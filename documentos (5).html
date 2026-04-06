@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Biblioteca · Red Acción Carcelaria</title>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500;600&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+  
+
+    :root {
+      --gris:        #666666;
+      --gris-claro:  #999;;
+
+      --gris-borde:  #e0e0e0      --blanco:      #ffffff;
+      --fondo:       #f2f2f7;
+      --texto:       #1a1a1a;
+      --radius:      14px;
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:"Barlow",sans-serif; background:var(--blanco); color:var(--texto); }
+
+    /* ════ CONTROLES ════ */
+    .controls-bar {
+      background:var(--blanco);
+      border-bottom:1px solid var(--gris-borde);
+      padding:14px 40px;
+      position:sticky; top:0; z-index:50;
+    }
+    .controls-inner {
+      max-width:1200px; margin:0 auto;
+      display:flex; align-items:center; gap:12px;
+    }
+
+    .search-wrap { position:relative; flex-shrink:0; }
+    .ios-pill {
+      display:flex; align-items:center; gap:7px;
+      background:var(--fondo); border:none; border-radius:12px;
+      padding:8px 16px; cursor:pointer;
+      font-family:-apple-system,"Barlow",sans-serif;
+      font-size:0.92rem; color:#8e8e93;
+      transition:background 0.15s;
+    }
+    .ios-pill:hover { background:#e5e5ea; }
+    .ios-bar { display:none; align-items:center; gap:8px; animation:iosOpen 0.2s cubic-bezier(0.4,0,0.2,1); }
+    .ios-bar.open { display:flex; }
+    @keyframes iosOpen {
+      from { opacity:0; transform:scaleX(0.94); transform-origin:left; }
+      to   { opacity:1; transform:scaleX(1); }
+    }
+    .ios-field {
+      display:flex; align-items:center; gap:8px;
+      background:var(--fondo); border-radius:12px;
+      padding:8px 12px; min-width:220px;
+    }
+    .ios-field input {
+      flex:1; border:none; background:transparent; outline:none;
+      font-family:-apple-system,"Barlow",sans-serif;
+      font-size:0.95rem; color:var(--texto); caret-color:var(--gris); min-width:0;
+    }
+    .ios-field input::placeholder { color:#8e8e93; }
+    .ios-x {
+      width:18px; height:18px; border-radius:50%;
+      background:#aeaeb2; border:none; cursor:pointer;
+      display:none; align-items:center; justify-content:center;
+      flex-shrink:0; padding:0; transition:background 0.15s;
+    }
+    .ios-x.show { display:flex; }
+    .ios-cancel {
+      background:none; border:none; cursor:pointer;
+      font-family:-apple-system,"Barlow",sans-serif;
+      font-size:0.95rem; color:var(--gris);
+      padding:4px 2px; white-space:nowrap; flex-shrink:0;
+    }
+    .sep { width:1px; height:26px; background:var(--gris-borde); flex-shrink:0; }
+    .filtros-label {
+      font-family:"Barlow Condensed",sans-serif;
+      font-size:1rem; font-weight:600;
+      letter-spacing:1px; text-transform:uppercase;
+      color:#666666; white-space:nowrap; flex-shrink:0;
+    }
+    .filtros-scroll {
+      display:flex; gap:8px; align-items:center;
+      overflow-x:auto; -webkit-overflow-scrolling:touch;
+      scrollbar-width:none; flex:1;
+    }
+    .filtros-scroll::-webkit-scrollbar { display:none; }
+    .ftab {
+      font-family:"Barlow Condensed",sans-serif;
+      font-weight:600; font-size:0.82rem;
+      letter-spacing:0.5px; text-transform:uppercase;
+      padding:7px 16px; border-radius:99px;
+      border:1.5px solid var(--gris-borde);
+      background:transparent; color:var(--gris-claro);
+      cursor:pointer; transition:all 0.15s; white-space:nowrap; flex-shrink:0;
+    }
+    .ftab {
+                     border: 1px solid #666666;}
+    .ftab:hover {   border-color: var(--gris-borde) !important; 
+                    color: var(--gris-claro) !important;
+                     background:#666666 !important;}
+    .ftab.active { background:var(--gris); border-color:var(--gris); color:white; }
+
+    /* ════ SECCIÓN RESULTADOS ════ */
+    .results-section { max-width:1200px; margin:0 auto; padding:28px 40px 80px; }
+    .results-header {
+      display:flex; align-items:center; justify-content:space-between;
+      margin-bottom:24px; padding-bottom:12px;
+      border-bottom:1px solid var(--gris-borde);
+      flex-wrap:wrap; gap:10px;
+    }
+    .results-count {
+      font-family:"Barlow Condensed",sans-serif;
+      font-size:0.8rem; font-weight:600;
+      letter-spacing:1.5px; text-transform:uppercase; color:#bbb;
+      display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+    }
+    .results-count b { color:var(--gris); font-weight:700; }
+    .active-tag {
+      display:none; align-items:center; gap:5px;
+      font-family:"Barlow Condensed",sans-serif;
+      font-size:0.72rem; font-weight:600; letter-spacing:1px; text-transform:uppercase;
+      background:var(--fondo); border:1.5px solid var(--gris-borde);
+      border-radius:99px; padding:3px 10px; color:var(--gris); cursor:pointer;
+    }
+    .active-tag.show { display:inline-flex; }
+    .vista-toggle { display:flex; gap:6px; flex-shrink:0; }
+   .vbtn {
+  width:44px; height:44px; border:none;
+  background:transparent; color:#bbb; border-radius:10px; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  font-size:2rem; transition:color 0.15s;
+}
+.vbtn.active { color:var(--gris) !important; background:transparent !important; border:none !important; }
+.vista-toggle .vbtn:hover { color:var(--gris) !important; background:transparent !important; border:none !important; }
+
+    /* ══════════════════════════════════════════════
+       GRILLA
+       ══════════════════════════════════════════════ */
+    .grid {
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:24px;
+      row-gap:48px; /* solo entre filas */
+    }
+
+    /* Cada card: imagen arriba, texto abajo */
+    .doc-card {
+      display:flex;
+      flex-direction:column;
+      gap:0;
+    }
+
+    /* ── Imagen ── */
+    .card-img {
+      position:relative;
+      aspect-ratio: 3 / 4;
+      border-radius:var(--radius);
+      overflow:hidden;
+      background-color:#b8b8c0;
+      background-size:cover;
+      background-position:center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.10);
+      transition: box-shadow 0.3s, transform 0.3s;
+      cursor:pointer;
+    }
+    .doc-card:hover .card-img {
+      box-shadow: 0 10px 32px rgba(0,0,0,0.16);
+      transform: translateY(-3px);
+    }
+
+    /* Tag de categoría — siempre visible. Puede haber más de una. */
+    .card-tags {
+      position: absolute;
+      top: 11px; left: 11px; z-index: 3;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .card-tag {
+      font-family:"Barlow Condensed",sans-serif;
+      font-size:1rem; font-weight:600;
+      letter-spacing:1px; text-transform:uppercase;
+      background:rgba(255,255,255,0.92);
+      color:var(--texto);
+      padding:4px 10px; border-radius:99px;
+      backdrop-filter:blur(4px);
+      pointer-events:none;
+    }
+
+    /* Overlay — solo en hover */
+    .card-overlay {
+      position:absolute;
+      inset:0;
+      background: rgba(0,0,0,0.55);
+      opacity:0;
+      transition: opacity 0.3s;
+      pointer-events:none;
+    }
+    .doc-card:hover .card-overlay { opacity:1; pointer-events:auto; }
+
+    /* Botón descargar — solo en hover, centrado */
+    .card-dl-hover {
+      position:absolute;
+      top:50%; left:50%;
+      transform: translate(-50%, calc(-50% + 8px));
+      z-index:4;
+      opacity:0;
+      transition: opacity 0.28s, transform 0.28s;
+      display:inline-flex;
+      align-items:center;
+      gap:7px;
+      background:#ffffff;
+      color:var(--texto) !important;
+      text-decoration:none;
+      font-family:"Barlow Condensed",sans-serif;
+      font-size:0.83rem; font-weight:700;
+      letter-spacing:1.5px; text-transform:uppercase;
+      padding:11px 24px;
+      border-radius:99px;
+      white-space:nowrap;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.22);
+    }
+    .doc-card:hover .card-dl-hover {
+      opacity:1;
+      transform: translate(-50%, -50%);
+    }
+    .card-dl-hover:hover {
+      background:#4A5EE5;
+      color:#fff !important;
+    }
+
+    /* ── Pie: título + año fuera de la imagen ── */
+    .card-foot {
+      padding:12px 2px 0;
+    }
+    .card-titulo {
+      font-family:"Montserrat",sans-serif;
+      font-size:1.rem;
+      font-weight:600;
+      line-height:1.35;
+      color:var(--texto);
+      margin-bottom:4px;
+    }
+    .card-ano {
+      font-family:"Barlow Condensed",sans-serif;
+      font-size:1.2rem;
+      font-weight:600;
+      letter-spacing:1px;
+      text-transform:uppercase;
+      color:#aaa;
+    }
+
+    /* ════ VISTA LISTA ════ */
+    .lista { display:none; flex-direction:column; gap:8px; }
+    .row {
+      background:var(--blanco); border:1.5px solid var(--gris-borde);
+      border-radius:var(--radius);
+      display:flex; align-items:center; gap:14px; padding:14px 20px;
+      transition:border-color 0.15s, box-shadow 0.15s;
+    }
+    .row:hover { border-color:var(--gris); box-shadow:0 2px 12px rgba(0,0,0,0.06); }
+    .row-badge {
+      font-family:"Barlow Condensed",sans-serif;
+      font-size:0.62rem; font-weight:700;
+      letter-spacing:1.5px; text-transform:uppercase;
+      background:var(--gris); color:white;
+      padding:4px 12px; border-radius:99px;
+      white-space:nowrap; min-width:90px; text-align:center; flex-shrink:0;
+    }
+    .row-info { flex:1; min-width:0; }
+    .row-titulo {
+      font-family:"Barlow Condensed",sans-serif;
+      font-size:0.95rem; font-weight:700; text-transform:uppercase;
+      color:var(--texto); margin-bottom:2px;
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    }
+    .row-cat { font-size:0.72rem; color:#bbb; font-weight:300; }
+    .row-ano { font-family:"Barlow Condensed",sans-serif; font-size:0.8rem; color:#bbb; font-weight:600; letter-spacing:1px; flex-shrink:0; }
+    .row-dl {
+      color:var(--gris); font-family:"Barlow Condensed",sans-serif;
+      font-size:0.72rem; font-weight:700; letter-spacing:1px;
+      text-transform:uppercase; text-decoration:none;
+      padding:5px 14px; border:1.5px solid var(--gris-borde);
+      border-radius:99px; transition:all 0.15s; flex-shrink:0;
+    }
+    .row-dl:hover { background:var(--gris); color:white; border-color:var(--gris); }
+
+    .no-results { display:none; text-align:center; padding:60px 20px; }
+    .no-results p {
+      font-family:"Barlow Condensed",sans-serif;
+      font-size:1.1rem; font-weight:600;
+      text-transform:uppercase; color:#ccc; letter-spacing:1px;
+    }
+
+    /* ════ RESPONSIVE ════ */
+    @media (max-width:1100px) {
+      .controls-bar, .results-section { padding-left:32px; padding-right:32px; }
+      .grid { grid-template-columns:repeat(3,1fr); gap:20px; }
+    }
+
+    @media (max-width:768px) {
+      .controls-bar { padding:12px 20px; }
+      .sep, .filtros-label { display:none; }
+      .results-section { padding:20px 20px 60px; }
+      .grid { grid-template-columns:repeat(2,1fr); gap:16px; }
+      .row-ano { display:none; }
+      .ios-field { min-width:160px; }
+      .card-titulo { font-size:1rem; }
+      .card-ano    { font-size:1rem; }
+    }
+
+    /* ════ PAGINADOR ════ */
+    .paginador {
+      display: none; /* se muestra por JS cuando hace falta */
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      margin-top: 40px;
+      flex-wrap: wrap;
+    }
+    .paginador.show { display: flex; }
+    .pag-btn {
+      font-family: "Barlow Condensed", sans-serif;
+      font-size: 0.85rem; font-weight: 700;
+      letter-spacing: 1px; text-transform: uppercase;
+      padding: 8px 14px; border-radius: 99px;
+      border: 1px solid #666666;
+      background: transparent; color: var(--gris);
+      cursor: pointer; transition: background 0.15s, color 0.15s;
+      min-width: 40px; text-align: center;
+    }
+    .pag-btn:hover  { background: var(--gris); color: #fff; }
+    .pag-btn.active { background: var(--gris); color: #fff; border-color: var(--gris); }
+    .pag-btn:disabled { opacity: 0.3; cursor: default; pointer-events: none; }
+    .pag-sep {
+      font-family: "Barlow Condensed", sans-serif;
+      font-size: 0.85rem; color: #bbb;
+      padding: 0 4px;
+    }
+
+    @media (max-width:500px) {
+      .controls-bar { padding:10px 16px; }
+      .results-section { padding:16px 16px 50px; }
+
+      /* En mobile la barra se convierte en 2 filas:
+         fila 1 → buscador
+         fila 2 → filtros */
+      .controls-inner {
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      /* El buscador ocupa toda la fila 1 */
+      .search-wrap {
+        width: 100%;
+        order: 1;
+      }
+      .ios-pill {
+        width: 100%;
+        justify-content: flex-start;
+      }
+      .ios-bar.open {
+        width: 100%;
+      }
+      .ios-field {
+        min-width: 0;
+        flex: 1;
+      }
+      /* Ocultar separador y label "Filtrar" */
+      .sep, .filtros-label { display: none; }
+      /* Los filtros van en fila 2, scroll horizontal */
+      .filtros-scroll {
+        order: 2;
+        width: 100%;
+      }
+
+      /* 1 sola columna */
+      .grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+
+      .card-img {
+        aspect-ratio: 3 / 4;
+        border-radius: var(--radius);
+      }
+
+      /* Tipografía 1rem en mobile */
+      .card-titulo { font-size: 1rem; }
+      .card-ano    { font-size: 1rem; }
+
+      .vista-toggle { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════ CONTROLES ════ -->
+<div class="controls-bar">
+  <div class="controls-inner">
+
+    <div class="search-wrap" id="search-wrap">
+      <button class="ios-pill" id="ios-pill" onclick="racOpen()" aria-label="Abrir buscador">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        Buscar
+      </button>
+      <div class="ios-bar" id="ios-bar">
+        <div class="ios-field">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8e8e93" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <input type="text" id="buscador" placeholder="Título, categoría o año…"
+                 oninput="racFiltrar(); racCheckX()"
+                 autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+          <button class="ios-x" id="ios-x" onclick="racLimpiarInput()" aria-label="Limpiar">
+            <svg width="9" height="9" viewBox="0 0 10 10">
+              <line x1="1.5" y1="1.5" x2="8.5" y2="8.5" stroke="white" stroke-width="2" stroke-linecap="round"/>
+              <line x1="8.5" y1="1.5" x2="1.5" y2="8.5" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+        <button class="ios-cancel" onclick="racClose()">Cancelar</button>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+    <span class="filtros-label">Filtrar</span>
+
+    <div class="filtros-scroll">
+           <button class="ftab active" data-cat="todos"         onclick="racSetFiltro(this)">Todos</button>
+           
+      <button class="ftab" data-cat="Nuestras publicaciones"         onclick="racSetFiltro(this)">Nuestras publicaciones</button>
+      
+      <button class="ftab"        data-cat="informe"       onclick="racSetFiltro(this)">informe</button>
+      
+      <button class="ftab"        data-cat="boletin"       onclick="racSetFiltro(this)">boletin</button>
+      
+      <button class="ftab"        data-cat="nacional"          onclick="racSetFiltro(this)">nacional</button>
+      
+      <button class="ftab"        data-cat="internacional"   onclick="racSetFiltro(this)">Internacional</button>
+      
+      <button class="ftab"        data-cat="Sentencias nacionales de interes"      onclick="racSetFiltro(this)">Sentencias nacionales de interés</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════ RESULTADOS ════ -->
+<div class="results-section">
+  <div class="results-header">
+    <div class="results-count">
+      <b id="count">8</b> documentos encontrados
+      <!-- Chips de filtros activos: se generan dinámicamente por JS -->
+      <span id="filtros-activos-wrap"></span>
+      <!-- Chip de búsqueda activa -->
+      <span class="active-tag" id="active-tag" onclick="racLimpiarBusqueda()">
+        <span id="active-tag-txt"></span> ✕
+      </span>
+    </div>
+    <div class="vista-toggle">
+      <button class="vbtn active" id="btn-grid"  onclick="racVista('grid')"  title="Grilla">▦</button>
+      <button class="vbtn"        id="btn-lista" onclick="racVista('lista')" title="Lista">☰</button>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════
+       GRILLA DE CARDS
+
+       PARA CADA CARD edita:
+         · data-cat, data-titulo, data-ano
+         · .card-img → style="background-image:url('URL_IMAGEN')"
+         · .card-tag → etiqueta visible
+         · .card-titulo → título visible
+         · .card-ano → año visible
+         · href en .card-dl-hover → URL del PDF
+       ════════════════════════════════════════════════ -->
+  <div class="grid" id="grid">
+
+    <!-- Card 1 -->
+    <!--
+    ══════════════════════════════════════════════════════════════
+    CÓMO AÑADIR MÚLTIPLES TAGS A UNA CARD
+    ══════════════════════════════════════════════════════════════
+
+    1. data-cat: separa las categorías con una COMA.
+       Cada valor debe coincidir exactamente con el data-cat del
+       botón de filtro correspondiente en .filtros-scroll.
+       Ejemplo: data-cat="boletin,Nuestras publicaciones"
+       ⚠️ NO uses espacios como separador: las categorías pueden
+       contener espacios en su nombre (ej. "Nuestras publicaciones").
+
+    2. Dentro de .card-tags añade un <span class="card-tag">
+       por cada etiqueta que quieras mostrar visualmente.
+       El contenedor ya tiene display:flex + flex-wrap:wrap + gap,
+       así que las tags se ponen en fila y bajan al siguiente
+       renglón automáticamente si no caben (responsive).
+
+    3. No hay límite de tags, pero 2-3 es lo más legible visualmente.
+    ══════════════════════════════════════════════════════════════
+    -->
+    <div class="doc-card"
+         data-cat="boletin,Nuestras publicaciones"
+         data-titulo="Sistema-penitenciario-en-Chile-balance-2022-2026"
+         data-ano="2024">
+      <div class="card-img" style="background-image:url('https://accioncarcelaria.org/wp-content/uploads/2026/03/Captura-de-pantalla-2026-03-10-a-las-9.44.56-p.-m.png')">
+
+        <!-- .card-tags ya tiene flex-wrap:wrap, así que si no caben
+             en una sola fila, la segunda tag baja automáticamente -->
+        <div class="card-tags">
+          <span class="card-tag">Boletín</span>
+          <span class="card-tag">Nuestras publicaciones</span>
+        </div>
+
+        <div class="card-overlay"></div>
+        <a href="https://accioncarcelaria.org/wp-content/uploads/2026/03/Sistema-penitenciario-en-Chile-balance-2022-2026.pdf" target="_blank" class="card-dl-hover">↓ Descargar</a>
+      </div>
+      <div class="card-foot">
+        <div class="card-titulo">Sistema penitenciario en Chile: balance 2022-2026</div>
+        <div class="card-ano">2026</div>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="doc-card" data-cat="boletin,Nuestras publicaciones" data-titulo="Cárcel y seguridad: Claves para un debate informado" data-ano="2025">
+      <div class="card-img" style="background-image:url('https://accioncarcelaria.org/wp-content/uploads/2025/07/WhatsApp-Image-2025-07-22-at-18.29.27.jpeg')">
+        <div class="card-tags"><span class="card-tag">Boletín</span><span class="card-tag">Nuestras publicaciones</span></div>
+        <div class="card-overlay"></div>
+        <a href="https://accioncarcelaria.org/wp-content/uploads/2025/11/Carcel-y-Seguridad.pdf" target="_blank" class="card-dl-hover">↓ Descargar</a>
+      </div>
+      <div class="card-foot">
+        <div class="card-titulo">Cárcel y seguridad: Claves para un debate informado</div>
+        <div class="card-ano">2025</div>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="doc-card" data-cat="boletin,Nuestras publicaciones" data-titulo="A tres años del gobierno del Presidente Gabriel Boric: evaluación de los compromisos en materia carcelarias" data-ano="2025">
+      <div class="card-img" style="background-image:url('https://accioncarcelaria.org/wp-content/uploads/2026/03/Captura-de-pantalla-2026-03-18-a-las-2.14.18-p.-m.png')">
+        <div class="card-tags"><span class="card-tag">Boletín</span><span class="card-tag">Nuestras publicaciones</span></div>
+        <div class="card-overlay"></div>
+        <a href="https://accioncarcelaria.org/wp-content/uploads/2025/07/A-3-anos-del-gobierno-del-presidente-Gabriel-Boric.pdf" target="_blank" class="card-dl-hover">↓ Descargar</a>
+      </div>
+      <div class="card-foot">
+        <div class="card-titulo">A tres años del gobierno del Presidente Gabriel Boric</div>
+        <div class="card-ano">2025</div>
+      </div>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="doc-card" data-cat="informe,Nuestras publicaciones" data-titulo="Salud sexual y menstrual en mujeres privadas de libertad" data-ano="2024">
+      <div class="card-img" style="background-image:url('https://accioncarcelaria.org/wp-content/uploads/2026/03/Captura-de-pantalla-2026-03-18-a-las-2.16.40-p.-m.png')">
+        <div class="card-tags"><span class="card-tag">Informe</span><span class="card-tag">Nuestras publicaciones</span></div>
+        <div class="card-overlay"></div>
+        <a href="https://accioncarcelaria.org/wp-content/uploads/2025/07/Salud-sexual-y-menstrual-en-mujeres-privadas-de-libertad.pdf" target="_blank" class="card-dl-hover">↓ Descargar</a>
+      </div>
+      <div class="card-foot">
+        <div class="card-titulo">Salud sexual y menstrual en mujeres privadas de libertad</div>
+        <div class="card-ano">2024</div>
+      </div>
+    </div>
+
+    <!-- Card 5 -->
+    <div class="doc-card" data-cat="nacionales" data-titulo="Prevención de la Tortura y situación de las personas privadas de libertad" data-ano="2022">
+      <div class="card-img" style="background-image:url('https://accioncarcelaria.org/wp-content/uploads/2026/03/Captura-de-pantalla-2026-03-18-a-las-6.48.23-p.-m.png')">
+        <div class="card-tags"><span class="card-tag">nacional </span></div>
+        <div class="card-overlay"></div>
+        <a href="https://accioncarcelaria.org/wp-content/uploads/2025/07/Prevencion-de-la-tortura-y-situacion-de-las-personas-privadas-de-libertad-Tercer-informe-anual-2024.pdf" target="_blank" class="card-dl-hover">↓ Descargar</a>
+      </div>
+      <div class="card-foot">
+        <div class="card-titulo">Prevención de la Tortura y situación de las personas privadas de libertad</div>
+        <div class="card-ano">2025</div>
+      </div>
+    </div>
+
+    <!-- Card 6 -->
+    <div class="doc-card" data-cat="nacional" data-titulo="Informe Anual Situación de los Derechos Humanos en Chile" data-ano="2024">
+      <div class="card-img" style="background-image:url('https://accioncarcelaria.org/wp-content/uploads/2026/03/Captura-de-pantalla-2026-03-18-a-las-6.49.31-p.-m-e1773856629819.png')">
+        <div class="card-tags"><span class="card-tag">nacional</span></div>
+        <div class="card-overlay"></div>
+        <a href="https://accioncarcelaria.org/wp-content/uploads/2025/07/Informe-Anual-2024-Situacion-de-los-Derechos-Humanos-en-Chile-INDH.pdf" target="_blank" class="card-dl-hover">↓ Descargar</a>
+      </div>
+      <div class="card-foot">
+        <div class="card-titulo">Informe Anual Situación de los Derechos Humanos en Chile</div>
+        <div class="card-ano">2024</div>
+      </div>
+    </div>
+
+    <!-- Card 7 -->
+    <div class="doc-card" data-cat="nacional" data-titulo="Compendio Estadístico Gendarmería" data-ano="2024">
+      <div class="card-img" style="background-image:url('https://accioncarcelaria.org/wp-content/uploads/2026/03/Captura-de-pantalla-2026-03-18-a-las-6.50.25-p.-m.png')">
+        <div class="card-tags"><span class="card-tag">nacional</span></div>
+        <div class="card-overlay"></div>
+        <a href="https://accioncarcelaria.org/wp-content/uploads/2025/07/Compendio-Estadistico-Penitenciario-Gendarmeria.-2024.pdf" target="_blank" class="card-dl-hover">↓ Descargar</a>
+      </div>
+      <div class="card-foot">
+        <div class="card-titulo">Compendio Estadístico Gendarmería</div>
+        <div class="card-ano">2024</div>
+      </div>
+    </div>
+    
+      <!-- Card 8 -->
+    <div class="doc-card" data-cat="nacional" data-titulo="Informe Anual Situación de los Derechos Humanos en Chile" data-ano="-2024">
+      <div class="card-img" style="background-image:url('https://accioncarcelaria.org/wp-content/uploads/2026/03/Captura-de-pantalla-2026-03-18-a-las-6.53.34-p.-m.png')">
+        <div class="card-tags"><span class="card-tag">nacional</span></div>
+        <div class="card-overlay"></div>
+        <a href="https://accioncarcelaria.org/wp-content/uploads/2026/03/Resumen-Ejecutivo-Estudio-trayectoria-de-vida-Ley-20000-Universidad-Catolica.pdf" target="_blank" class="card-dl-hover">↓ Descargar</a>
+      </div>
+      <div class="card-foot">
+        <div class="card-titulo">Informe Anual Situación de los Derechos Humanos en Chile</div>
+        <div class="card-ano">2024</div>
+      </div>
+    </div>
+    
+    <!-- Card 9 -->
+    <div class="doc-card" data-cat="nacional" data-titulo="Informe Anual Situación de los Derechos Humanos en Chile" data-ano="-2023">
+      <div class="card-img" style="background-image:url('https://accioncarcelaria.org/wp-content/uploads/2026/03/Captura-de-pantalla-2026-03-18-a-las-6.51.13-p.-m.png')">
+        <div class="card-tags"><span class="card-tag">nacional</span></div>
+        <div class="card-overlay"></div>
+        <a href="https://accioncarcelaria.org/wp-content/uploads/2025/07/Informe-Anual-Situacion-de-los-Derechos-Humanos-en-Chile-2023-INDH-2024.pdf" target="_blank" class="card-dl-hover">↓ Descargar</a>
+      </div>
+      <div class="card-foot">
+        <div class="card-titulo">Informe Anual Situación de los Derechos Humanos en Chile</div>
+        <div class="card-ano">2023</div>
+      </div>
+    </div>
+    
+     <!-- Card 10 -->
+    <div class="doc-card" data-cat="nacional" data-titulo="Encarcelamiento Materno y Problemas de Comportamiento en Niñeces" data-ano="-2023">
+      <div class="card-img" style="background-image:url('https://accioncarcelaria.org/wp-content/uploads/2026/03/Captura-de-pantalla-2026-03-18-a-las-6.52.01-p.-m.png')">
+        <div class="card-tags"><span class="card-tag">nacional</span></div>
+        <div class="card-overlay"></div>
+        <a href="https://accioncarcelaria.org/wp-content/uploads/2025/07/Encarcelamiento-Materno-y-Problemas-de-Comportamiento-en-Nineces.pdf" target="_blank" class="card-dl-hover">↓ Descargar</a>
+      </div>
+      <div class="card-foot">
+        <div class="card-titulo">Encarcelamiento Materno y Problemas de Comportamiento en Niñeces</div>
+        <div class="card-ano">2023</div>
+      </div>
+    </div>
+    
+      <!-- Card 11 -->
+    <div class="doc-card" data-cat="nacional" data-titulo="Reinserción y desistimiento en mujeres privadas de libertad" data-ano="2021">
+      <div class="card-img" style="background-image:url('https://accioncarcelaria.org/wp-content/uploads/2026/03/Captura-de-pantalla-2026-03-18-a-las-6.52.44-p.-m.png')">
+        <div class="card-tags"><span class="card-tag">nacional</span></div>
+        <div class="card-overlay"></div>
+        <a href="https://accioncarcelaria.org/wp-content/uploads/2025/07/Estudio-Reinsercion-Desistimiento-en-Mujeres.pdf" target="_blank" class="card-dl-hover">↓ Descargar</a>
+      </div>
+      <div class="card-foot">
+        <div class="card-titulo">Reinserción y desistimiento en mujeres privadas de libertad </div>
+        <div class="card-ano">2021</div>
+      </div>
+    </div>
+    
+          <!-- Card 12 -->
+    <div class="doc-card" data-cat="internacional" data-titulo="Informe mundial sobre mujeres en prisión" data-ano="2024">
+      <div class="card-img" style="background-image:url('https://accioncarcelaria.org/wp-content/uploads/2026/03/Captura-de-pantalla-2026-03-18-a-las-6.58.20-p.-m.png')">
+        <div class="card-tags"><span class="card-tag">Internacionall</span></div>
+        <div class="card-overlay"></div>
+        <a href="https://accioncarcelaria.org/wp-content/uploads/2025/07/Informe-mundial-sobre-mujeres-en-prision-APT-2024.pdf" target="_blank" class="card-dl-hover">↓ Descargar</a>
+      </div>
+      <div class="card-foot">
+        <div class="card-titulo">Informe mundial sobre mujeres en prisión</div>
+        <div class="card-ano">2024</div>
+      </div>
+    </div>
+    
+       <!-- Card 13 -->
+    <div class="doc-card" data-cat="internacional" data-titulo="Mujeres, madres y delincuentes: Apuntes sobre el control social específico en razón de género" data-ano="2022">
+      <div class="card-img" style="background-image:url('https://accioncarcelaria.org/wp-content/uploads/2026/03/Captura-de-pantalla-2026-03-18-a-las-6.58.31-p.-m.png')">
+        <div class="card-tags"><span class="card-tag">Internacionall</span></div>
+        <div class="card-overlay"></div>
+        <a href="https://accioncarcelaria.org/wp-content/uploads/2025/07/Mujeres-madres-y-delincuentes-Apuntes-sobre-el-control-social-especifico-en-razon-de-genero.pdf" target="_blank" class="card-dl-hover">↓ Descargar</a>
+      </div>
+      <div class="card-foot">
+        <div class="card-titulo">Mujeres, madres y delincuentes: Apuntes sobre el control social específico en razón de género</div>
+        <div class="card-ano">2022</div>
+      </div>
+    </div>
+    
+    
+  </div>
+  
+  
+  
+  <!-- /grid -->
+
+
+  <!-- ════ LISTA ════ -->
+  <div class="lista" id="lista">
+
+    <div class="row" data-cat="informe" data-titulo="carcel seguridad debate informado" data-ano="2024">
+      <div class="row-badge">Informe</div>
+      <div class="row-info">
+        <div class="row-titulo">Cárcel y Seguridad: Claves para un debate informado</div>
+        <div class="row-cat">Política Pública</div>
+      </div>
+      <div class="row-ano">2024</div>
+      <a href="Women-in-frog_week_Radiografia.pdf" target="_blank" class="row-dl">↓ Descargar</a>
+    </div>
+
+    <div class="row" data-cat="investigacion" data-titulo="mujeres privadas libertad chile reinsercion" data-ano="2023">
+      <div class="row-badge">Investigación</div>
+      <div class="row-info"><div class="row-titulo">Mujeres privadas de libertad en Chile</div><div class="row-cat">Reinserción</div></div>
+      <div class="row-ano">2023</div><a href="#" target="_blank" class="row-dl">↓ Descargar</a>
+    </div>
+
+    <div class="row" data-cat="boletin" data-titulo="reinsercion social barreras oportunidades" data-ano="2023">
+      <div class="row-badge">Internacional</div>
+      <div class="row-info"><div class="row-titulo">Reinserción social: Barreras y oportunidades</div><div class="row-cat">Reinserción</div></div>
+      <div class="row-ano">2023</div><a href="#" target="_blank" class="row-dl">↓ Descargar</a>
+    </div>
+
+    <div class="row" data-cat="estadistica" data-titulo="estadisticas sistema penitenciario datos" data-ano="2023">
+      <div class="row-badge">Estadísticas</div>
+      <div class="row-info"><div class="row-titulo">Estadísticas del sistema penitenciario 2023</div><div class="row-cat">Datos</div></div>
+      <div class="row-ano">2023</div><a href="#" target="_blank" class="row-dl">↓ Descargar</a>
+    </div>
+
+    <div class="row" data-cat="guia" data-titulo="guia derechos personas privadas libertad" data-ano="2022">
+      <div class="row-badge">Sentencia</div>
+      <div class="row-info"><div class="row-titulo">Guía de derechos para personas privadas de libertad</div><div class="row-cat">Derechos</div></div>
+      <div class="row-ano">2022</div><a href="#" target="_blank" class="row-dl">↓ Descargar</a>
+    </div>
+
+    <div class="row" data-cat="politica" data-titulo="propuestas reforma penitenciaria politica publica" data-ano="2022">
+      <div class="row-badge">Política</div>
+      <div class="row-info"><div class="row-titulo">Propuestas para una reforma penitenciaria integral</div><div class="row-cat">Política Pública</div></div>
+      <div class="row-ano">2022</div><a href="#" target="_blank" class="row-dl">↓ Descargar</a>
+    </div>
+
+    <div class="row" data-cat="informe" data-titulo="fecu informe transparencia fundacion" data-ano="2022">
+      <div class="row-badge">Informe</div>
+      <div class="row-info"><div class="row-titulo">FECU 2022 · Informe de Transparencia</div><div class="row-cat">Transparencia</div></div>
+      <div class="row-ano">2022</div><a href="#" target="_blank" class="row-dl">↓ Descargar</a>
+    </div>
+
+    <div class="row" data-cat="investigacion" data-titulo="hijos madres encarceladas familia impacto vulnerabilidad" data-ano="2021">
+      <div class="row-badge">Investigación</div>
+      <div class="row-info"><div class="row-titulo">Hijos de madres encarceladas: impacto y vulnerabilidad</div><div class="row-cat">Familia</div></div>
+      <div class="row-ano">2021</div><a href="#" target="_blank" class="row-dl">↓ Descargar</a>
+    </div>
+
+  </div><!-- /lista -->
+
+  <div class="no-results" id="no-results">
+    <p>No se encontraron documentos</p>
+  </div>
+
+  <!-- Paginador — generado por JS -->
+  <div class="paginador" id="paginador"></div>
+
+</div><!-- /results-section -->
+
+
+<script>
+(function () {
+
+  // ── FILTROS MULTI-SELECCIÓN ──────────────────────────────────
+  // catsActivas es un Set con las categorías seleccionadas.
+  // Si está vacío equivale a "Todos".
+  // Para añadir: catsActivas.add("boletin")
+  // Para quitar: catsActivas.delete("boletin")
+  // Para limpiar: catsActivas.clear()
+  // ────────────────────────────────────────────────────────────
+  var catsActivas = new Set();
+  var barraOpen = false;
+  var paginaActual = 1;
+  var POR_PAGINA   = 12;
+
+  function init() {
+    document.addEventListener("click", function (e) {
+      var wrap = document.getElementById("search-wrap");
+      if (wrap && !wrap.contains(e.target) && barraOpen) racClose();
+    });
+    racFiltrar();
+  }
+
+  window.racOpen = function () {
+    var pill = document.getElementById("ios-pill");
+    var bar  = document.getElementById("ios-bar");
+    if (!pill || !bar) return;
+    barraOpen = true;
+    pill.style.display = "none";
+    bar.classList.add("open");
+    setTimeout(function () { var i = document.getElementById("buscador"); if (i) i.focus(); }, 30);
+  };
+
+  window.racClose = function () {
+    var pill = document.getElementById("ios-pill");
+    var bar  = document.getElementById("ios-bar");
+    var inp  = document.getElementById("buscador");
+    if (!pill || !bar) return;
+    barraOpen = false;
+    bar.classList.remove("open");
+    pill.style.display = "";
+    if (inp) inp.value = "";
+    racCheckX(); racFiltrar();
+  };
+
+  window.racCheckX = function () {
+    var inp = document.getElementById("buscador");
+    var x   = document.getElementById("ios-x");
+    if (!inp || !x) return;
+    x.classList.toggle("show", inp.value.length > 0);
+  };
+
+  window.racLimpiarInput = function () {
+    var inp = document.getElementById("buscador");
+    if (inp) { inp.value = ""; inp.focus(); }
+    racCheckX(); racFiltrar();
+  };
+
+  window.racLimpiarBusqueda = function () {
+    var inp = document.getElementById("buscador");
+    if (inp) inp.value = "";
+    racCheckX(); racFiltrar();
+  };
+
+  window.racSetFiltro = function (btn) {
+    var cat = btn.dataset.cat;
+
+    if (cat === "todos") {
+      // "Todos" limpia todas las selecciones
+      catsActivas.clear();
+    } else {
+      // Toggle: si ya estaba activa la quita, si no la añade
+      if (catsActivas.has(cat)) {
+        catsActivas.delete(cat);
+      } else {
+        catsActivas.add(cat);
+      }
+    }
+
+    // Actualizar estado visual de todos los botones
+    document.querySelectorAll(".ftab").forEach(function (b) {
+      var c = b.dataset.cat;
+      if (c === "todos") {
+        // "Todos" se marca solo cuando no hay ningún filtro activo
+        b.classList.toggle("active", catsActivas.size === 0);
+      } else {
+        b.classList.toggle("active", catsActivas.has(c));
+      }
+    });
+
+    renderChipsFiltros();
+    paginaActual = 1;
+    racFiltrar();
+  };
+
+  // Quita un único filtro desde su chip (X dentro del chip)
+  window.racQuitarFiltro = function (cat) {
+    catsActivas.delete(cat);
+    document.querySelectorAll(".ftab").forEach(function (b) {
+      var c = b.dataset.cat;
+      b.classList.toggle("active", c === "todos" ? catsActivas.size === 0 : catsActivas.has(c));
+    });
+    renderChipsFiltros();
+    paginaActual = 1;
+    racFiltrar();
+  };
+
+  // Dibuja un chip .active-tag por cada filtro activo, idénticos al chip de búsqueda
+  function renderChipsFiltros() {
+    var wrap = document.getElementById("filtros-activos-wrap");
+    if (!wrap) return;
+    wrap.innerHTML = "";
+    catsActivas.forEach(function (cat) {
+      var chip = document.createElement("span");
+      chip.className = "active-tag show";
+      // El span interior maneja solo el clic en la X
+      chip.innerHTML = cat + ' <span onclick="racQuitarFiltro(\'' + cat.replace(/'/g, "\\'") + '\')">✕</span>';
+      wrap.appendChild(chip);
+    });
+  }
+
+  window.racVista = function (v) {
+    var grid  = document.getElementById("grid");
+    var lista = document.getElementById("lista");
+    var btnG  = document.getElementById("btn-grid");
+    var btnL  = document.getElementById("btn-lista");
+    if (!grid || !lista) return;
+    if (v === "grid") {
+      grid.style.display  = "grid";
+      lista.style.display = "none";
+      if (btnG) btnG.classList.add("active");
+      if (btnL) btnL.classList.remove("active");
+    } else {
+      grid.style.display  = "none";
+      lista.style.display = "flex";
+      if (btnG) btnG.classList.remove("active");
+      if (btnL) btnL.classList.add("active");
+    }
+    racFiltrar();
+  };
+
+  window.racIrPagina = function (n) {
+    paginaActual = n;
+    racFiltrar();
+    // scroll suave al inicio de la sección
+    var sec = document.querySelector(".results-section");
+    if (sec) sec.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  window.racFiltrar = function () {
+    var inp      = document.getElementById("buscador");
+    var busqueda = inp ? inp.value.toLowerCase().trim() : "";
+    function norm(str) { return str.normalize("NFD").replace(/[\u0300-\u036f]/g, ""); }
+    var q = norm(busqueda);
+
+    function match(el) {
+      // data-cat usa COMA como separador (no espacio) para soportar categorías con espacios
+      // Ejemplo: data-cat="boletin,Nuestras publicaciones"
+      var cats  = (el.dataset.cat || "").split(",").map(function(c){ return c.trim(); });
+      // AND: la card debe tener TODOS los filtros activos
+      var catOk = catsActivas.size === 0 || Array.from(catsActivas).every(function(c){ return cats.indexOf(c) !== -1; });
+      var txtOk = q === "" || norm(el.dataset.titulo || "").includes(q) || (el.dataset.ano || "").includes(q);
+      return catOk && txtOk;
+    }
+
+    /* ── Grilla con paginación ── */
+    var todasCards = Array.from(document.querySelectorAll("#grid .doc-card"));
+    var coinciden  = todasCards.filter(match);
+    var total      = coinciden.length;
+    var totalPags  = Math.ceil(total / POR_PAGINA);
+
+    // si la página actual queda fuera de rango al filtrar, volver a 1
+    if (paginaActual > totalPags) paginaActual = 1;
+
+    var inicio = (paginaActual - 1) * POR_PAGINA;
+    var fin    = inicio + POR_PAGINA;
+
+    todasCards.forEach(function (el) { el.style.display = "none"; });
+    coinciden.forEach(function (el, i) {
+      el.style.display = (i >= inicio && i < fin) ? "" : "none";
+    });
+
+    /* ── Lista (sin paginación, muestra todo) ── */
+    document.querySelectorAll("#lista .row").forEach(function (el) {
+      el.style.display = match(el) ? "" : "none";
+    });
+
+    /* ── Contador ── */
+    var countEl = document.getElementById("count");
+    if (countEl) countEl.textContent = total;
+
+    /* ── Sin resultados ── */
+    var noRes = document.getElementById("no-results");
+    if (noRes) noRes.style.display = total === 0 ? "block" : "none";
+
+    /* ── Tag búsqueda activa ── */
+    var tag    = document.getElementById("active-tag");
+    var tagTxt = document.getElementById("active-tag-txt");
+    if (tag && tagTxt) {
+      if (busqueda) { tag.classList.add("show"); tagTxt.textContent = "\"" + busqueda + "\""; }
+      else { tag.classList.remove("show"); }
+    }
+
+    /* ── Paginador ── */
+    renderPaginador(totalPags);
+  };
+
+  function renderPaginador(totalPags) {
+    var wrap = document.getElementById("paginador");
+    if (!wrap) return;
+    wrap.innerHTML = "";
+
+    if (totalPags <= 1) {
+      wrap.classList.remove("show");
+      return;
+    }
+    wrap.classList.add("show");
+
+    // Botón anterior
+    var prev = document.createElement("button");
+    prev.className = "pag-btn";
+    prev.textContent = "←";
+    prev.disabled = paginaActual === 1;
+    prev.onclick = function () { racIrPagina(paginaActual - 1); };
+    wrap.appendChild(prev);
+
+    // Números de página con elipsis
+    var paginas = paginasAMostrar(paginaActual, totalPags);
+    var anterior = null;
+    paginas.forEach(function (p) {
+      if (anterior !== null && p - anterior > 1) {
+        var sep = document.createElement("span");
+        sep.className = "pag-sep";
+        sep.textContent = "…";
+        wrap.appendChild(sep);
+      }
+      var btn = document.createElement("button");
+      btn.className = "pag-btn" + (p === paginaActual ? " active" : "");
+      btn.textContent = p;
+      btn.onclick = (function (n) { return function () { racIrPagina(n); }; })(p);
+      wrap.appendChild(btn);
+      anterior = p;
+    });
+
+    // Botón siguiente
+    var next = document.createElement("button");
+    next.className = "pag-btn";
+    next.textContent = "→";
+    next.disabled = paginaActual === totalPags;
+    next.onclick = function () { racIrPagina(paginaActual + 1); };
+    wrap.appendChild(next);
+  }
+
+  // Qué números mostrar: siempre primera, última, actual y adyacentes
+  function paginasAMostrar(actual, total) {
+    var set = {};
+    [1, 2, actual - 1, actual, actual + 1, total - 1, total].forEach(function (p) {
+      if (p >= 1 && p <= total) set[p] = true;
+    });
+    return Object.keys(set).map(Number).sort(function (a, b) { return a - b; });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+
+})();
+</script>
+
+</body>
+</html>
