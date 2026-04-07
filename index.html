@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ignacia · UX/UI Designer</title>
+
+  <!-- =====================================================
+       FUENTES: Bebas Neue para el hero, DM Sans para body
+       Se cargan desde Google Fonts (sin instalación)
+  ===================================================== -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+<body>
+
+  <!-- =====================================================
+       NAVEGACIÓN
+       Logo a la izquierda, links a la derecha.
+       En móvil el menú se colapsa (ver main.js)
+  ===================================================== -->
+  <nav class="nav">
+    <a href="index.html" class="nav__logo" aria-label="Inicio">
+      <!-- Logo: punto + letra D, replicando el diseño original -->
+      <span class="nav__logo-dot"></span>
+      <span class="nav__logo-letter">D</span>
+    </a>
+
+    <!-- Botón hamburguesa (solo visible en móvil) -->
+    <button class="nav__burger" aria-label="Abrir menú" aria-expanded="false">
+      <span></span><span></span>
+    </button>
+
+    <ul class="nav__links" role="list">
+      <li><a href="pages/projects.html" class="nav__link">Projects</a></li>
+      <li><a href="pages/about.html" class="nav__link">About</a></li>
+    </ul>
+  </nav>
+
+  <!-- =====================================================
+       HERO SECTION
+       El fondo amarillo animado está hecho con un pseudo-
+       elemento en CSS para no ensuciar el HTML.
+       La foto reemplaza el punto final de "Hello."
+  ===================================================== -->
+  <main class="hero" role="main">
+
+    <!-- Contenedor del título gigante -->
+    <div class="hero__title-wrap">
+      <h1 class="hero__title" aria-label="Hello.">
+        <!-- Cada letra tiene un span para el efecto hover individual -->
+        <span class="hero__char" style="--i:0">H</span>
+        <span class="hero__char" style="--i:1">e</span>
+        <span class="hero__char" style="--i:2">l</span>
+        <span class="hero__char" style="--i:3">l</span>
+        <span class="hero__char" style="--i:4">o</span>
+
+        <!-- La foto ocupa el lugar del punto -->
+        <span class="hero__photo-wrap" aria-hidden="true">
+          <!--
+            INSTRUCCIÓN: reemplaza "assets/images/avatar.jpg"
+            con tu foto real. Tamaño recomendado: 200x200px, formato JPG o WebP.
+          -->
+          <img
+            src="assets/images/avatar.jpg"
+            alt="Foto de Ignacia"
+            class="hero__photo"
+            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"
+          />
+          <!-- Placeholder que aparece si no hay foto aún -->
+          <span class="hero__photo-placeholder" aria-hidden="true">IG</span>
+        </span>
+
+        <span class="hero__dot" aria-hidden="true">.</span>
+      </h1>
+    </div>
+
+    <!-- Subtítulo -->
+    <p class="hero__subtitle">
+      I'm Ignacia,<br />
+      <strong>UX/UI Designer</strong>
+    </p>
+
+    <!-- Flecha de scroll hacia abajo -->
+    <a href="#projects-preview" class="hero__scroll" aria-label="Ver proyectos">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <circle cx="16" cy="16" r="15" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M10 14l6 6 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+  </main>
+
+  <!-- =====================================================
+       PREVIEW DE PROYECTOS (sección debajo del fold)
+       INSTRUCCIÓN: duplica las tarjetas .project-card
+       y cambia el título, descripción e imagen por los tuyos.
+  ===================================================== -->
+  <section id="projects-preview" class="projects-preview">
+    <h2 class="projects-preview__heading">Selected work</h2>
+
+    <div class="projects-grid">
+
+      <!-- Tarjeta de proyecto — duplica este bloque para añadir más -->
+      <article class="project-card">
+        <a href="pages/projects/project-1.html" class="project-card__link">
+          <div class="project-card__img-wrap">
+            <!--
+              INSTRUCCIÓN: pon aquí una captura de tu proyecto.
+              Tamaño recomendado: 800x600px.
+            -->
+            <img
+              src="assets/images/projects/project-1.jpg"
+              alt="Nombre del proyecto 1"
+              class="project-card__img"
+              loading="lazy"
+              onerror="this.parentElement.classList.add('project-card__img-wrap--placeholder')"
+            />
+          </div>
+          <div class="project-card__info">
+            <span class="project-card__tag">UX Research · App</span>
+            <h3 class="project-card__title">Project Name</h3>
+            <span class="project-card__arrow" aria-hidden="true">→</span>
+          </div>
+        </a>
+      </article>
+
+      <!-- Segunda tarjeta -->
+      <article class="project-card">
+        <a href="pages/projects/project-2.html" class="project-card__link">
+          <div class="project-card__img-wrap">
+            <img
+              src="assets/images/projects/project-2.jpg"
+              alt="Nombre del proyecto 2"
+              class="project-card__img"
+              loading="lazy"
+              onerror="this.parentElement.classList.add('project-card__img-wrap--placeholder')"
+            />
+          </div>
+          <div class="project-card__info">
+            <span class="project-card__tag">UI Design · Web</span>
+            <h3 class="project-card__title">Project Name</h3>
+            <span class="project-card__arrow" aria-hidden="true">→</span>
+          </div>
+        </a>
+      </article>
+
+    </div><!-- /projects-grid -->
+
+    <a href="pages/projects.html" class="btn-all">View all projects →</a>
+  </section>
+
+  <!-- =====================================================
+       FOOTER
+       INSTRUCCIÓN: cambia los links de redes sociales
+  ===================================================== -->
+  <footer class="footer">
+    <p class="footer__copy">© 2025 Ignacia · UX/UI Designer</p>
+    <ul class="footer__links" role="list">
+      <li><a href="https://linkedin.com/in/tu-usuario" class="footer__link" target="_blank" rel="noopener">LinkedIn</a></li>
+      <li><a href="https://behance.net/tu-usuario" class="footer__link" target="_blank" rel="noopener">Behance</a></li>
+      <li><a href="mailto:tu@email.com" class="footer__link">Email</a></li>
+    </ul>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
