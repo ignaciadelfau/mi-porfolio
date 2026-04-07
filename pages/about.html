@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About · Ignacia</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/about.css" />
+</head>
+<body>
+
+  <nav class="nav">
+    <a href="../index.html" class="nav__logo" aria-label="Inicio">
+      <span class="nav__logo-dot"></span>
+      <span class="nav__logo-letter">D</span>
+    </a>
+    <button class="nav__burger" aria-label="Abrir menú" aria-expanded="false">
+      <span></span><span></span>
+    </button>
+    <ul class="nav__links" role="list">
+      <li><a href="projects.html" class="nav__link">Projects</a></li>
+      <li><a href="about.html" class="nav__link">About</a></li>
+    </ul>
+  </nav>
+
+  <main class="about-page">
+
+    <!-- =====================================================
+         COLUMNA IZQUIERDA: foto + datos rápidos
+         INSTRUCCIÓN: reemplaza la imagen y los datos
+    ===================================================== -->
+    <aside class="about-sidebar">
+      <div class="about-photo-wrap">
+        <img
+          src="../assets/images/avatar.jpg"
+          alt="Foto de Ignacia"
+          class="about-photo"
+          onerror="this.style.opacity='0'"
+        />
+      </div>
+
+      <div class="about-quick">
+        <!--
+          INSTRUCCIÓN: cambia ciudad, herramientas y CV.
+          Para el CV: sube tu PDF a assets/docs/cv.pdf
+        -->
+        <dl class="about-dl">
+          <dt>Based in</dt>
+          <dd>Santiago, Chile</dd>
+
+          <dt>Tools</dt>
+          <dd>Figma · Maze · Notion</dd>
+
+          <dt>Available for</dt>
+          <dd>Freelance & full-time</dd>
+        </dl>
+
+        <a href="../assets/docs/cv.pdf" class="btn-cv" download>
+          Download CV ↓
+        </a>
+      </div>
+    </aside>
+
+    <!-- =====================================================
+         COLUMNA DERECHA: bio y habilidades
+         INSTRUCCIÓN: reemplaza el texto con tu historia real.
+    ===================================================== -->
+    <div class="about-content">
+
+      <h1 class="about-title reveal">About me</h1>
+
+      <p class="about-bio reveal">
+        I'm Ignacia, a UX/UI Designer passionate about creating products
+        that are not only beautiful but genuinely useful. I approach every
+        project with curiosity, research, and a strong sense of visual craft.
+      </p>
+
+      <p class="about-bio reveal">
+        With a background in [tu carrera/formación], I've worked on
+        [tipos de proyectos] for [tipos de clientes/industrias]. I care
+        deeply about accessibility, design systems, and the invisible
+        details that make a product feel right.
+      </p>
+
+      <!-- Skills / habilidades -->
+      <h2 class="about-section-title reveal">Skills</h2>
+
+      <ul class="skills-list reveal" role="list">
+        <!--
+          INSTRUCCIÓN: modifica estas habilidades.
+          El valor de --level controla el largo de la barra (0–100).
+        -->
+        <li class="skill-item" style="--level: 95%">
+          <span class="skill-name">UX Research</span>
+          <span class="skill-bar" aria-hidden="true"><span class="skill-fill"></span></span>
+        </li>
+        <li class="skill-item" style="--level: 90%">
+          <span class="skill-name">UI Design</span>
+          <span class="skill-bar" aria-hidden="true"><span class="skill-fill"></span></span>
+        </li>
+        <li class="skill-item" style="--level: 85%">
+          <span class="skill-name">Figma</span>
+          <span class="skill-bar" aria-hidden="true"><span class="skill-fill"></span></span>
+        </li>
+        <li class="skill-item" style="--level: 75%">
+          <span class="skill-name">Prototyping</span>
+          <span class="skill-bar" aria-hidden="true"><span class="skill-fill"></span></span>
+        </li>
+        <li class="skill-item" style="--level: 70%">
+          <span class="skill-name">Design Systems</span>
+          <span class="skill-bar" aria-hidden="true"><span class="skill-fill"></span></span>
+        </li>
+      </ul>
+
+      <!-- Contacto -->
+      <h2 class="about-section-title reveal">Let's talk</h2>
+      <p class="about-bio reveal">
+        I'm open to new projects and collaborations. Feel free to reach out.
+      </p>
+
+      <div class="about-contact reveal">
+        <a href="mailto:tu@email.com" class="btn-all">Send me an email →</a>
+        <a href="https://linkedin.com/in/tu-usuario" class="about-link" target="_blank" rel="noopener">LinkedIn ↗</a>
+        <a href="https://behance.net/tu-usuario" class="about-link" target="_blank" rel="noopener">Behance ↗</a>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p class="footer__copy">© 2025 Ignacia · UX/UI Designer</p>
+    <ul class="footer__links" role="list">
+      <li><a href="https://linkedin.com/in/tu-usuario" class="footer__link" target="_blank" rel="noopener">LinkedIn</a></li>
+      <li><a href="https://behance.net/tu-usuario" class="footer__link" target="_blank" rel="noopener">Behance</a></li>
+      <li><a href="mailto:tu@email.com" class="footer__link">Email</a></li>
+    </ul>
+  </footer>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>
