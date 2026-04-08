@@ -8,18 +8,15 @@
   <link rel="stylesheet" href="css/style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
 </head>
 <body>
-
-  <!-- SKIP LINK (accessibility) -->
-  <a href="#main-content" class="skip-link">Skip to main content</a>
 
   <!-- NAV -->
   <header role="banner">
     <nav class="nav" aria-label="Main navigation">
-      <a href="index.html" class="nav-logo" aria-label="MID — Home">
-        <span aria-hidden="true">·</span>MID
+      <a href="index.html" class="nav-logo" aria-label="Home">
+        <img src="assets/images/logo.png" alt="María Ignacia Delfau" class="logo-img" />
       </a>
       <div class="nav-links">
         <a href="#work">Work</a>
@@ -39,28 +36,28 @@
 
   <main id="main-content">
 
-    <!-- ======= HERO SECTION ======= -->
+    <!-- ======= HERO ======= -->
     <section class="hero" aria-label="Introduction">
-      <!-- Animated gradient -->
       <div class="gradient-bg" aria-hidden="true">
         <div class="orb orb-1"></div>
         <div class="orb orb-2"></div>
         <div class="orb orb-3"></div>
       </div>
-
       <div class="hero-content">
-        <!-- HELLO with letter microinteractions -->
         <h1 class="hello-word" aria-label="Hello">
-          <span class="h-letter" data-char="H">H</span><span class="h-letter" data-char="e">e</span><span class="h-letter" data-char="l">l</span><span class="h-letter" data-char="l">l</span><span class="h-letter h-o" data-char="o" aria-label="o — hover to see my face">o<span class="face-bubble" aria-hidden="true"><img src="assets/images/face.jpg" alt="" /></span></span><span class="h-period" aria-hidden="true">.</span>
+          <span class="h-letter" style="--i:0">H</span><span
+          class="h-letter" style="--i:1">e</span><span
+          class="h-letter" style="--i:2">l</span><span
+          class="h-letter" style="--i:3">l</span><span
+          class="h-letter h-o" style="--i:4">o<span class="face-bubble" aria-hidden="true"><img src="assets/images/face.jpg" alt="" /></span></span><span
+          class="h-period" style="--i:5" aria-hidden="true">.</span>
         </h1>
-
         <p class="hero-sub">
           I'm <em>Ignacia</em> — Chilean designer in Barcelona,<br />
-          specializing in <strong>UX/UI design</strong> for a sustainable,<br />equitable future.
+          specializing in <strong>UX/UI design</strong>.
         </p>
-
-        <a href="#work" class="hero-scroll" aria-label="Scroll to work section">
-          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true" focusable="false">
+        <a href="#work" class="hero-scroll" aria-label="Scroll to work">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
             <circle cx="16" cy="16" r="15" stroke="currentColor" stroke-width="1.5"/>
             <path d="M11 14l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
@@ -68,127 +65,52 @@
       </div>
     </section>
 
-    <!-- ======= BIO STRIP ======= -->
-    <section class="bio-strip" aria-label="About summary">
-      <div class="bio-strip-inner">
-        <p>
-          I'm a Chilean designer in Barcelona, <strong>specializing in UX/UI design.</strong>
-          <span class="bio-photo-inline" aria-hidden="true">
-            <img src="assets/images/face.jpg" alt="" />
-          </span>
-          I'm passionate about projects that enhance user experiences and promote a <strong>sustainable, equitable future.</strong>
-        </p>
-      </div>
-    </section>
-
-    <!-- ======= WORK / PROJECTS ======= -->
+    <!-- ======= SOLAR CAROUSEL ======= -->
     <section class="work-section" id="work" aria-label="Selected work">
-      <div class="work-header">
-        <span class="section-eyebrow" aria-hidden="true">Selected Work</span>
-        <h2 class="sr-only">Selected projects</h2>
+      <p class="carousel-label" aria-hidden="true">Highlighted projects</p>
+      <div class="carousel-title-wrap">
+        <h2 class="carousel-active-title" id="carousel-title">&nbsp;</h2>
       </div>
 
-      <!-- Cards grid -->
-      <div class="projects-grid" role="list">
+      <div class="solar-wrap">
+        <!-- Decorative orbital rings -->
+        <div class="orbit-deco" aria-hidden="true">
+          <div class="ring ring-1"></div>
+          <div class="ring ring-2"></div>
+          <div class="ring ring-3"></div>
+          <!-- Floating dots (planets) -->
+          <div class="planet p-1"></div>
+          <div class="planet p-2"></div>
+          <div class="planet p-3"></div>
+          <div class="planet p-4"></div>
+        </div>
 
-        <!-- Card 1 (public) -->
-        <article class="project-card" role="listitem">
-          <a href="project.html" class="project-card-link" aria-label="View project: Project Name — UX Design & Branding, 2024">
-            <div class="project-card-img" aria-hidden="true">
-              <img src="assets/images/project-1.jpg" alt="" loading="lazy" />
-              <div class="project-card-hover">
-                <span class="project-card-cta">View Case Study</span>
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h12M10 4l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </div>
-            </div>
-            <div class="project-card-body">
-              <span class="project-num" aria-hidden="true">01</span>
-              <div class="project-info">
-                <h3 class="project-title">Project Name</h3>
-                <p class="project-tags">UX Design · Branding</p>
-              </div>
-              <span class="project-year">2024</span>
-            </div>
-          </a>
-        </article>
+        <div class="solar-track" id="solar-track" role="list">
+          <!-- Cards injected by JS -->
+        </div>
+      </div>
 
-        <!-- Card 2 (password protected) -->
-        <article class="project-card" role="listitem">
-          <div class="project-card-link project-card-locked" 
-               role="button" tabindex="0"
-               aria-label="Project Name (password protected) — Product Design, 2024"
-               data-project-title="Project Name"
-               data-project-dest="project.html">
-            <div class="project-card-img" aria-hidden="true">
-              <img src="assets/images/project-2.jpg" alt="" loading="lazy" />
-              <div class="project-card-hover project-card-hover--lock">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M8 11V7a4 4 0 018 0v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="16" r="1.5" fill="currentColor"/></svg>
-                <span>Password Protected</span>
-              </div>
-            </div>
-            <div class="project-card-body">
-              <span class="project-num" aria-hidden="true">02</span>
-              <div class="project-info">
-                <h3 class="project-title">Project Name</h3>
-                <p class="project-tags">Product Design · Motion</p>
-              </div>
-              <span class="project-year">2024</span>
-            </div>
-          </div>
-        </article>
+      <div class="carousel-controls" role="group" aria-label="Carousel navigation">
+        <button class="carousel-btn" id="carousel-prev" aria-label="Previous project">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+            <circle cx="11" cy="11" r="10" stroke="currentColor" stroke-width="1.4"/>
+            <path d="M12.5 7L9 11l3.5 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <button class="carousel-btn" id="carousel-next" aria-label="Next project">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+            <circle cx="11" cy="11" r="10" stroke="currentColor" stroke-width="1.4"/>
+            <path d="M9.5 7L13 11l-3.5 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
 
-        <!-- Card 3 (public) -->
-        <article class="project-card" role="listitem">
-          <a href="project.html" class="project-card-link" aria-label="View project: Project Name — Visual Identity, 2023">
-            <div class="project-card-img" aria-hidden="true">
-              <img src="assets/images/project-3.jpg" alt="" loading="lazy" />
-              <div class="project-card-hover">
-                <span class="project-card-cta">View Case Study</span>
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h12M10 4l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </div>
-            </div>
-            <div class="project-card-body">
-              <span class="project-num" aria-hidden="true">03</span>
-              <div class="project-info">
-                <h3 class="project-title">Project Name</h3>
-                <p class="project-tags">Visual Identity · Web</p>
-              </div>
-              <span class="project-year">2023</span>
-            </div>
-          </a>
-        </article>
-
-        <!-- Card 4 (password protected) -->
-        <article class="project-card" role="listitem">
-          <div class="project-card-link project-card-locked"
-               role="button" tabindex="0"
-               aria-label="Project Name (password protected) — UX Research, 2023"
-               data-project-title="Project Name"
-               data-project-dest="project.html">
-            <div class="project-card-img" aria-hidden="true">
-              <img src="assets/images/project-4.jpg" alt="" loading="lazy" />
-              <div class="project-card-hover project-card-hover--lock">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M8 11V7a4 4 0 018 0v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="16" r="1.5" fill="currentColor"/></svg>
-                <span>Password Protected</span>
-              </div>
-            </div>
-            <div class="project-card-body">
-              <span class="project-num" aria-hidden="true">04</span>
-              <div class="project-info">
-                <h3 class="project-title">Project Name</h3>
-                <p class="project-tags">UX Research · UI</p>
-              </div>
-              <span class="project-year">2023</span>
-            </div>
-          </div>
-        </article>
-
-      </div><!-- /projects-grid -->
+      <!-- Accessible list (screen readers only) -->
+      <nav class="sr-only" aria-label="All projects" id="projects-a11y-list"></nav>
     </section>
 
   </main>
 
-  <!-- FOOTER -->
   <footer class="footer" role="contentinfo">
     <div class="footer-inner">
       <p class="footer-copy">© 2024 María Ignacia Delfau</p>
@@ -203,7 +125,7 @@
   <!-- PASSWORD MODAL -->
   <div class="modal-overlay" id="password-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-hidden="true">
     <div class="modal-box">
-      <button class="modal-close" id="modal-close" aria-label="Close modal">
+      <button class="modal-close" id="modal-close" aria-label="Close">
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 5l10 10M15 5l-10 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
       </button>
       <h2 class="modal-title" id="modal-title">This project is private</h2>
@@ -211,7 +133,7 @@
       <div class="modal-form">
         <label for="modal-password" class="sr-only">Password</label>
         <input type="password" id="modal-password" class="modal-input" placeholder="Enter password" autocomplete="current-password" />
-        <button class="modal-submit btn-primary" id="modal-submit">Access →</button>
+        <button class="btn-primary" id="modal-submit">Access →</button>
       </div>
       <p class="modal-error" id="modal-error" role="alert" aria-live="polite"></p>
     </div>
