@@ -3,138 +3,174 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Project — María Ignacia Delfau</title>
+  <title>Project Name — María Ignacia Delfau</title>
   <link rel="stylesheet" href="css/style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
 </head>
 <body>
 
-  <!-- NAV -->
-  <nav class="nav">
-    <a href="index.html" class="nav-logo">MID</a>
-    <div class="nav-links">
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <header role="banner">
+    <nav class="nav" aria-label="Main navigation">
+      <a href="index.html" class="nav-logo" aria-label="MID — Home">
+        <span aria-hidden="true">·</span>MID
+      </a>
+      <div class="nav-links">
+        <a href="index.html#work">Work</a>
+        <a href="about.html">About</a>
+        <a href="mailto:hello@mid.design">Contact</a>
+      </div>
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu">
+        <span></span><span></span>
+      </button>
+    </nav>
+    <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
       <a href="index.html#work">Work</a>
       <a href="about.html">About</a>
       <a href="mailto:hello@mid.design">Contact</a>
     </div>
-  </nav>
+  </header>
 
-  <!-- PROJECT HERO — Full bleed image -->
-  <div class="project-hero">
-    <!-- Replace with your project hero image -->
-    <img src="assets/images/project-hero.jpg" alt="Project Hero" />
-    <div class="project-hero-overlay"></div>
-    <div class="project-hero-title">
-      <span class="eyebrow">UX Design · Branding</span>
-      <h1>Project<br/><em>Name</em></h1>
-    </div>
-  </div>
+  <main id="main-content">
 
-  <!-- PROJECT BODY -->
-  <div class="project-body">
-
-    <!-- Intro grid: description + meta -->
-    <div class="project-intro">
-      <p class="project-description">
-        A concise, compelling description of the project. What problem did it solve?
-        What was the design challenge? Write 2–3 sentences that set the stage.
-      </p>
-      <div class="project-details-grid">
-        <div class="project-detail-item">
-          <label>Client</label>
-          <p>Client Name</p>
-        </div>
-        <div class="project-detail-item">
-          <label>Role</label>
-          <p>Lead UX Designer</p>
-        </div>
-        <div class="project-detail-item">
-          <label>Year</label>
-          <p>2024</p>
-        </div>
-        <div class="project-detail-item">
-          <label>Deliverables</label>
-          <p>Brand Identity, Design System, Web Design</p>
-        </div>
+    <!-- FULL-BLEED HERO IMAGE -->
+    <div class="project-page-hero" aria-hidden="true">
+      <!-- Replace with your hero image -->
+      <img src="assets/images/project-hero.jpg" alt="" />
+      <div class="project-page-hero-overlay"></div>
+      <div class="project-page-hero-text">
+        <span class="eyebrow">UX Design · Brand</span>
+        <h1>Project<br/>Name</h1>
       </div>
     </div>
 
-    <!-- Gallery — replace images with your own project assets -->
-    <div class="project-gallery">
+    <!-- PROJECT BODY -->
+    <article class="project-body" aria-label="Project case study">
 
-      <!-- Single full-width image -->
-      <div class="gallery-row single" style="margin-bottom: 8px;">
-        <div class="gallery-img wide">
-          <img src="assets/images/project-1-full.jpg" alt="Project overview" />
-        </div>
+      <!-- Intro: description + metadata -->
+      <div class="project-intro">
+        <p class="project-desc">
+          A two-to-three sentence description of the project challenge. 
+          What was the brief? What made it interesting? Set the stage 
+          for everything that follows.
+        </p>
+        <dl class="project-meta-list">
+          <div class="project-meta-item">
+            <dt><label>Client</label></dt>
+            <dd><p>Client Name</p></dd>
+          </div>
+          <div class="project-meta-item">
+            <dt><label>Role</label></dt>
+            <dd><p>Lead UX Designer</p></dd>
+          </div>
+          <div class="project-meta-item">
+            <dt><label>Year</label></dt>
+            <dd><p>2024</p></dd>
+          </div>
+          <div class="project-meta-item">
+            <dt><label>Deliverables</label></dt>
+            <dd><p>Brand Identity, Design System, Web Design</p></dd>
+          </div>
+        </dl>
       </div>
 
-      <!-- Two-column -->
-      <div class="gallery-row half" style="margin-bottom: 8px;">
-        <div class="gallery-img">
-          <img src="assets/images/project-1-detail-a.jpg" alt="Detail A" />
-        </div>
-        <div class="gallery-img">
-          <img src="assets/images/project-1-detail-b.jpg" alt="Detail B" />
-        </div>
-      </div>
+      <!-- ---- GALLERY ---- -->
+      <!-- COLLINS-style: mix of full-width, half, thirds, featured. 
+           Replace all <img src> paths with your project images. 
+           Use .tall, .wide, .square modifiers on .g-img as needed. -->
 
-      <!-- Featured: big + small -->
-      <div class="gallery-row featured" style="margin-bottom: 8px;">
-        <div class="gallery-img">
-          <img src="assets/images/project-1-main.jpg" alt="Main visual" />
+      <div class="project-gallery">
+
+        <!-- Single full-width -->
+        <div class="g-row g-1">
+          <div class="g-img wide">
+            <img src="assets/images/project-1-full.jpg" alt="Project overview" loading="lazy" />
+          </div>
         </div>
-        <div class="gallery-img tall">
-          <img src="assets/images/project-1-side.jpg" alt="Side detail" />
+
+        <!-- Text block -->
+        <div class="project-text-block">
+          <h2>The Challenge</h2>
+          <p>
+            Describe the design challenge here. What problem were you solving?
+            What constraints shaped your decisions? This section gives depth to
+            the work and demonstrates your thinking process.
+          </p>
         </div>
-      </div>
 
-      <!-- Thirds -->
-      <div class="gallery-row thirds">
-        <div class="gallery-img">
-          <img src="assets/images/project-1-c.jpg" alt="Visual C" />
+        <!-- Two columns -->
+        <div class="g-row g-2">
+          <div class="g-img">
+            <img src="assets/images/project-1-a.jpg" alt="Detail view A" loading="lazy" />
+          </div>
+          <div class="g-img">
+            <img src="assets/images/project-1-b.jpg" alt="Detail view B" loading="lazy" />
+          </div>
         </div>
-        <div class="gallery-img">
-          <img src="assets/images/project-1-d.jpg" alt="Visual D" />
+
+        <!-- Featured: 2/3 + 1/3 -->
+        <div class="g-row g-feat">
+          <div class="g-img">
+            <img src="assets/images/project-1-main.jpg" alt="Main visual" loading="lazy" />
+          </div>
+          <div class="g-img tall">
+            <img src="assets/images/project-1-side.jpg" alt="Side detail" loading="lazy" />
+          </div>
         </div>
-        <div class="gallery-img">
-          <img src="assets/images/project-1-e.jpg" alt="Visual E" />
+
+        <!-- Text block -->
+        <div class="project-text-block">
+          <h2>The Approach</h2>
+          <p>
+            Explain your design process: research, ideation, iteration, and final decisions.
+            Show your thinking, not just the output. What trade-offs did you make?
+            What did you learn?
+          </p>
         </div>
-      </div>
 
-    </div><!-- /gallery -->
+        <!-- Thirds -->
+        <div class="g-row g-3">
+          <div class="g-img square">
+            <img src="assets/images/project-1-c.jpg" alt="" loading="lazy" />
+          </div>
+          <div class="g-img square">
+            <img src="assets/images/project-1-d.jpg" alt="" loading="lazy" />
+          </div>
+          <div class="g-img square">
+            <img src="assets/images/project-1-e.jpg" alt="" loading="lazy" />
+          </div>
+        </div>
 
-    <!-- Optional: text section between images -->
-    <div style="max-width: 640px; margin: 80px 0;">
-      <h2 style="font-family: var(--font-display); font-size: clamp(24px, 3vw, 40px); font-weight: 400; margin-bottom: 20px;">The Approach</h2>
-      <p style="font-size: 17px; line-height: 1.75; color: var(--ink-muted);">
-        Describe your design process here. What research did you do? What decisions
-        did you make and why? This section gives depth to the case study and shows
-        your thinking, not just the output.
-      </p>
-    </div>
+        <!-- Single full-width — closing visual -->
+        <div class="g-row g-1">
+          <div class="g-img wide">
+            <img src="assets/images/project-1-close.jpg" alt="Final result" loading="lazy" />
+          </div>
+        </div>
 
-  </div><!-- /project-body -->
+      </div><!-- /project-gallery -->
 
-  <!-- NEXT PROJECT -->
-  <div style="padding: 0 48px 80px; border-top: 1px solid rgba(26,24,21,0.12); max-width: 1100px; margin: 0 auto;">
-    <div style="padding-top: 48px; display: flex; justify-content: space-between; align-items: center;">
-      <a href="index.html#work" style="font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted); transition: color 0.2s;" onmouseover="this.style.color='var(--ink)'" onmouseout="this.style.color='var(--ink-muted)'">← All Work</a>
-      <a href="project.html?id=2" style="font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted); transition: color 0.2s;" onmouseover="this.style.color='var(--ink)'" onmouseout="this.style.color='var(--ink-muted)'">Next Project →</a>
-    </div>
-  </div>
+      <!-- Project navigation -->
+      <nav class="project-nav" aria-label="Project navigation">
+        <a href="index.html#work">← All Work</a>
+        <a href="project.html">Next Project →</a>
+      </nav>
 
-  <!-- FOOTER -->
-  <footer class="footer">
+    </article>
+
+  </main>
+
+  <footer class="footer" role="contentinfo">
     <div class="footer-inner">
-      <p>© 2024 María Ignacia Delfau</p>
-      <div class="footer-links">
-        <a href="https://linkedin.com" target="_blank">LinkedIn</a>
-        <a href="https://behance.net" target="_blank">Behance</a>
+      <p class="footer-copy">© 2024 María Ignacia Delfau</p>
+      <nav class="footer-links" aria-label="Footer navigation">
+        <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        <a href="https://behance.net" target="_blank" rel="noopener noreferrer">Behance</a>
         <a href="mailto:hello@mid.design">Email</a>
-      </div>
+      </nav>
     </div>
   </footer>
 
