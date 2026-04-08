@@ -1,154 +1,175 @@
-# Portfolio — María Ignacia Delfau
-## Guía de uso, estructura de archivos y GitHub
+# Portfolio V2 — María Ignacia Delfau
+## Estructura, instrucciones y contraseñas
 
 ---
 
-## 📁 ESTRUCTURA DE CARPETAS
+## 📁 ESTRUCTURA
 
 ```
 portfolio/
 │
-├── index.html          ← INICIO (hero + carrusel de proyectos)
-├── about.html          ← ABOUT ME
-├── project.html        ← PÁGINA DE PROYECTO (template reutilizable)
+├── index.html          ← Inicio (hero + bio strip + grilla proyectos)
+├── about.html          ← About me
+├── project.html        ← Template de proyecto (duplicar por cada proyecto)
 │
 ├── css/
-│   └── style.css       ← TODOS los estilos del portfolio
+│   └── style.css       ← Todos los estilos
 │
 ├── js/
-│   └── main.js         ← Carrusel, transiciones, microinteracciones
+│   └── main.js         ← Interacciones, contraseña, transiciones
 │
 └── assets/
-    ├── images/         ← TODAS tus imágenes van aquí
-    │   ├── face.jpg            ← Tu foto para el hover en la "O"
-    │   ├── about-portrait.jpg  ← Tu retrato en About
-    │   ├── project-1.jpg       ← Thumbnail proyecto 1 (carrusel)
-    │   ├── project-2.jpg       ← Thumbnail proyecto 2 (carrusel)
-    │   ├── project-3.jpg       ← Thumbnail proyecto 3 (carrusel)
-    │   ├── project-4.jpg       ← Thumbnail proyecto 4 (carrusel)
-    │   ├── project-hero.jpg    ← Hero full-bleed de cada proyecto
-    │   └── project-1-full.jpg  ← Imágenes de galería del proyecto
-    │       project-1-detail-a.jpg
-    │       project-1-detail-b.jpg
-    │       (etc.)
-    │
-    └── resume.pdf      ← Tu CV (linkado en About)
+    ├── images/
+    │   ├── face.jpg            ← Tu foto (hover en la "O" + bio strip)
+    │   ├── about-portrait.jpg  ← Retrato vertical para About
+    │   ├── project-1.jpg       ← Thumbnail card proyecto 1
+    │   ├── project-2.jpg       ← Thumbnail card proyecto 2
+    │   ├── project-3.jpg       ← Thumbnail card proyecto 3
+    │   ├── project-4.jpg       ← Thumbnail card proyecto 4
+    │   └── project-hero.jpg    ← Hero full-bleed página de proyecto
+    └── resume.pdf
 ```
 
 ---
 
-## 🛠 QUÉ EDITAR EN CADA ARCHIVO
+## 🎨 SISTEMA DE DISEÑO
 
-### `index.html` — Página de inicio
-- Línea con `.hello-wrap`: El texto gigante "Hello" — no cambiar letras, sí cambiar fuente/color en CSS si quieres
-- Cada `<a class="project-card">`: reemplaza título, tags, año y ruta de imagen por tus proyectos reales
-- Para AGREGAR un proyecto: copia un bloque `<a class="project-card">` completo y pégalo; agrega también un `<span class="dot">` en `.carousel-dots`
+| Token       | Valor      | Uso                                         |
+|-------------|------------|---------------------------------------------|
+| `--bg`      | `#FFFFFF`  | Fondo general                               |
+| `--ink`     | `#111111`  | Texto principal                             |
+| `--blue`    | `#1000FF`  | Color secundario (textos, HELLO, elementos) |
+| `--blue-a11y` | `#0500CC` | Versión accesible del azul (≥4.5:1 ratio) |
+| `--yellow`  | `#FAC601`  | Decorativo SÓLO (gradiente del hero)        |
 
-### `project.html` — Página de proyecto (template)
-- Duplica este archivo para cada proyecto: `proyecto-nombre.html`
-- Cambia el `<img src>` del hero por la imagen del proyecto
-- Edita `.eyebrow` (categoría), `<h1>` (nombre del proyecto)
-- Rellena los 4 campos de metadata: Cliente, Rol, Año, Deliverables
-- En `.project-gallery`: reemplaza los `<img src>` con las imágenes reales del proyecto
-- Puedes agregar/quitar filas de galería: `single`, `half`, `thirds`, `featured`
-- Actualiza el link "Next Project →" al siguiente proyecto
-
-### `about.html` — About me
-- Reemplaza el texto del `<p>` con tu bio real
-- Edita la lista de skills en `<ul class="skills-list">`
-- Cambia el link del CV en `assets/resume.pdf`
-- Reemplaza la imagen de portrait
-
-### `css/style.css` — Diseño visual
-- Variables de color arriba del todo (`:root { }`) — cambia aquí para modificar la paleta
-- `--font-display` y `--font-body` — cambia las Google Fonts si quieres otro tipografía
-
-### `js/main.js`
-- No necesitas tocarlo normalmente
-- Si agregas proyectos, el número de dots debe coincidir con el número de cards
+**Tipografía:**
+- Headlines/Display: `Syne` — bold 700, extrabold 800
+- Body/UI: `Montserrat` — regular 400, medium 500, semibold 600
 
 ---
 
-## 🖼 IMÁGENES — Guía rápida
+## 🔐 CÓMO CONFIGURAR CONTRASEÑAS DE PROYECTOS
 
-| Imagen | Tamaño recomendado | Dónde se usa |
-|--------|-------------------|--------------|
-| `face.jpg` | 400×400px, cuadrada | Hover en la "O" de Hello |
-| `about-portrait.jpg` | 800×1000px, vertical | Página About |
-| `project-X.jpg` (thumbnails) | 1200×750px | Carrusel en inicio |
-| `project-hero.jpg` | 1920×1080px | Hero full-bleed página proyecto |
-| Galería proyectos | 1200–2400px de ancho | Galería interna del proyecto |
+### En `js/main.js`, línea ~30:
 
-**Tip:** Usa .jpg para fotos y .png solo cuando necesitas transparencia. Comprime con squoosh.app antes de subir.
+```javascript
+const PROJECT_PASSWORDS = {
+  'project.html':        'mi-password-aqui',
+  'proyecto-marca.html': 'otro-password',
+  'proyecto-app.html':   'otro-mas',
+};
+```
 
----
+Cambia los valores por las contraseñas que quieras. La clave del objeto es el nombre del archivo HTML del proyecto.
 
-## 🐙 CÓMO SUBIR A GITHUB PAGES
+### En `index.html`, en cada card protegida:
 
-### Primera vez (setup inicial):
+```html
+<div class="project-card-link project-card-locked"
+     role="button" tabindex="0"
+     data-project-title="Nombre del Proyecto"
+     data-project-dest="proyecto-marca.html">
+```
 
-1. Crea una cuenta en github.com si no tienes
-2. Crea un repositorio nuevo:
-   - Ve a github.com → botón verde "New"
-   - Nombre del repo: `tu-username.github.io` (exactamente así)
-   - Márcalo como Public
-   - Click "Create repository"
-3. Sube los archivos:
-   - En el repo vacío, haz click en "uploading an existing file"
-   - Arrastra TODA la carpeta `portfolio/` (o selecciona todos los archivos)
-   - En la caja de texto escribe: `Initial commit`
-   - Click "Commit changes"
-4. Activa GitHub Pages:
-   - Ve a Settings → Pages
-   - Source: "Deploy from a branch"
-   - Branch: `main` → folder: `/ (root)`
-   - Save
-5. En 2-3 minutos tu portfolio estará en: `https://tu-username.github.io`
+- `data-project-title`: Nombre que aparece en el modal
+- `data-project-dest`: Nombre del archivo HTML — DEBE coincidir con la clave en `PROJECT_PASSWORDS`
+
+### Cards públicas vs privadas:
+- **Pública**: usa `<a href="project.html" class="project-card-link">`
+- **Privada**: usa `<div class="project-card-link project-card-locked" ...>`
 
 ---
 
-## ✏️ CÓMO ACTUALIZAR EL PORTFOLIO (dos opciones)
+## ➕ AGREGAR UN PROYECTO NUEVO
 
-### Opción A — Directamente en GitHub (más fácil, sin instalar nada):
-1. Ve a tu repositorio en github.com
-2. Haz click en el archivo que quieres editar (ej: `index.html`)
-3. Haz click en el ícono de lápiz ✏️ (arriba a la derecha del contenido)
-4. Edita el código directamente en el navegador
-5. Abajo: escribe un mensaje descriptivo y haz "Commit changes"
-6. En 1-2 minutos, los cambios se publican automáticamente
-
-### Opción B — Desde tu computadora con GitHub Desktop (recomendada para cambios grandes):
-1. Descarga GitHub Desktop: desktop.github.com
-2. Clona tu repositorio (File → Clone Repository)
-3. Edita los archivos en tu computadora con VS Code o cualquier editor
-4. En GitHub Desktop verás los cambios resaltados
-5. Escribe un mensaje y haz "Commit to main" → "Push origin"
-6. Los cambios se publican en 1-2 minutos
-
-### Para subir imágenes nuevas en GitHub.com:
-1. Ve al repo → carpeta `assets/images/`
-2. Click "Add file" → "Upload files"
-3. Arrastra las imágenes nuevas → Commit
+1. Duplica `project.html` → renómbralo: `proyecto-nombre.html`
+2. Edita el contenido del nuevo archivo
+3. En `index.html`, agrega una nueva `<article class="project-card">` (copia una existente)
+4. Si es privado: agrega la contraseña en `js/main.js`
+5. Sube las imágenes a `assets/images/`
+6. Commit y push a GitHub
 
 ---
 
-## 🔗 CÓMO AGREGAR UN PROYECTO NUEVO
+## 📐 LAYOUTS DE GALERÍA DISPONIBLES
 
-1. **Duplica** `project.html` → renómbralo (ej: `proyecto-app-bancaria.html`)
-2. **Edita** el nuevo archivo con el contenido del proyecto
-3. **En `index.html`**, agrega una nueva `.project-card` con link al nuevo archivo
-4. **Agrega** un `<span class="dot"></span>` en `.carousel-dots`
-5. **Sube** las imágenes a `assets/images/`
-6. Commit y push
+En `project.html`, dentro de `.project-gallery`:
+
+```html
+<!-- Una imagen full width -->
+<div class="g-row g-1">
+  <div class="g-img wide"><img src="..." /></div>
+</div>
+
+<!-- Dos columnas -->
+<div class="g-row g-2">
+  <div class="g-img"><img src="..." /></div>
+  <div class="g-img"><img src="..." /></div>
+</div>
+
+<!-- Tres columnas -->
+<div class="g-row g-3">
+  <div class="g-img square"><img /></div>
+  <div class="g-img square"><img /></div>
+  <div class="g-img square"><img /></div>
+</div>
+
+<!-- Featured: imagen grande + pequeña (2:1) -->
+<div class="g-row g-feat">
+  <div class="g-img"><img /></div>
+  <div class="g-img tall"><img /></div>
+</div>
+
+<!-- Featured invertido (1:2) -->
+<div class="g-row g-feat-r">
+  <div class="g-img tall"><img /></div>
+  <div class="g-img"><img /></div>
+</div>
+```
+
+**Modificadores de imagen:**
+- `g-img` — ratio 16:10 por defecto
+- `g-img tall` — ratio 4:5 (vertical)
+- `g-img wide` — ratio 21:9 (panorámica)
+- `g-img square` — ratio 1:1
 
 ---
 
-## 💡 TIPS
+## 🖼 IMÁGENES RECOMENDADAS
 
-- El portfolio usa Google Fonts cargadas desde internet — necesitas conexión para verlas en desarrollo local
-- Para previsualizar en local: abre el archivo `index.html` directamente en Chrome (no necesitas servidor)
-- Paleta de colores actual: fondo cálido `#F5F0EA`, tinta `#1A1815`, acento terracota `#C8471A`
-- La animación del gradiente es 100% CSS, no consume recursos
+| Archivo               | Tamaño ideal        | Ratio  |
+|-----------------------|---------------------|--------|
+| `face.jpg`            | 400×400px           | 1:1    |
+| `about-portrait.jpg`  | 900×1200px          | 3:4    |
+| `project-N.jpg`       | 1200×900px          | 4:3    |
+| `project-hero.jpg`    | 2000×1125px         | 16:9   |
+| Galería (full)        | 2000px de ancho     | libre  |
+| Galería (square)      | 1000×1000px         | 1:1    |
+
+Comprime siempre con **squoosh.app** antes de subir (apunta a <300KB por imagen).
+
+---
+
+## 🐙 SUBIR A GITHUB (ruta correcta)
+
+Los archivos deben ir en la **raíz** del repositorio, NO dentro de una carpeta.
+
+**Estructura correcta en GitHub:**
+```
+ignaciadelfau.github.io/
+├── index.html     ← aquí, en la raíz
+├── about.html
+├── project.html
+├── css/
+├── js/
+└── assets/
+```
+
+**Pasos:**
+1. Ve a tu repo en github.com
+2. Click en "Add file" → "Upload files"
+3. Arrastra los archivos **desde dentro** de la carpeta `portfolio/`
+4. Commit → espera 2 minutos → listo en `https://ignaciadelfau.github.io`
 
 ---
 
