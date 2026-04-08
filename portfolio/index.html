@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfolio — María Ignacia Delfau</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Editorial+New:ital,wght@0,400;1,400&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <a href="index.html" class="nav-logo">MID</a>
+    <div class="nav-links">
+      <a href="index.html#work">Work</a>
+      <a href="about.html">About</a>
+      <a href="mailto:hello@mid.design">Contact</a>
+    </div>
+  </nav>
+
+  <!-- HERO SECTION -->
+  <section class="hero">
+    <div class="gradient-bg">
+      <div class="gradient-orb orb-1"></div>
+      <div class="gradient-orb orb-2"></div>
+      <div class="gradient-orb orb-3"></div>
+      <div class="gradient-orb orb-4"></div>
+    </div>
+
+    <div class="hero-content">
+      <div class="hello-wrap">
+        <span class="hello-letter" data-letter="H">H</span>
+        <span class="hello-letter" data-letter="e">e</span>
+        <span class="hello-letter" data-letter="l">l</span>
+        <span class="hello-letter" data-letter="l">l</span>
+        <span class="hello-letter hello-o" data-letter="o">
+          o
+          <div class="face-reveal">
+            <img src="assets/images/face.jpg" alt="María Ignacia" />
+          </div>
+        </span>
+      </div>
+
+      <div class="hero-tagline">
+        <p>I'm <em>María Ignacia</em> — a designer crafting<br/>
+        thoughtful digital experiences.</p>
+      </div>
+
+      <div class="hero-scroll-hint">
+        <span>Scroll to see work</span>
+        <div class="scroll-line"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORK / CAROUSEL SECTION -->
+  <section class="work-section" id="work">
+    <div class="work-header">
+      <span class="section-label">Selected Work</span>
+    </div>
+
+    <div class="projects-track-wrap">
+      <div class="projects-track">
+
+        <!-- PROJECT CARD 1 -->
+        <a href="project.html?id=1" class="project-card" data-index="01">
+          <div class="project-card-media">
+            <img src="assets/images/project-1.jpg" alt="Project 1" />
+            <div class="project-card-overlay">
+              <span class="project-cta">View Case Study →</span>
+            </div>
+          </div>
+          <div class="project-card-info">
+            <span class="project-num">01</span>
+            <div class="project-meta">
+              <h3 class="project-title">Project Name</h3>
+              <p class="project-tags">UX Design · Branding</p>
+            </div>
+            <span class="project-year">2024</span>
+          </div>
+        </a>
+
+        <!-- PROJECT CARD 2 -->
+        <a href="project.html?id=2" class="project-card" data-index="02">
+          <div class="project-card-media">
+            <img src="assets/images/project-2.jpg" alt="Project 2" />
+            <div class="project-card-overlay">
+              <span class="project-cta">View Case Study →</span>
+            </div>
+          </div>
+          <div class="project-card-info">
+            <span class="project-num">02</span>
+            <div class="project-meta">
+              <h3 class="project-title">Project Name</h3>
+              <p class="project-tags">Product Design · Motion</p>
+            </div>
+            <span class="project-year">2024</span>
+          </div>
+        </a>
+
+        <!-- PROJECT CARD 3 -->
+        <a href="project.html?id=3" class="project-card" data-index="03">
+          <div class="project-card-media">
+            <img src="assets/images/project-3.jpg" alt="Project 3" />
+            <div class="project-card-overlay">
+              <span class="project-cta">View Case Study →</span>
+            </div>
+          </div>
+          <div class="project-card-info">
+            <span class="project-num">03</span>
+            <div class="project-meta">
+              <h3 class="project-title">Project Name</h3>
+              <p class="project-tags">Visual Identity · Web</p>
+            </div>
+            <span class="project-year">2023</span>
+          </div>
+        </a>
+
+        <!-- PROJECT CARD 4 -->
+        <a href="project.html?id=4" class="project-card" data-index="04">
+          <div class="project-card-media">
+            <img src="assets/images/project-4.jpg" alt="Project 4" />
+            <div class="project-card-overlay">
+              <span class="project-cta">View Case Study →</span>
+            </div>
+          </div>
+          <div class="project-card-info">
+            <span class="project-num">04</span>
+            <div class="project-meta">
+              <h3 class="project-title">Project Name</h3>
+              <p class="project-tags">UX Research · UI</p>
+            </div>
+            <span class="project-year">2023</span>
+          </div>
+        </a>
+
+      </div>
+    </div>
+
+    <!-- Carousel controls -->
+    <div class="carousel-controls">
+      <button class="carousel-btn prev-btn" aria-label="Previous">←</button>
+      <div class="carousel-dots">
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </div>
+      <button class="carousel-btn next-btn" aria-label="Next">→</button>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <p>© 2024 María Ignacia Delfau</p>
+      <div class="footer-links">
+        <a href="https://linkedin.com" target="_blank">LinkedIn</a>
+        <a href="https://behance.net" target="_blank">Behance</a>
+        <a href="mailto:hello@mid.design">Email</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
