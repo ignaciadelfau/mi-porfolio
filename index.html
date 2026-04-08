@@ -3,167 +3,219 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Portfolio — María Ignacia Delfau</title>
+  <meta name="description" content="María Ignacia Delfau — UX/UI Designer based in Barcelona" />
+  <title>María Ignacia Delfau — UX/UI Designer</title>
   <link rel="stylesheet" href="css/style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Editorial+New:ital,wght@0,400;1,400&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
 </head>
 <body>
 
+  <!-- SKIP LINK (accessibility) -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
   <!-- NAV -->
-  <nav class="nav">
-    <a href="index.html" class="nav-logo">MID</a>
-    <div class="nav-links">
-      <a href="index.html#work">Work</a>
+  <header role="banner">
+    <nav class="nav" aria-label="Main navigation">
+      <a href="index.html" class="nav-logo" aria-label="MID — Home">
+        <span aria-hidden="true">·</span>MID
+      </a>
+      <div class="nav-links">
+        <a href="#work">Work</a>
+        <a href="about.html">About</a>
+        <a href="mailto:hello@mid.design">Contact</a>
+      </div>
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu">
+        <span></span><span></span>
+      </button>
+    </nav>
+    <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+      <a href="#work">Work</a>
       <a href="about.html">About</a>
       <a href="mailto:hello@mid.design">Contact</a>
     </div>
-  </nav>
+  </header>
 
-  <!-- HERO SECTION -->
-  <section class="hero">
-    <div class="gradient-bg">
-      <div class="gradient-orb orb-1"></div>
-      <div class="gradient-orb orb-2"></div>
-      <div class="gradient-orb orb-3"></div>
-      <div class="gradient-orb orb-4"></div>
-    </div>
+  <main id="main-content">
 
-    <div class="hero-content">
-      <div class="hello-wrap">
-        <span class="hello-letter" data-letter="H">H</span>
-        <span class="hello-letter" data-letter="e">e</span>
-        <span class="hello-letter" data-letter="l">l</span>
-        <span class="hello-letter" data-letter="l">l</span>
-        <span class="hello-letter hello-o" data-letter="o">
-          o
-          <div class="face-reveal">
-            <img src="assets/images/face.jpg" alt="María Ignacia" />
-          </div>
-        </span>
+    <!-- ======= HERO SECTION ======= -->
+    <section class="hero" aria-label="Introduction">
+      <!-- Animated gradient -->
+      <div class="gradient-bg" aria-hidden="true">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
       </div>
 
-      <div class="hero-tagline">
-        <p>I'm <em>María Ignacia</em> — a designer crafting<br/>
-        thoughtful digital experiences.</p>
-      </div>
+      <div class="hero-content">
+        <!-- HELLO with letter microinteractions -->
+        <h1 class="hello-word" aria-label="Hello">
+          <span class="h-letter" data-char="H">H</span><span class="h-letter" data-char="e">e</span><span class="h-letter" data-char="l">l</span><span class="h-letter" data-char="l">l</span><span class="h-letter h-o" data-char="o" aria-label="o — hover to see my face">o<span class="face-bubble" aria-hidden="true"><img src="assets/images/face.jpg" alt="" /></span></span><span class="h-period" aria-hidden="true">.</span>
+        </h1>
 
-      <div class="hero-scroll-hint">
-        <span>Scroll to see work</span>
-        <div class="scroll-line"></div>
-      </div>
-    </div>
-  </section>
+        <p class="hero-sub">
+          I'm <em>Ignacia</em> — Chilean designer in Barcelona,<br />
+          specializing in <strong>UX/UI design</strong> for a sustainable,<br />equitable future.
+        </p>
 
-  <!-- WORK / CAROUSEL SECTION -->
-  <section class="work-section" id="work">
-    <div class="work-header">
-      <span class="section-label">Selected Work</span>
-    </div>
-
-    <div class="projects-track-wrap">
-      <div class="projects-track">
-
-        <!-- PROJECT CARD 1 -->
-        <a href="project.html?id=1" class="project-card" data-index="01">
-          <div class="project-card-media">
-            <img src="assets/images/project-1.jpg" alt="Project 1" />
-            <div class="project-card-overlay">
-              <span class="project-cta">View Case Study →</span>
-            </div>
-          </div>
-          <div class="project-card-info">
-            <span class="project-num">01</span>
-            <div class="project-meta">
-              <h3 class="project-title">Project Name</h3>
-              <p class="project-tags">UX Design · Branding</p>
-            </div>
-            <span class="project-year">2024</span>
-          </div>
+        <a href="#work" class="hero-scroll" aria-label="Scroll to work section">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true" focusable="false">
+            <circle cx="16" cy="16" r="15" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M11 14l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
         </a>
-
-        <!-- PROJECT CARD 2 -->
-        <a href="project.html?id=2" class="project-card" data-index="02">
-          <div class="project-card-media">
-            <img src="assets/images/project-2.jpg" alt="Project 2" />
-            <div class="project-card-overlay">
-              <span class="project-cta">View Case Study →</span>
-            </div>
-          </div>
-          <div class="project-card-info">
-            <span class="project-num">02</span>
-            <div class="project-meta">
-              <h3 class="project-title">Project Name</h3>
-              <p class="project-tags">Product Design · Motion</p>
-            </div>
-            <span class="project-year">2024</span>
-          </div>
-        </a>
-
-        <!-- PROJECT CARD 3 -->
-        <a href="project.html?id=3" class="project-card" data-index="03">
-          <div class="project-card-media">
-            <img src="assets/images/project-3.jpg" alt="Project 3" />
-            <div class="project-card-overlay">
-              <span class="project-cta">View Case Study →</span>
-            </div>
-          </div>
-          <div class="project-card-info">
-            <span class="project-num">03</span>
-            <div class="project-meta">
-              <h3 class="project-title">Project Name</h3>
-              <p class="project-tags">Visual Identity · Web</p>
-            </div>
-            <span class="project-year">2023</span>
-          </div>
-        </a>
-
-        <!-- PROJECT CARD 4 -->
-        <a href="project.html?id=4" class="project-card" data-index="04">
-          <div class="project-card-media">
-            <img src="assets/images/project-4.jpg" alt="Project 4" />
-            <div class="project-card-overlay">
-              <span class="project-cta">View Case Study →</span>
-            </div>
-          </div>
-          <div class="project-card-info">
-            <span class="project-num">04</span>
-            <div class="project-meta">
-              <h3 class="project-title">Project Name</h3>
-              <p class="project-tags">UX Research · UI</p>
-            </div>
-            <span class="project-year">2023</span>
-          </div>
-        </a>
-
       </div>
-    </div>
+    </section>
 
-    <!-- Carousel controls -->
-    <div class="carousel-controls">
-      <button class="carousel-btn prev-btn" aria-label="Previous">←</button>
-      <div class="carousel-dots">
-        <span class="dot active"></span>
-        <span class="dot"></span>
-        <span class="dot"></span>
-        <span class="dot"></span>
+    <!-- ======= BIO STRIP ======= -->
+    <section class="bio-strip" aria-label="About summary">
+      <div class="bio-strip-inner">
+        <p>
+          I'm a Chilean designer in Barcelona, <strong>specializing in UX/UI design.</strong>
+          <span class="bio-photo-inline" aria-hidden="true">
+            <img src="assets/images/face.jpg" alt="" />
+          </span>
+          I'm passionate about projects that enhance user experiences and promote a <strong>sustainable, equitable future.</strong>
+        </p>
       </div>
-      <button class="carousel-btn next-btn" aria-label="Next">→</button>
-    </div>
-  </section>
+    </section>
+
+    <!-- ======= WORK / PROJECTS ======= -->
+    <section class="work-section" id="work" aria-label="Selected work">
+      <div class="work-header">
+        <span class="section-eyebrow" aria-hidden="true">Selected Work</span>
+        <h2 class="sr-only">Selected projects</h2>
+      </div>
+
+      <!-- Cards grid -->
+      <div class="projects-grid" role="list">
+
+        <!-- Card 1 (public) -->
+        <article class="project-card" role="listitem">
+          <a href="project.html" class="project-card-link" aria-label="View project: Project Name — UX Design & Branding, 2024">
+            <div class="project-card-img" aria-hidden="true">
+              <img src="assets/images/project-1.jpg" alt="" loading="lazy" />
+              <div class="project-card-hover">
+                <span class="project-card-cta">View Case Study</span>
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h12M10 4l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+            </div>
+            <div class="project-card-body">
+              <span class="project-num" aria-hidden="true">01</span>
+              <div class="project-info">
+                <h3 class="project-title">Project Name</h3>
+                <p class="project-tags">UX Design · Branding</p>
+              </div>
+              <span class="project-year">2024</span>
+            </div>
+          </a>
+        </article>
+
+        <!-- Card 2 (password protected) -->
+        <article class="project-card" role="listitem">
+          <div class="project-card-link project-card-locked" 
+               role="button" tabindex="0"
+               aria-label="Project Name (password protected) — Product Design, 2024"
+               data-project-title="Project Name"
+               data-project-dest="project.html">
+            <div class="project-card-img" aria-hidden="true">
+              <img src="assets/images/project-2.jpg" alt="" loading="lazy" />
+              <div class="project-card-hover project-card-hover--lock">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M8 11V7a4 4 0 018 0v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="16" r="1.5" fill="currentColor"/></svg>
+                <span>Password Protected</span>
+              </div>
+            </div>
+            <div class="project-card-body">
+              <span class="project-num" aria-hidden="true">02</span>
+              <div class="project-info">
+                <h3 class="project-title">Project Name</h3>
+                <p class="project-tags">Product Design · Motion</p>
+              </div>
+              <span class="project-year">2024</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 3 (public) -->
+        <article class="project-card" role="listitem">
+          <a href="project.html" class="project-card-link" aria-label="View project: Project Name — Visual Identity, 2023">
+            <div class="project-card-img" aria-hidden="true">
+              <img src="assets/images/project-3.jpg" alt="" loading="lazy" />
+              <div class="project-card-hover">
+                <span class="project-card-cta">View Case Study</span>
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h12M10 4l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+            </div>
+            <div class="project-card-body">
+              <span class="project-num" aria-hidden="true">03</span>
+              <div class="project-info">
+                <h3 class="project-title">Project Name</h3>
+                <p class="project-tags">Visual Identity · Web</p>
+              </div>
+              <span class="project-year">2023</span>
+            </div>
+          </a>
+        </article>
+
+        <!-- Card 4 (password protected) -->
+        <article class="project-card" role="listitem">
+          <div class="project-card-link project-card-locked"
+               role="button" tabindex="0"
+               aria-label="Project Name (password protected) — UX Research, 2023"
+               data-project-title="Project Name"
+               data-project-dest="project.html">
+            <div class="project-card-img" aria-hidden="true">
+              <img src="assets/images/project-4.jpg" alt="" loading="lazy" />
+              <div class="project-card-hover project-card-hover--lock">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M8 11V7a4 4 0 018 0v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="16" r="1.5" fill="currentColor"/></svg>
+                <span>Password Protected</span>
+              </div>
+            </div>
+            <div class="project-card-body">
+              <span class="project-num" aria-hidden="true">04</span>
+              <div class="project-info">
+                <h3 class="project-title">Project Name</h3>
+                <p class="project-tags">UX Research · UI</p>
+              </div>
+              <span class="project-year">2023</span>
+            </div>
+          </div>
+        </article>
+
+      </div><!-- /projects-grid -->
+    </section>
+
+  </main>
 
   <!-- FOOTER -->
-  <footer class="footer">
+  <footer class="footer" role="contentinfo">
     <div class="footer-inner">
-      <p>© 2024 María Ignacia Delfau</p>
-      <div class="footer-links">
-        <a href="https://linkedin.com" target="_blank">LinkedIn</a>
-        <a href="https://behance.net" target="_blank">Behance</a>
+      <p class="footer-copy">© 2024 María Ignacia Delfau</p>
+      <nav class="footer-links" aria-label="Footer navigation">
+        <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        <a href="https://behance.net" target="_blank" rel="noopener noreferrer">Behance</a>
         <a href="mailto:hello@mid.design">Email</a>
-      </div>
+      </nav>
     </div>
   </footer>
+
+  <!-- PASSWORD MODAL -->
+  <div class="modal-overlay" id="password-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-hidden="true">
+    <div class="modal-box">
+      <button class="modal-close" id="modal-close" aria-label="Close modal">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 5l10 10M15 5l-10 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+      <h2 class="modal-title" id="modal-title">This project is private</h2>
+      <p class="modal-desc">Enter the password to access <strong id="modal-project-name"></strong>.</p>
+      <div class="modal-form">
+        <label for="modal-password" class="sr-only">Password</label>
+        <input type="password" id="modal-password" class="modal-input" placeholder="Enter password" autocomplete="current-password" />
+        <button class="modal-submit btn-primary" id="modal-submit">Access →</button>
+      </div>
+      <p class="modal-error" id="modal-error" role="alert" aria-live="polite"></p>
+    </div>
+  </div>
 
   <script src="js/main.js"></script>
 </body>
