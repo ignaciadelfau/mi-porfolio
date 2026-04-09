@@ -459,58 +459,6 @@ shakeCSS.textContent = `
 document.head.appendChild(shakeCSS);
 
 /* ============================================================
-   MOUSE-FOLLOWING GRADIENT
-   Moves orb-1 (the main yellow blob) to follow the cursor
-   with a smooth lag. Makes the gradient feel alive and reactive.
-   ============================================================ */
-function initMouseGradient() {
-  const orb = document.querySelector('.orb-1');
-  if (!orb) return;
-
-  // Target and current position (as % of viewport)
-  let targetX = 50, targetY = 45;
-  let currentX = 50, currentY = 45;
-
-  // Lerp speed — lower = more lag/inertia (0.06 = very smooth)
-  const LERP = 0.055;
-
-  // Pause CSS animation on orb-1 so JS takes over its position
-  orb.style.animation = 'none';
-  orb.style.opacity   = '0.72';
-
-  // Update target on mouse move (only in hero + work section area)
-  window.addEventListener('mousemove', e => {
-    targetX = (e.clientX / window.innerWidth)  * 100;
-    targetY = (e.clientY / window.innerHeight) * 100;
-  }, { passive: true });
-
-  // Animation loop — lerp current toward target
-  function tick() {
-    currentX += (targetX - currentX) * LERP;
-    currentY += (targetY - currentY) * LERP;
-
-    // Clamp so it doesn't go too far outside the viewport
-    const cx = Math.max(10, Math.min(90, currentX));
-    const cy = Math.max(5,  Math.min(95, currentY));
-
-    // Pulse: oscillate scale slightly so it still feels alive
-    const t    = Date.now() / 1000;
-    const pulse = 1 + Math.sin(t * 0.8) * 0.08;
-
-    orb.style.transform = `translate(${cx - 50}vw, ${cy - 45}vh) scale(${pulse})`;
-    orb.style.left  = '50%';
-    orb.style.top   = '45%';
-
-    requestAnimationFrame(tick);
-  }
-
-  // Respect reduced motion
-  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    requestAnimationFrame(tick);
-  }
-}
-
-/* ============================================================
    INIT
    ============================================================ */
 document.addEventListener('DOMContentLoaded', () => {
@@ -520,5 +468,4 @@ document.addEventListener('DOMContentLoaded', () => {
   initPasswordModal();
   initPageTransitions();
   initScrollReveal();
-  initMouseGradient();
 });
