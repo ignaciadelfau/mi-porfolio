@@ -23,8 +23,12 @@ html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
   --ease-io:      cubic-bezier(0.65, 0, 0.35, 1);
 }
 
+/* White on html = fallback only; body is transparent so the
+   position:fixed gradient layer shows through everywhere */
+html { background: var(--bg); }
+
 body {
-  background: var(--bg);
+  background: transparent;
   color: var(--ink);
   font-family: var(--font-body);
   font-size: 16px;
@@ -566,7 +570,7 @@ header { position: sticky; top: 0; z-index: 100; }
 /* ============================================================
    FOOTER
    ============================================================ */
-.footer { border-top: none; padding: 40px 48px; margin-top: 0; }
+.footer { border-top: none; padding: 40px 48px; margin-top: 0; background: transparent; }
 .footer-inner {
   max-width: 1200px; margin: 0 auto;
   display: flex; justify-content: space-between; align-items: center;
