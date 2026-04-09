@@ -161,7 +161,6 @@ class SolarCarousel {
     const n = this.total;
     this.cards.forEach((card, i) => {
       const relIndex = ((i - this.current) % n + n) % n;
-      // Map relIndex so it wraps: 0,1,2,...floor(n/2), -floor(n/2),...,-1
       const wrapped  = relIndex > n / 2 ? relIndex - n : relIndex;
       const state    = this.getCardState(wrapped);
 
@@ -170,6 +169,12 @@ class SolarCarousel {
       card.setAttribute('tabindex', isActive ? '0' : '-1');
       card.setAttribute('aria-current', isActive ? 'true' : 'false');
 
+      // Ensure cards always originate from the true center of .solar-track
+      // left:50% top:50% anchors to center; translate(-50%,-50%) removes own size;
+      // then orbital offset x/y moves outward; scale applied last.
+      card.style.left = '50%';
+      card.style.top  = '50%';
+
       const dur = instant ? 0 : 650;
       card.style.transition = instant
         ? 'none'
@@ -177,10 +182,10 @@ class SolarCarousel {
            opacity   ${dur}ms ease,
            filter    ${dur}ms ease`;
 
-      card.style.transform  = `translate(calc(-50% + ${state.x}px), calc(-50% + ${state.y}px)) scale(${state.scale})`;
-      card.style.opacity    = state.opacity;
-      card.style.zIndex     = state.zIndex;
-      card.style.filter     = state.blur > 0 ? `blur(${state.blur}px)` : '';
+      card.style.transform = `translate(calc(-50% + ${state.x}px), calc(-50% + ${state.y}px)) scale(${state.scale})`;
+      card.style.opacity   = state.opacity;
+      card.style.zIndex    = state.zIndex;
+      card.style.filter    = state.blur > 0 ? `blur(${state.blur}px)` : '';
     });
 
     this.updateTitle();
@@ -228,13 +233,13 @@ class SolarCarousel {
     this.prevBtn?.addEventListener('click', () => this.advance(-1));
     this.nextBtn?.addEventListener('click', () => this.advance(1));
 
-    // Keyboard
+    // Keyboard arrows
     document.addEventListener('keydown', e => {
       if (e.key === 'ArrowRight') this.advance(1);
       if (e.key === 'ArrowLeft')  this.advance(-1);
     });
 
-    // ---- Touch swipe ----
+    // ── Touch swipe (mobile) ────────────────────────────────────
     let touchStartX = 0;
     let touchStartY = 0;
     this.track.addEventListener('touchstart', e => {
@@ -244,48 +249,39 @@ class SolarCarousel {
     this.track.addEventListener('touchend', e => {
       const dx = touchStartX - e.changedTouches[0].clientX;
       const dy = touchStartY - e.changedTouches[0].clientY;
-      // only fire if horizontal swipe dominates
       if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 36) {
         this.advance(dx > 0 ? 1 : -1);
       }
     });
 
-    // ---- Mouse drag (desktop) ----
-    const wrap = this.track.closest('.solar-wrap') || this.track;
-    let dragStartX  = 0;
-    let dragging    = false;
-    let hasDragged  = false;
+    // ── Horizontal scroll / trackpad swipe (desktop) ─────────────
+    // Accumulate deltaX; fire once a threshold is crossed, then
+    // cooldown so one flick = one step.
+    let wheelAccum = 0;
+    let wheelCooldown = false;
 
-    const onMouseDown = e => {
-      dragging    = true;
-      hasDragged  = false;
-      dragStartX  = e.clientX;
-      wrap.classList.add('is-dragging');
-      // prevent text selection while dragging
-      e.preventDefault();
+    const onWheel = e => {
+      // Only intercept if there's a meaningful horizontal component
+      // (trackpad two-finger swipe gives deltaX; vertical scroll gives deltaY)
+      if (Math.abs(e.deltaX) < Math.abs(e.deltaY) * 0.4) return;
+
+      e.preventDefault();  // stop page scroll while swiping horizontally
+
+      if (wheelCooldown) return;
+
+      wheelAccum += e.deltaX;
+
+      if (Math.abs(wheelAccum) > 60) {
+        this.advance(wheelAccum > 0 ? 1 : -1);
+        wheelAccum = 0;
+        wheelCooldown = true;
+        setTimeout(() => { wheelCooldown = false; }, 700);
+      }
     };
 
-    const onMouseMove = e => {
-      if (!dragging) return;
-      if (Math.abs(e.clientX - dragStartX) > 8) hasDragged = true;
-    };
-
-    const onMouseUp = e => {
-      if (!dragging) return;
-      dragging = false;
-      wrap.classList.remove('is-dragging');
-      const dx = dragStartX - e.clientX;
-      if (Math.abs(dx) > 48) this.advance(dx > 0 ? 1 : -1);
-    };
-
-    wrap.addEventListener('mousedown', onMouseDown);
-    window.addEventListener('mousemove', onMouseMove);
-    window.addEventListener('mouseup', onMouseUp);
-
-    // Prevent card click firing after a drag
-    this.track.addEventListener('click', e => {
-      if (hasDragged) { e.stopImmediatePropagation(); hasDragged = false; }
-    }, true);
+    // Must be non-passive to call preventDefault
+    const section = this.track.closest('.work-section') || this.track;
+    section.addEventListener('wheel', onWheel, { passive: false });
   }
 }
 
