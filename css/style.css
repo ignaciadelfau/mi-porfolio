@@ -357,12 +357,9 @@ header { position: sticky; top: 0; z-index: 100; }
 .solar-wrap {
   position: relative;
   width: 100%;
-  height: 500px;
-  display: flex; align-items: center; justify-content: center;
-  /* cursor shows drag intent on desktop */
-  cursor: grab;
+  height: 520px;
+  overflow: hidden;
 }
-.solar-wrap.is-dragging { cursor: grabbing; }
 
 /* ---- Decorative orbital rings ---- */
 .orbit-deco {
@@ -401,17 +398,16 @@ header { position: sticky; top: 0; z-index: 100; }
   .planet, .ring { animation: none; }
 }
 
-/* ---- Solar track: the 3D carousel stage ---- */
+/* ---- Solar track: explicit center anchor for absolute cards ---- */
 .solar-track {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  perspective: 1200px;
+  position: absolute;          /* sits inside solar-wrap */
+  inset: 0;
+  /* The center of this element is the carousel center */
+  perspective: 1400px;
   perspective-origin: 50% 50%;
 }
+/* All cards are placed relative to .solar-track center via JS:
+   left:50% top:50% then translate(-50%,-50%) + orbital offset */
 
 /* Each card is absolutely positioned and transformed by JS */
 .solar-card {
@@ -504,24 +500,27 @@ header { position: sticky; top: 0; z-index: 100; }
 }
 .card-label-title { font-family: var(--font-display); font-size: 18px; font-weight: 800; }
 
-/* Carousel controls — equal gap above (matches title→cards gap) */
+/* Carousel controls */
 .carousel-controls {
+  position: relative;
+  z-index: 20;                  /* above the cards */
   display: flex; align-items: center; justify-content: center;
-  gap: 20px; padding: 40px 0 0;  /* 40px matches title margin-bottom */
+  gap: 20px;
+  padding: 40px 0 0;
 }
 .carousel-btn {
-  background: none; border: 1.5px solid var(--border-hover);
-  color: var(--ink); width: 44px; height: 44px; border-radius: 50%;
+  background: var(--bg);        /* solid white so always visible */
+  border: 2px solid var(--ink);
+  color: var(--ink);
+  width: 48px; height: 48px;
+  border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   cursor: pointer;
-  transition: background 0.2s ease, border-color 0.2s ease,
-              transform 0.2s ease, color 0.2s ease;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
 }
-.carousel-btn:hover {
-  background: var(--ink); color: var(--bg);
-  border-color: var(--ink); transform: scale(1.08);
-}
-.carousel-btn:active { transform: scale(0.96); }
+.carousel-btn:hover  { background: var(--ink); color: var(--bg); transform: scale(1.1); }
+.carousel-btn:active { transform: scale(0.94); }
 
 /* ============================================================
    FOOTER
@@ -762,18 +761,17 @@ header { position: sticky; top: 0; z-index: 100; }
    CLAUDE BADGE  — fixed side label
    ============================================================ */
 .claude-badge {
+  /* Rotate the whole element so text reads bottom-to-top */
   position: fixed;
-  right: 0;
+  right: -42px;                  /* pull it out so only tab peeks */
   top: 50%;
-  transform: translateY(-50%) rotate(90deg);
-  transform-origin: right center;
-  /* shift it flush to the right edge */
-  translate: 0 0;
+  transform-origin: center center;
+  transform: translateY(-50%) rotate(-90deg);
 
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  padding: 7px 14px;
+  padding: 8px 16px 8px 12px;
   background: var(--ink);
   color: var(--bg);
   font-family: var(--font-body);
@@ -784,21 +782,20 @@ header { position: sticky; top: 0; z-index: 100; }
   text-decoration: none;
   z-index: 90;
   white-space: nowrap;
-
-  /* Position: after rotation, anchor right edge to viewport right */
-  right: -1px;
-  border-radius: 6px 6px 0 0; /* rounds the top (which faces right after rotation) */
-  transition: background 0.2s ease, color 0.2s ease, gap 0.2s ease;
+  border-radius: 8px 8px 0 0;   /* rounded on the top edge (left when rotated) */
+  box-shadow: 0 -2px 12px rgba(0,0,0,0.18);
+  /* Slide in on hover */
+  transition: right 0.3s var(--ease-out), background 0.2s ease;
 }
 .claude-badge:hover {
+  right: -2px;                   /* slides fully into view */
   background: var(--blue-a11y);
-  gap: 10px;
 }
 .claude-badge-icon {
   flex-shrink: 0;
   transition: transform 0.3s var(--ease-out);
 }
-.claude-badge:hover .claude-badge-icon { transform: rotate(15deg) scale(1.1); }
+.claude-badge:hover .claude-badge-icon { transform: rotate(20deg) scale(1.15); }
 
 @media (max-width: 600px) {
   .claude-badge { display: none; }
