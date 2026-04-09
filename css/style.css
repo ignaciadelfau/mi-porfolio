@@ -316,9 +316,8 @@ header { position: sticky; top: 0; z-index: 100; }
    SOLAR CAROUSEL
    ============================================================ */
 .work-section {
-  padding: 80px 0 60px;
+  padding: 48px 0 60px;
   position: relative;
-  /* transparent so hero gradient bleeds through seamlessly */
   background: transparent;
 }
 
@@ -330,12 +329,12 @@ header { position: sticky; top: 0; z-index: 100; }
   margin-bottom: 12px;
 }
 
-/* equal 40px spacing between: label → title → cards → arrows */
+/* 32px spacing between: label → title → cards → arrows */
 .carousel-title-wrap {
   text-align: center;
-  min-height: 96px;
+  min-height: 80px;
   display: flex; align-items: center; justify-content: center;
-  margin-bottom: 40px;
+  margin-bottom: 32px;
   padding: 0 24px;
 }
 
@@ -372,10 +371,10 @@ header { position: sticky; top: 0; z-index: 100; }
 .ring {
   position: absolute;
   border-radius: 50%;
-  border: 1px solid rgba(17,17,17,0.06);
+  border: 1.5px solid rgba(17,17,17,0.13);
 }
-.ring-1 { width: 560px; height: 220px; transform: rotateX(72deg); }
-.ring-2 { width: 820px; height: 320px; transform: rotateX(72deg); }
+.ring-1 { width: 560px;  height: 220px; transform: rotateX(72deg); }
+.ring-2 { width: 820px;  height: 320px; transform: rotateX(72deg); }
 .ring-3 { width: 1080px; height: 420px; transform: rotateX(72deg); }
 
 /* Floating planet dots */
@@ -503,23 +502,24 @@ header { position: sticky; top: 0; z-index: 100; }
 /* Carousel controls */
 .carousel-controls {
   position: relative;
-  z-index: 20;                  /* above the cards */
+  z-index: 20;
   display: flex; align-items: center; justify-content: center;
   gap: 20px;
-  padding: 40px 0 0;
+  padding: 32px 0 0;
 }
 .carousel-btn {
-  background: var(--bg);        /* solid white so always visible */
-  border: 2px solid var(--ink);
+  background: var(--bg);
+  border: 1.5px solid var(--ink);
   color: var(--ink);
-  width: 48px; height: 48px;
+  width: 40px; height: 40px;
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   cursor: pointer;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.10);
   transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
 }
-.carousel-btn:hover  { background: var(--ink); color: var(--bg); transform: scale(1.1); }
+.carousel-btn svg { width: 18px; height: 18px; }
+.carousel-btn:hover  { background: var(--ink); color: var(--bg); transform: scale(1.08); }
 .carousel-btn:active { transform: scale(0.94); }
 
 /* ============================================================
@@ -758,20 +758,26 @@ header { position: sticky; top: 0; z-index: 100; }
 }
 
 /* ============================================================
-   CLAUDE BADGE  — fixed side label
+   CLAUDE BADGE — fixed right edge, slide on hover
+   Trick: position right:0, rotate around bottom-right corner.
+   Use translateX for the slide so transform stays composited
+   and there's no layout jitter.
    ============================================================ */
 .claude-badge {
-  /* Rotate the whole element so text reads bottom-to-top */
   position: fixed;
-  right: -42px;                  /* pull it out so only tab peeks */
+  right: 0;
   top: 50%;
-  transform-origin: center center;
-  transform: translateY(-50%) rotate(-90deg);
+  /* Step 1: move anchor to bottom-right of element after rotation */
+  transform-origin: bottom right;
+  /* Step 2: rotate -90deg so text reads upward; then shift so only
+     a sliver peeks out — use a CSS var for the slide amount */
+  --badge-peek: calc(100% - 12px); /* how much to hide: all but 12px tab */
+  transform: rotate(-90deg) translateX(var(--badge-peek)) translateY(100%);
 
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  padding: 8px 16px 8px 12px;
+  padding: 7px 14px 7px 10px;
   background: var(--ink);
   color: var(--bg);
   font-family: var(--font-body);
@@ -782,21 +788,19 @@ header { position: sticky; top: 0; z-index: 100; }
   text-decoration: none;
   z-index: 90;
   white-space: nowrap;
-  border-radius: 8px 8px 0 0;   /* rounded on the top edge (left when rotated) */
-  box-shadow: 0 -2px 12px rgba(0,0,0,0.18);
-  /* Slide in on hover */
-  transition: right 0.3s var(--ease-out), background 0.2s ease;
+  border-radius: 6px 6px 0 0;
+  box-shadow: 0 -2px 14px rgba(0,0,0,0.2);
+  transition: transform 0.35s cubic-bezier(0.16,1,0.3,1),
+              background 0.2s ease;
 }
 .claude-badge:hover {
-  right: -2px;                   /* slides fully into view */
+  --badge-peek: 0px;  /* slide fully out */
   background: var(--blue-a11y);
 }
 .claude-badge-icon {
   flex-shrink: 0;
-  transition: transform 0.3s var(--ease-out);
+  transition: transform 0.3s cubic-bezier(0.16,1,0.3,1);
 }
-.claude-badge:hover .claude-badge-icon { transform: rotate(20deg) scale(1.15); }
+.claude-badge:hover .claude-badge-icon { transform: rotate(20deg) scale(1.12); }
 
-@media (max-width: 600px) {
-  .claude-badge { display: none; }
-}
+@media (max-width: 600px) { .claude-badge { display: none; } }
