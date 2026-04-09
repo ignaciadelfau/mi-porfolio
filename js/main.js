@@ -228,19 +228,64 @@ class SolarCarousel {
     this.prevBtn?.addEventListener('click', () => this.advance(-1));
     this.nextBtn?.addEventListener('click', () => this.advance(1));
 
-    // Keyboard on active card
+    // Keyboard
     document.addEventListener('keydown', e => {
       if (e.key === 'ArrowRight') this.advance(1);
       if (e.key === 'ArrowLeft')  this.advance(-1);
     });
 
-    // Touch swipe
-    let touchX = 0;
-    this.track.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; }, { passive: true });
+    // ---- Touch swipe ----
+    let touchStartX = 0;
+    let touchStartY = 0;
+    this.track.addEventListener('touchstart', e => {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+    }, { passive: true });
     this.track.addEventListener('touchend', e => {
-      const diff = touchX - e.changedTouches[0].clientX;
-      if (Math.abs(diff) > 40) this.advance(diff > 0 ? 1 : -1);
+      const dx = touchStartX - e.changedTouches[0].clientX;
+      const dy = touchStartY - e.changedTouches[0].clientY;
+      // only fire if horizontal swipe dominates
+      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 36) {
+        this.advance(dx > 0 ? 1 : -1);
+      }
     });
+
+    // ---- Mouse drag (desktop) ----
+    const wrap = this.track.closest('.solar-wrap') || this.track;
+    let dragStartX  = 0;
+    let dragging    = false;
+    let hasDragged  = false;
+
+    const onMouseDown = e => {
+      dragging    = true;
+      hasDragged  = false;
+      dragStartX  = e.clientX;
+      wrap.classList.add('is-dragging');
+      // prevent text selection while dragging
+      e.preventDefault();
+    };
+
+    const onMouseMove = e => {
+      if (!dragging) return;
+      if (Math.abs(e.clientX - dragStartX) > 8) hasDragged = true;
+    };
+
+    const onMouseUp = e => {
+      if (!dragging) return;
+      dragging = false;
+      wrap.classList.remove('is-dragging');
+      const dx = dragStartX - e.clientX;
+      if (Math.abs(dx) > 48) this.advance(dx > 0 ? 1 : -1);
+    };
+
+    wrap.addEventListener('mousedown', onMouseDown);
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mouseup', onMouseUp);
+
+    // Prevent card click firing after a drag
+    this.track.addEventListener('click', e => {
+      if (hasDragged) { e.stopImmediatePropagation(); hasDragged = false; }
+    }, true);
   }
 }
 
