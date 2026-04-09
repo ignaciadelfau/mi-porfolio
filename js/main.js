@@ -66,6 +66,7 @@ class SolarCarousel {
     this.total        = PROJECTS.length;
     this.current      = 0;
     this.isAnimating  = false;
+    this.orbitAngle   = 0;   // accumulated rotation in degrees
 
     if (!this.track) return;
 
@@ -203,10 +204,23 @@ class SolarCarousel {
     }, 200);
   }
 
+  rotateOrbit(dir) {
+    // Each step rotates the rings by 360/total degrees (one full "planet step")
+    // dir: +1 = clockwise, -1 = counter-clockwise
+    const step = (360 / this.total) * dir;
+    this.orbitAngle += step;
+
+    const rings = document.querySelectorAll('.ring');
+    rings.forEach(ring => {
+      ring.style.setProperty('--rot', `${this.orbitAngle}deg`);
+    });
+  }
+
   advance(dir) {
     if (this.isAnimating) return;
     this.isAnimating = true;
     this.current = ((this.current + dir) + this.total) % this.total;
+    this.rotateOrbit(dir);
     this.render();
     setTimeout(() => { this.isAnimating = false; }, 680);
   }
