@@ -408,10 +408,15 @@ header { position: sticky; top: 0; z-index: 100; }
   position: absolute;
   border-radius: 50%;
   border: 1.5px solid rgba(17,17,17,0.13);
+  /* --rot is set by JS on each advance(); transition makes it animate smoothly */
+  --rot: 0deg;
+  transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.ring-1 { width: 560px;  height: 220px; transform: rotateX(72deg); }
-.ring-2 { width: 820px;  height: 320px; transform: rotateX(72deg); }
-.ring-3 { width: 1080px; height: 420px; transform: rotateX(72deg); }
+/* Each ring has a slightly different speed multiplier (via --factor) so they
+   feel like independent orbits, not one rigid disc */
+.ring-1 { width: 560px;  height: 220px; transform: rotateX(72deg) rotateZ(calc(var(--rot) * 1.0)); }
+.ring-2 { width: 820px;  height: 320px; transform: rotateX(72deg) rotateZ(calc(var(--rot) * 0.7)); }
+.ring-3 { width: 1080px; height: 420px; transform: rotateX(72deg) rotateZ(calc(var(--rot) * 0.45)); }
 
 /* Floating planet dots */
 .planet {
