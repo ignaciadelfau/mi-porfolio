@@ -158,50 +158,56 @@ header { position: sticky; top: 0; z-index: 100; }
 .mobile-menu a:hover { color: var(--blue-a11y); }
 
 /* ============================================================
-   HERO
+   HERO  +  gradient that bleeds into the next section
    ============================================================ */
 .hero {
   position: relative;
   min-height: calc(100vh - var(--nav-h));
   display: flex; align-items: center; justify-content: center;
-  overflow: hidden; text-align: center;
+  /* NO overflow:hidden — let orbs bleed down into work section */
+  text-align: center;
 }
 
-/* Gradient orbs */
-.gradient-bg { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+/* Gradient orbs — bigger, more visible, faster */
+.gradient-bg {
+  position: absolute;
+  /* Extend below hero so the gradient bleeds into the carousel section */
+  top: 0; left: 0; right: 0; bottom: -240px;
+  pointer-events: none;
+  overflow: visible;
+}
 .orb {
-  position: absolute; border-radius: 50%; filter: blur(90px);
+  position: absolute; border-radius: 50%; filter: blur(80px);
 }
 .orb-1 {
-  width: 60vw; height: 60vw;
-  background: radial-gradient(circle, #FAC601 0%, transparent 65%);
-  top: 50%; left: 50%; transform: translate(-50%, -50%);
-  opacity: 0.45;
-  animation: orb-pulse 9s ease-in-out infinite alternate;
+  width: 70vw; height: 70vw;
+  background: radial-gradient(circle, #FAC601 0%, #FAC60100 62%);
+  top: 40%; left: 50%; transform: translate(-50%, -50%);
+  opacity: 0.65;
+  animation: orb-pulse 5s ease-in-out infinite alternate;
 }
 .orb-2 {
-  width: 28vw; height: 28vw;
-  background: radial-gradient(circle, #1000FF1A 0%, transparent 70%);
-  top: 5%; right: 8%; opacity: 0.6;
-  animation: orb-drift 12s ease-in-out infinite alternate;
+  width: 38vw; height: 38vw;
+  background: radial-gradient(circle, #1000FF33 0%, transparent 70%);
+  top: 0%; right: 4%; opacity: 0.7;
+  animation: orb-drift 7s ease-in-out infinite alternate;
 }
 .orb-3 {
-  width: 24vw; height: 24vw;
-  background: radial-gradient(circle, #FAC60128 0%, transparent 70%);
-  bottom: 5%; left: 5%; opacity: 0.5;
-  animation: orb-drift 15s ease-in-out infinite alternate-reverse;
+  width: 32vw; height: 32vw;
+  background: radial-gradient(circle, #FAC60144 0%, transparent 70%);
+  bottom: -10%; left: 2%; opacity: 0.6;
+  animation: orb-drift 9s ease-in-out infinite alternate-reverse;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  @keyframes orb-pulse {
-    0%   { transform: translate(-50%,-50%) scale(0.8); opacity: 0.35; }
-    100% { transform: translate(-50%,-50%) scale(1.1); opacity: 0.55; }
-  }
-  @keyframes orb-drift {
-    0%   { transform: translate(0,0) scale(1); }
-    100% { transform: translate(4vw,-4vh) scale(1.1); }
-  }
+@keyframes orb-pulse {
+  0%   { transform: translate(-50%,-50%) scale(0.82); opacity: 0.5; }
+  100% { transform: translate(-50%,-50%) scale(1.12); opacity: 0.72; }
 }
+@keyframes orb-drift {
+  0%   { transform: translate(0,0) scale(1); }
+  100% { transform: translate(5vw,-5vh) scale(1.12); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .orb, .logo-img { animation: none !important; }
   .logo-img { opacity: 1; filter: none; transform: none; }
@@ -311,8 +317,9 @@ header { position: sticky; top: 0; z-index: 100; }
    ============================================================ */
 .work-section {
   padding: 80px 0 60px;
-  overflow: hidden;
   position: relative;
+  /* transparent so hero gradient bleeds through seamlessly */
+  background: transparent;
 }
 
 .carousel-label {
@@ -320,14 +327,15 @@ header { position: sticky; top: 0; z-index: 100; }
   font-size: 13px; font-weight: 500;
   letter-spacing: 0.06em;
   color: var(--ink-muted);
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 }
 
+/* equal 40px spacing between: label → title → cards → arrows */
 .carousel-title-wrap {
   text-align: center;
-  min-height: 80px;
+  min-height: 96px;
   display: flex; align-items: center; justify-content: center;
-  margin-bottom: 16px;
+  margin-bottom: 40px;
   padding: 0 24px;
 }
 
@@ -338,20 +346,23 @@ header { position: sticky; top: 0; z-index: 100; }
   letter-spacing: -0.03em;
   color: var(--ink);
   line-height: 1;
-  transition: opacity 0.3s ease, transform 0.3s var(--ease-out);
+  transition: opacity 0.25s ease, transform 0.25s var(--ease-out);
 }
 .carousel-active-title.changing {
   opacity: 0;
-  transform: translateY(8px) scale(0.97);
+  transform: translateY(10px) scale(0.97);
 }
 
-/* ---- Solar wrap: relative container for the orbit deco + track ---- */
+/* ---- Solar wrap ---- */
 .solar-wrap {
   position: relative;
   width: 100%;
-  height: 480px;
+  height: 500px;
   display: flex; align-items: center; justify-content: center;
+  /* cursor shows drag intent on desktop */
+  cursor: grab;
 }
+.solar-wrap.is-dragging { cursor: grabbing; }
 
 /* ---- Decorative orbital rings ---- */
 .orbit-deco {
@@ -493,10 +504,10 @@ header { position: sticky; top: 0; z-index: 100; }
 }
 .card-label-title { font-family: var(--font-display); font-size: 18px; font-weight: 800; }
 
-/* Carousel controls */
+/* Carousel controls — equal gap above (matches title→cards gap) */
 .carousel-controls {
   display: flex; align-items: center; justify-content: center;
-  gap: 16px; padding: 32px 0 0;
+  gap: 20px; padding: 40px 0 0;  /* 40px matches title margin-bottom */
 }
 .carousel-btn {
   background: none; border: 1.5px solid var(--border-hover);
@@ -745,4 +756,50 @@ header { position: sticky; top: 0; z-index: 100; }
   .hello-word { font-size: clamp(64px, 22vw, 110px); }
   .solar-card { width: 210px; }
   .g-3 { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   CLAUDE BADGE  — fixed side label
+   ============================================================ */
+.claude-badge {
+  position: fixed;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%) rotate(90deg);
+  transform-origin: right center;
+  /* shift it flush to the right edge */
+  translate: 0 0;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 14px;
+  background: var(--ink);
+  color: var(--bg);
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  z-index: 90;
+  white-space: nowrap;
+
+  /* Position: after rotation, anchor right edge to viewport right */
+  right: -1px;
+  border-radius: 6px 6px 0 0; /* rounds the top (which faces right after rotation) */
+  transition: background 0.2s ease, color 0.2s ease, gap 0.2s ease;
+}
+.claude-badge:hover {
+  background: var(--blue-a11y);
+  gap: 10px;
+}
+.claude-badge-icon {
+  flex-shrink: 0;
+  transition: transform 0.3s var(--ease-out);
+}
+.claude-badge:hover .claude-badge-icon { transform: rotate(15deg) scale(1.1); }
+
+@media (max-width: 600px) {
+  .claude-badge { display: none; }
 }
