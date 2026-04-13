@@ -61,6 +61,7 @@ class SolarCarousel {
     this.titleEl      = document.getElementById('carousel-title');
     this.prevBtn      = document.getElementById('carousel-prev');
     this.nextBtn      = document.getElementById('carousel-next');
+    this.dotsEl       = document.getElementById('carousel-dots');
     this.a11yList     = document.getElementById('projects-a11y-list');
 
     this.total        = PROJECTS.length;
@@ -70,6 +71,7 @@ class SolarCarousel {
     if (!this.track) return;
 
     this.buildCards();
+    this.buildDots();
     this.buildA11yList();
     this.render(true);
     this.bindEvents();
@@ -113,6 +115,38 @@ class SolarCarousel {
     });
 
     this.cards = Array.from(this.track.querySelectorAll('.solar-card'));
+  }
+
+  buildDots() {
+    if (!this.dotsEl) return;
+    PROJECTS.forEach((p, i) => {
+      const dot = document.createElement('button');
+      dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+      dot.setAttribute('role', 'tab');
+      dot.setAttribute('aria-label', `Go to project: ${p.title}`);
+      dot.setAttribute('aria-selected', i === 0 ? 'true' : 'false');
+      dot.addEventListener('click', () => this.goTo(i));
+      this.dotsEl.appendChild(dot);
+    });
+    this.dots = Array.from(this.dotsEl.querySelectorAll('.carousel-dot'));
+  }
+
+  updateDots() {
+    if (!this.dots) return;
+    this.dots.forEach((dot, i) => {
+      const active = i === this.current;
+      dot.classList.toggle('active', active);
+      dot.setAttribute('aria-selected', active ? 'true' : 'false');
+    });
+  }
+
+  goTo(index) {
+    if (index === this.current || this.isAnimating) return;
+    const dir = index > this.current ? 1 : -1;
+    this.isAnimating = true;
+    this.current = index;
+    this.render();
+    setTimeout(() => { this.isAnimating = false; }, 680);
   }
 
   buildA11yList() {
@@ -189,6 +223,7 @@ class SolarCarousel {
     });
 
     this.updateTitle();
+    this.updateDots();
   }
 
   updateTitle() {
