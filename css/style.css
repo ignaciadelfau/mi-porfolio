@@ -590,7 +590,7 @@ header { position: sticky; top: 0; z-index: 100; }
 .carousel-btn svg { width: 10px; height: 10px; }
 .carousel-btn:hover  {
   border-color: var(--ink); color: var(--ink);
-  background: rgba(17,17,17,0.05); transform: scale(1.1);
+  background: transparent; transform: scale(1.1);
 }
 .carousel-btn:active { transform: scale(0.92); }
 
