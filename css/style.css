@@ -23,17 +23,8 @@ html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
   --ease-io:      cubic-bezier(0.65, 0, 0.35, 1);
 }
 
-/* Fixed white base behind the fixed gradient — no scroll cuts ever */
-html {
-  background: transparent;
-}
-html::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: -2;          /* below gradient (-1) and content */
-  background: var(--bg);
-}
+/* Both html and body transparent — gradient-bg carries the white base */
+html { background: transparent; }
 
 body {
   background: transparent;
@@ -178,13 +169,15 @@ header { position: sticky; top: 0; z-index: 100; }
   text-align: center;
 }
 
-/* ── Full-page fixed gradient — sits behind everything, covers hero+carousel+footer ── */
+/* ── Full-page fixed layer — white base + gradient orbs in one element ── */
 .gradient-bg {
-  position: fixed;          /* fixed = always covers the full viewport */
+  position: fixed;
   inset: 0;
-  z-index: -1;              /* behind all page content */
+  z-index: -1;
   pointer-events: none;
   overflow: hidden;
+  /* White base painted directly here so it's always in sync with the orbs */
+  background: var(--bg);
 }
 
 .orb {
@@ -364,7 +357,7 @@ header { position: sticky; top: 0; z-index: 100; }
    SOLAR CAROUSEL
    ============================================================ */
 .work-section {
-  padding: 20px 0 48px;
+  padding: 12px 0 40px;
   position: relative;
   background: transparent;
 }
@@ -380,9 +373,9 @@ header { position: sticky; top: 0; z-index: 100; }
 /* 32px spacing between: label → title → cards → arrows */
 .carousel-title-wrap {
   text-align: center;
-  min-height: 64px;
+  min-height: 56px;
   display: flex; align-items: center; justify-content: center;
-  margin-bottom: 4px;
+  margin-bottom: 0;
   padding: 0 24px;
 }
 
@@ -414,9 +407,20 @@ header { position: sticky; top: 0; z-index: 100; }
   inset: 0;
   pointer-events: none;
   display: flex; align-items: center; justify-content: center;
-  /* Perspective makes the circular orbits look like foreshortened ellipses */
-  perspective: 600px;
+}
+
+/* Planet container spins horizontally — gives the "solar system tilted plane" feel */
+.planet-container {
+  position: absolute;
+  inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  animation: planet-spin 28s linear infinite;
   transform-style: preserve-3d;
+}
+
+@keyframes planet-spin {
+  from { transform: rotateX(72deg) rotateZ(0deg); }
+  to   { transform: rotateX(72deg) rotateZ(360deg); }
 }
 
 .ring {
@@ -429,70 +433,18 @@ header { position: sticky; top: 0; z-index: 100; }
 .ring-2 { width: 820px;  height: 320px; transform: rotateX(72deg); }
 .ring-3 { width: 1080px; height: 420px; transform: rotateX(72deg); }
 
-/* Planet dots — orbit around the center using CSS animations.
-   Each planet is centered at 50%/50% and moved via translateX/Y orbit radius.
-   On carousel advance, JS bumps --planet-angle to jump them forward. */
+/* Planet dots — fixed at positions on the rotating container.
+   The container (planet-container) rotates, carrying them around. */
 .planet {
   position: absolute;
   border-radius: 50%;
   background: var(--yellow);
-  /* All planets start at center of orbit-deco; transform moves them out */
-  top: 50%; left: 50%;
-  /* CSS var for JS to nudge angle on advance */
-  --planet-angle: 0deg;
 }
-
-/* p-1: small yellow, inner ring orbit */
-.p-1 {
-  width: 8px; height: 8px;
-  margin: -4px 0 0 -4px;
-  opacity: 0.7;
-  animation: orbit-p1 12s linear infinite;
-}
-/* p-2: medium blue, outer ring orbit, opposite direction */
-.p-2 {
-  width: 11px; height: 11px;
-  margin: -5.5px 0 0 -5.5px;
-  background: var(--blue);
-  opacity: 0.35;
-  animation: orbit-p2 20s linear infinite reverse;
-}
-/* p-3: tiny yellow, mid ring */
-.p-3 {
-  width: 5px; height: 5px;
-  margin: -2.5px 0 0 -2.5px;
-  opacity: 0.6;
-  animation: orbit-p3 16s linear infinite;
-  animation-delay: -5s;
-}
-/* p-4: small grey, inner ring opposite */
-.p-4 {
-  width: 7px; height: 7px;
-  margin: -3.5px 0 0 -3.5px;
-  background: var(--ink-faint);
-  opacity: 0.5;
-  animation: orbit-p4 9s linear infinite reverse;
-  animation-delay: -3s;
-}
-
-/* Orbit keyframes: translate outward by orbit radius, then rotate around center.
-   The perspective on .orbit-deco gives the ellipse / foreshortened look. */
-@keyframes orbit-p1 {
-  from { transform: rotate(0deg)   translateX(200px) rotate(0deg); }
-  to   { transform: rotate(360deg) translateX(200px) rotate(-360deg); }
-}
-@keyframes orbit-p2 {
-  from { transform: rotate(0deg)   translateX(340px) rotate(0deg); }
-  to   { transform: rotate(360deg) translateX(340px) rotate(-360deg); }
-}
-@keyframes orbit-p3 {
-  from { transform: rotate(0deg)   translateX(270px) rotate(0deg); }
-  to   { transform: rotate(360deg) translateX(270px) rotate(-360deg); }
-}
-@keyframes orbit-p4 {
-  from { transform: rotate(0deg)   translateX(155px) rotate(0deg); }
-  to   { transform: rotate(360deg) translateX(155px) rotate(-360deg); }
-}
+/* Each planet is placed at a fixed offset from center — the parent rotation carries them */
+.p-1 { width: 8px;  height: 8px;  translate: 200px  30px;  opacity: 0.75; }
+.p-2 { width: 11px; height: 11px; translate: -310px -20px; opacity: 0.4; background: var(--blue); }
+.p-3 { width: 5px;  height: 5px;  translate: 260px -50px;  opacity: 0.65; }
+.p-4 { width: 7px;  height: 7px;  translate: -140px  40px; opacity: 0.5; background: var(--ink-faint); }
 @media (prefers-reduced-motion: reduce) {
   .planet, .ring { animation: none; }
 }
@@ -567,14 +519,21 @@ header { position: sticky; top: 0; z-index: 100; }
   transform: scale(1.04);
   filter: brightness(0.88);
 }
-/* Lift the whole inner on hover — works because it's a child of the JS-transformed card */
-.solar-card.is-active .solar-card-inner {
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.35s ease;
+/* Card tilt on hover — rotates slightly like the reference, with a shadow shift */
+.solar-card.is-active {
+  transition: transform 0.65s var(--ease-out),
+              opacity   0.65s ease,
+              box-shadow 0.4s ease,
+              filter    0.65s ease;
 }
+.solar-card.is-active .solar-card-inner {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.4s ease;
+}
+/* Tilt: rotate around the bottom-center axis so it leans back like picked up */
 .solar-card.is-active:hover .solar-card-inner {
-  transform: translateY(-10px);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.18);
+  transform: perspective(800px) rotateX(-6deg) rotateZ(-2deg) translateY(-8px) scale(1.02);
+  box-shadow: 8px 24px 48px rgba(0,0,0,0.22), -4px 8px 16px rgba(0,0,0,0.08);
 }
 
 /* Side / back cards */
@@ -608,28 +567,50 @@ header { position: sticky; top: 0; z-index: 100; }
 }
 .card-label-title { font-family: var(--font-display); font-size: 18px; font-weight: 800; }
 
-/* Carousel controls */
+/* Carousel controls — two small chevron circles flanking dots */
 .carousel-controls {
   position: relative;
   z-index: 20;
   display: flex; align-items: center; justify-content: center;
-  gap: 20px;
-  padding: 20px 0 0;
+  gap: 12px;
+  padding: 16px 0 0;
 }
 .carousel-btn {
-  background: var(--bg);
-  border: 1.5px solid var(--ink);
-  color: var(--ink);
-  width: 40px; height: 40px;
+  background: none;
+  border: 1px solid rgba(17,17,17,0.25);
+  color: var(--ink-muted);
+  width: 28px; height: 28px;
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   cursor: pointer;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.10);
-  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  transition: border-color 0.2s ease, color 0.2s ease, transform 0.2s ease,
+              background 0.2s ease;
+  flex-shrink: 0;
 }
-.carousel-btn svg { width: 18px; height: 18px; }
-.carousel-btn:hover  { background: var(--ink); color: var(--bg); transform: scale(1.08); }
-.carousel-btn:active { transform: scale(0.94); }
+.carousel-btn svg { width: 10px; height: 10px; }
+.carousel-btn:hover  {
+  border-color: var(--ink); color: var(--ink);
+  background: rgba(17,17,17,0.05); transform: scale(1.1);
+}
+.carousel-btn:active { transform: scale(0.92); }
+
+/* Dot indicators */
+.carousel-dots {
+  display: flex; align-items: center; gap: 6px;
+}
+.carousel-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: rgba(17,17,17,0.2);
+  cursor: pointer;
+  transition: background 0.25s ease, transform 0.25s ease;
+  border: none; padding: 0;
+}
+.carousel-dot.active {
+  background: var(--ink);
+  transform: scale(1.3);
+}
+.carousel-dot:hover { background: rgba(17,17,17,0.5); }
 
 /* ============================================================
    FOOTER
