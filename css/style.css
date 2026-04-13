@@ -401,14 +401,6 @@ header { position: sticky; top: 0; z-index: 100; }
   overflow: visible;
 }
 
-.solar-track {
-  overflow: hidden;
-}
-Esto mueve el clip al .solar-track (que contiene las tarjetas) pero deja el .solar-wrap visible, así la gradiente del fondo fluye sin interrupciones. El orbit-deco y las tarjetas siguen funcionando igual.
-
-
-
-
 /* ---- Decorative orbital rings ---- */
 .orbit-deco {
   position: absolute;
@@ -464,6 +456,8 @@ Esto mueve el clip al .solar-track (que contiene las tarjetas) pero deja el .sol
   /* The center of this element is the carousel center */
   perspective: 1400px;
   perspective-origin: 50% 50%;
+  overflow-x: clip;
+  overflow-y: visible;
 }
 /* All cards are placed relative to .solar-track center via JS:
    left:50% top:50% then translate(-50%,-50%) + orbital offset */
@@ -598,7 +592,7 @@ Esto mueve el clip al .solar-track (que contiene las tarjetas) pero deja el .sol
 .carousel-btn svg { width: 10px; height: 10px; }
 .carousel-btn:hover  {
   border-color: var(--ink); color: var(--ink);
-  background: transparent; transform: scale(1.1);
+  background: rgba(17,17,17,0.05); transform: scale(1.1);
 }
 .carousel-btn:active { transform: scale(0.92); }
 
@@ -901,4 +895,3 @@ Esto mueve el clip al .solar-track (que contiene las tarjetas) pero deja el .sol
 }
 
 @media (max-width: 768px) { .claude-badge { display: none; } }
-
