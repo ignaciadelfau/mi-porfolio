@@ -375,7 +375,7 @@ header { position: sticky; top: 0; z-index: 100; }
   text-align: center;
   min-height: 56px;
   display: flex; align-items: center; justify-content: center;
-  margin-bottom: 0;
+  margin-bottom: -80px;
   padding: 0 24px;
 }
 
@@ -521,7 +521,7 @@ header { position: sticky; top: 0; z-index: 100; }
   transform: scale(1.04);
   filter: brightness(0.88);
 }
-/* Card tilt on hover — rotates slightly like the reference, with a shadow shift */
+/* Card tilt on hover — removed */
 .solar-card.is-active {
   transition: transform 0.65s var(--ease-out),
               opacity   0.65s ease,
@@ -529,13 +529,7 @@ header { position: sticky; top: 0; z-index: 100; }
               filter    0.65s ease;
 }
 .solar-card.is-active .solar-card-inner {
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.4s ease;
-}
-/* Tilt: rotate around the bottom-center axis so it leans back like picked up */
-.solar-card.is-active:hover .solar-card-inner {
-  transform: perspective(800px) rotateX(-6deg) rotateZ(-2deg) translateY(-8px) scale(1.02);
-  box-shadow: 8px 24px 48px rgba(0,0,0,0.22), -4px 8px 16px rgba(0,0,0,0.08);
+  transition: none;
 }
 
 /* Side / back cards */
