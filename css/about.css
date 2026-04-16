@@ -1,0 +1,140 @@
+/* ============================================================
+   ABOUT PAGE — Narrative scroll layout
+   Archivo: css/about.css
+   ============================================================ */
+
+/* Reset about-page body background to plain white */
+.about-body {
+  background: #fff;
+}
+
+/* ── Shared reveal animation ── */
+.ab-reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.ab-reveal.ab-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ============================================================
+   ① PHOTO SECTION
+   ============================================================ */
+.ab-photo-section {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 120px 24px 80px;
+}
+
+.ab-photo-wrap {
+  position: relative;
+}
+
+.ab-portrait {
+  width: clamp(200px, 30vw, 380px);
+  height: clamp(200px, 30vw, 380px);
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: 50% 20%;
+  display: block;
+}
+
+/* ============================================================
+   ② BIO STATEMENT SECTION
+   ============================================================ */
+.ab-statement-section {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 48px;
+  background: #fff;
+}
+
+.ab-statement {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: clamp(28px, 4.5vw, 64px);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  text-align: center;
+  max-width: 900px;
+  color: #111;
+}
+
+.ab-statement strong {
+  font-weight: 800;
+}
+
+/* ============================================================
+   ③ LET'S TALK CTA SECTION
+   ============================================================ */
+.ab-cta-section {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 24px;
+  background: #fff;
+}
+
+.ab-cta-inner {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.ab-cta-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: clamp(52px, 10vw, 140px);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: #111;
+}
+
+.ab-cta-sub {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(15px, 1.8vw, 20px);
+  font-weight: 400;
+  color: #555;
+}
+
+.ab-cta-btn {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 12px 28px;
+  border: 1.5px solid #1000FF;
+  border-radius: 999px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: #1000FF;
+  text-decoration: none;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+.ab-cta-btn:hover {
+  background: #1000FF;
+  color: #fff;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 600px) {
+  .ab-statement-section,
+  .ab-cta-section {
+    padding: 60px 24px;
+  }
+  .ab-statement {
+    font-size: clamp(22px, 6vw, 36px);
+  }
+}
