@@ -859,7 +859,7 @@ header { position: sticky; top: 0; z-index: 100; }
 .claude-badge {
   position: fixed;
   right: 0;
-  top: 50%;
+  top: 75%;
   /* Rotate so text reads bottom→top; anchor at bottom-right so it
      sits flush against the viewport edge */
   transform-origin: 100% 100%;
