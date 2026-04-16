@@ -302,8 +302,8 @@ header { position: sticky; top: 0; z-index: 100; }
   /* Slightly above center to align with the O's optical center */
   top: 48%; left: 50%;
   transform: translate(-50%, -50%) scale(0);
-  /* Size matches the full O letter */
-  width: 1em; height: 1em;
+  /* Sized to fit neatly inside the O without touching adjacent letters */
+  width: 0.72em; height: 0.72em;
   border-radius: 50%; overflow: hidden;
   opacity: 0; pointer-events: none;
   transition: transform 0.4s var(--ease-out), opacity 0.3s ease;
