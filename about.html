@@ -6,18 +6,19 @@
   <meta name="description" content="About María Ignacia Delfau — UX/UI Designer in Barcelona" />
   <title>About — María Ignacia Delfau</title>
   <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/about.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
 </head>
-<body>
+<body class="about-body">
 
-  <a href="#main-content" class="skip-link">Skip to main content</a>
+  <a href="#main-content" class="skip-link sr-only">Skip to main content</a>
 
   <header role="banner">
     <nav class="nav" aria-label="Main navigation">
-      <a href="index.html" class="nav-logo" aria-label="MID — Home">
-        <span aria-hidden="true">·</span>MID
+      <a href="index.html" class="nav-logo" aria-label="Home">
+        <img src="assets/images/logo.png" alt="María Ignacia Delfau" class="logo-img" />
       </a>
       <div class="nav-links">
         <a href="index.html#work">Work</a>
@@ -35,88 +36,31 @@
     </div>
   </header>
 
-  <main id="main-content" class="about-page">
+  <main id="main-content">
 
-    <!-- HERO: split — text left, photo right -->
-    <section class="about-intro" aria-label="About introduction">
-      <div class="about-intro-text">
-        <h1 class="about-headline">
-          Designer.<br/>
-          <span class="accent">Curious</span><br/>
-          by nature.
-        </h1>
-        <p>
-          I'm a Chilean UX/UI designer based in Barcelona.
-          I believe great design should be invisible — purposeful,
-          accessible, and built for real people.
-        </p>
-      </div>
-      <div class="about-intro-photo" aria-hidden="true">
-        <!-- Replace with your portrait -->
-        <img src="assets/images/about-portrait.jpg" alt="María Ignacia Delfau" />
+    <!-- ① PHOTO — centrada, aparece sola -->
+    <section class="ab-photo-section" aria-label="Portrait">
+      <div class="ab-photo-wrap ab-reveal">
+        <img src="assets/images/about-portrait.jpg" alt="María Ignacia Delfau" class="ab-portrait" />
       </div>
     </section>
 
-    <!-- BIO STRIP -->
-    <div class="bio-strip" aria-hidden="true">
-      <div class="bio-strip-inner">
-        <p>
-          I'm a Chilean designer in Barcelona,
-          <strong>specializing in UX/UI design.</strong>
-          <span class="bio-photo-inline">
-            <img src="assets/images/face.jpg" alt="" />
-          </span>
-          I'm passionate about projects that enhance user experiences and promote a
-          <strong>sustainable, equitable future.</strong>
-        </p>
+    <!-- ② BIO STATEMENT — texto grande tipo manifiesto -->
+    <section class="ab-statement-section" aria-label="Bio">
+      <div class="ab-statement ab-reveal">
+        I'm a Chilean&nbsp;designer in Barcelona,
+        <strong>specializing in UX/UI design.</strong>
+        I'm passionate about projects that enhance user experiences and promote a
+        <strong>sustainable, equitable future.</strong>
       </div>
-    </div>
+    </section>
 
-    <!-- DETAILS: bio text + skills -->
-    <section class="about-details" aria-label="Bio and skills">
-      <div class="about-bio">
-        <p>
-          I've been shaping digital experiences for brands big and small,
-          always with a focus on the person at the other end of the screen.
-          My process lives at the intersection of research, strategy,
-          and visual craft.
-        </p>
-        <p>
-          Before landing in Barcelona, I studied design in Santiago,
-          Chile — where I developed a deep respect for how design can
-          solve real-world problems at scale. I've since worked across
-          fintech, sustainability, and consumer products.
-        </p>
-        <p>
-          When I'm not pushing pixels, you'll find me [your hobby here —
-          hiking, reading about typography, photographing textures, etc.].
-        </p>
-        <a href="assets/resume.pdf" target="_blank" rel="noopener noreferrer">
-          Download CV ↗
-        </a>
-      </div>
-
-      <div class="about-sidebar">
-        <h3>Skills</h3>
-        <ul class="skills-pills" role="list">
-          <li>UX Research</li>
-          <li>UI Design</li>
-          <li>Prototyping</li>
-          <li>Brand Identity</li>
-          <li>Design Systems</li>
-          <li>Motion Design</li>
-          <li>Figma</li>
-          <li>Webflow</li>
-          <li>Framer</li>
-          <li>Illustration</li>
-          <li>Accessibility</li>
-        </ul>
-
-        <h3>Currently</h3>
-        <p style="font-size:14px; color:var(--ink-muted); line-height:1.6; margin-bottom:20px;">
-          Available for freelance projects<br/>and full-time opportunities.
-        </p>
-        <a href="mailto:hello@mid.design" class="about-cta">Get in touch →</a>
+    <!-- ③ LET'S TALK — CTA final -->
+    <section class="ab-cta-section" aria-label="Contact">
+      <div class="ab-cta-inner ab-reveal">
+        <h2 class="ab-cta-title">Let's talk</h2>
+        <p class="ab-cta-sub">And make something fun together&nbsp;:)</p>
+        <a href="mailto:hello@mid.design" class="ab-cta-btn">Hit me up!</a>
       </div>
     </section>
 
@@ -134,5 +78,20 @@
   </footer>
 
   <script src="js/main.js"></script>
+  <script>
+    // Scroll reveal for about page elements
+    document.addEventListener('DOMContentLoaded', () => {
+      const els = document.querySelectorAll('.ab-reveal');
+      const obs = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            e.target.classList.add('ab-visible');
+            obs.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+      els.forEach(el => obs.observe(el));
+    });
+  </script>
 </body>
 </html>
