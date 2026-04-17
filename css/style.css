@@ -1,901 +1,506 @@
 /* ============================================================
-   PORTFOLIO V3 — María Ignacia Delfau
+   main.js — Portfolio V3
+   Solar system carousel + all interactions
    ============================================================ */
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+/* ---- PROJECTS DATA — edit this to add/change projects ---- */
+const PROJECTS = [
+  {
+    id: 1,
+    title: 'Openbank',
+    tags: 'UX Design · Fintech',
+    dest: 'project.html',
+    locked: false,
+    img: 'assets/images/project-1.jpg',
+  },
+  {
+    id: 2,
+    title: 'Project Name',
+    tags: 'Brand Identity · Motion',
+    dest: 'project.html',
+    locked: true,
+    img: 'assets/images/project-2.jpg',
+  },
+  {
+    id: 3,
+    title: 'Project Name',
+    tags: 'Visual Identity · Web',
+    dest: 'project.html',
+    locked: false,
+    img: 'assets/images/project-3.jpg',
+  },
+  {
+    id: 4,
+    title: 'Project Name',
+    tags: 'UX Research · UI',
+    dest: 'project.html',
+    locked: true,
+    img: 'assets/images/project-4.jpg',
+  },
+  {
+    id: 5,
+    title: 'Project Name',
+    tags: 'Product Design',
+    dest: 'project.html',
+    locked: false,
+    img: 'assets/images/project-5.jpg',
+  },
+];
 
-:root {
-  --bg:           #FFFFFF;
-  --ink:          #111111;
-  --ink-muted:    #555555;
-  --ink-faint:    #999999;
-  --blue:         #1000FF;
-  --blue-a11y:    #0500CC;
-  --yellow:       #FAC601;
-  --border:       rgba(17,17,17,0.10);
-  --border-hover: rgba(17,17,17,0.22);
+/* ---- Passwords: key = dest filename ---- */
+const PASSWORDS = {
+  'project.html': 'demo123',
+};
 
-  --font-body:    'Montserrat', sans-serif;
-  --font-display: 'Syne', sans-serif;
-  --nav-h:        88px;
-  --ease-out:     cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-io:      cubic-bezier(0.65, 0, 0.35, 1);
-}
+/* ============================================================
+   SOLAR CAROUSEL
+   ============================================================ */
+class SolarCarousel {
+  constructor() {
+    this.track        = document.getElementById('solar-track');
+    this.titleEl      = document.getElementById('carousel-title');
+    this.prevBtn      = document.getElementById('carousel-prev');
+    this.nextBtn      = document.getElementById('carousel-next');
+    this.dotsEl       = document.getElementById('carousel-dots');
+    this.a11yList     = document.getElementById('projects-a11y-list');
 
-/* Both html and body transparent — gradient-bg carries the white base */
-html { background: transparent; }
+    this.total        = PROJECTS.length;
+    this.current      = 0;
+    this.isAnimating  = false;
 
-body {
-  background: transparent;
-  color: var(--ink);
-  font-family: var(--font-body);
-  font-size: 16px;
-  line-height: 1.6;
-  overflow-x: hidden;
-}
+    if (!this.track) return;
 
-img { display: block; max-width: 100%; }
-a   { color: inherit; text-decoration: none; }
+    this.buildCards();
+    this.buildDots();
+    this.buildA11yList();
+    this.render(true);
+    this.bindEvents();
+  }
 
-.sr-only {
-  position: absolute; width: 1px; height: 1px; padding: 0;
-  margin: -1px; overflow: hidden; clip: rect(0,0,0,0);
-  white-space: nowrap; border: 0;
-}
+  buildCards() {
+    PROJECTS.forEach((p, i) => {
+      const card = document.createElement('div');
+      card.className = 'solar-card';
+      card.setAttribute('role', 'button');
+      card.setAttribute('tabindex', '-1');
+      card.dataset.index = i;
 
-:focus-visible {
-  outline: 2px solid var(--blue-a11y);
-  outline-offset: 3px;
-  border-radius: 2px;
+      card.innerHTML = `
+        <div class="solar-card-inner">
+          <img src="${p.img}" alt="${p.title}" loading="lazy"
+               onerror="this.parentElement.style.background='#e0e0e0';this.style.display='none'" />
+          ${p.locked ? `
+          <div class="card-lock-overlay">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <rect x="5" y="11" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M8 11V7a4 4 0 018 0v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <circle cx="12" cy="16" r="1.5" fill="currentColor"/>
+            </svg>
+            <span>Password Protected</span>
+          </div>` : ''}
+          <div class="card-label">
+            <div class="card-label-tags">${p.tags}</div>
+            <div class="card-label-title">${p.title}</div>
+          </div>
+        </div>
+      `;
+
+      // Click: only active card navigates/opens modal
+      card.addEventListener('click', () => this.onCardClick(i));
+      card.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.onCardClick(i); }
+      });
+
+      this.track.appendChild(card);
+    });
+
+    this.cards = Array.from(this.track.querySelectorAll('.solar-card'));
+  }
+
+  buildDots() {
+    if (!this.dotsEl) return;
+    PROJECTS.forEach((p, i) => {
+      const dot = document.createElement('button');
+      dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+      dot.setAttribute('role', 'tab');
+      dot.setAttribute('aria-label', `Go to project: ${p.title}`);
+      dot.setAttribute('aria-selected', i === 0 ? 'true' : 'false');
+      dot.addEventListener('click', () => this.goTo(i));
+      this.dotsEl.appendChild(dot);
+    });
+    this.dots = Array.from(this.dotsEl.querySelectorAll('.carousel-dot'));
+  }
+
+  updateDots() {
+    if (!this.dots) return;
+    this.dots.forEach((dot, i) => {
+      const active = i === this.current;
+      dot.classList.toggle('active', active);
+      dot.setAttribute('aria-selected', active ? 'true' : 'false');
+    });
+  }
+
+  goTo(index) {
+    if (index === this.current || this.isAnimating) return;
+    const dir = index > this.current ? 1 : -1;
+    this.isAnimating = true;
+    this.current = index;
+    this.render();
+    setTimeout(() => { this.isAnimating = false; }, 680);
+  }
+
+  buildA11yList() {
+    if (!this.a11yList) return;
+    PROJECTS.forEach(p => {
+      const a = document.createElement('a');
+      a.href = p.dest;
+      a.textContent = `${p.title} — ${p.tags}`;
+      this.a11yList.appendChild(a);
+    });
+  }
+
+  /* Compute layout for N cards around a flattened ellipse (solar system feel) */
+  getCardState(relIndex) {
+    // relIndex: 0 = active/center, ±1 = adjacent, ±2 = further, etc.
+    const n      = this.total;
+    // angle for this position in a circle, then project onto ellipse
+    const angle  = (relIndex / n) * Math.PI * 2;
+
+    // Ellipse radii (visual "orbit")
+    const rx = 280;  // horizontal spread
+    const ry = 40;   // vertical squash (perspective feel)
+
+    const x  = Math.sin(angle) * rx;
+    const y  = Math.cos(angle) * ry;
+
+    // Depth: cos(angle) → 1 at center front, -1 at back
+    const depth = Math.cos(angle); // 1 = front, -1 = back
+
+    // Scale: front bigger, back smaller
+    const scale  = 0.45 + 0.55 * ((depth + 1) / 2);
+
+    // Opacity: back cards fade
+    const opacity = 0.3 + 0.7 * ((depth + 1) / 2);
+
+    // Z index: front on top
+    const zIndex = Math.round(10 + depth * 10);
+
+    // Blur: back cards slightly blurred
+    const blur = Math.max(0, (1 - (depth + 1) / 2) * 3);
+
+    return { x, y, scale, opacity, zIndex, blur, depth };
+  }
+
+  render(instant = false) {
+    const n = this.total;
+    this.cards.forEach((card, i) => {
+      const relIndex = ((i - this.current) % n + n) % n;
+      const wrapped  = relIndex > n / 2 ? relIndex - n : relIndex;
+      const state    = this.getCardState(wrapped);
+
+      const isActive = wrapped === 0;
+      card.classList.toggle('is-active', isActive);
+      card.setAttribute('tabindex', isActive ? '0' : '-1');
+      card.setAttribute('aria-current', isActive ? 'true' : 'false');
+
+      // Ensure cards always originate from the true center of .solar-track
+      // left:50% top:50% anchors to center; translate(-50%,-50%) removes own size;
+      // then orbital offset x/y moves outward; scale applied last.
+      card.style.left = '50%';
+      card.style.top  = '30%';
+
+      const dur = instant ? 0 : 650;
+      card.style.transition = instant
+        ? 'none'
+        : `transform ${dur}ms cubic-bezier(0.16,1,0.3,1),
+           opacity   ${dur}ms ease,
+           filter    ${dur}ms ease`;
+
+      card.style.transform = `translate(calc(-50% + ${state.x}px), calc(-50% + ${state.y}px)) scale(${state.scale})`;
+      card.style.opacity   = state.opacity;
+      card.style.zIndex    = state.zIndex;
+      card.style.filter    = state.blur > 0 ? `blur(${state.blur}px)` : '';
+    });
+
+    this.updateTitle();
+    this.updateDots();
+  }
+
+  updateTitle() {
+    const p = PROJECTS[this.current];
+    if (!this.titleEl) return;
+
+    // Animate title change
+    this.titleEl.classList.add('changing');
+    setTimeout(() => {
+      this.titleEl.textContent = p.title;
+      this.titleEl.classList.remove('changing');
+    }, 200);
+  }
+
+  advance(dir) {
+    if (this.isAnimating) return;
+    this.isAnimating = true;
+    this.current = ((this.current + dir) + this.total) % this.total;
+    this.render();
+    setTimeout(() => { this.isAnimating = false; }, 680);
+  }
+
+  onCardClick(i) {
+    if (i !== this.current) {
+      // Clicking a side card rotates to it
+      const n = this.total;
+      const fwd = ((i - this.current) + n) % n;
+      const bwd = ((this.current - i) + n) % n;
+      this.advance(fwd <= bwd ? fwd : -bwd);
+      return;
+    }
+    // Active card: navigate or open modal
+    const p = PROJECTS[i];
+    if (p.locked) {
+      openModal(p.dest, p.title);
+    } else {
+      navigateTo(p.dest);
+    }
+  }
+
+  bindEvents() {
+    this.prevBtn?.addEventListener('click', () => this.advance(-1));
+    this.nextBtn?.addEventListener('click', () => this.advance(1));
+
+    // Keyboard arrows
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight') this.advance(1);
+      if (e.key === 'ArrowLeft')  this.advance(-1);
+    });
+
+    // ── Touch swipe (mobile) ────────────────────────────────────
+    let touchStartX = 0;
+    let touchStartY = 0;
+    this.track.addEventListener('touchstart', e => {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+    this.track.addEventListener('touchend', e => {
+      const dx = touchStartX - e.changedTouches[0].clientX;
+      const dy = touchStartY - e.changedTouches[0].clientY;
+      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 36) {
+        this.advance(dx > 0 ? 1 : -1);
+      }
+    });
+
+    // ── Horizontal scroll / trackpad swipe (desktop) ─────────────
+    // Accumulate deltaX; fire once a threshold is crossed, then
+    // cooldown so one flick = one step.
+    let wheelAccum = 0;
+    let wheelCooldown = false;
+
+    const onWheel = e => {
+      // Only intercept if there's a meaningful horizontal component
+      // (trackpad two-finger swipe gives deltaX; vertical scroll gives deltaY)
+      if (Math.abs(e.deltaX) < Math.abs(e.deltaY) * 0.4) return;
+
+      e.preventDefault();  // stop page scroll while swiping horizontally
+
+      if (wheelCooldown) return;
+
+      wheelAccum += e.deltaX;
+
+      if (Math.abs(wheelAccum) > 60) {
+        this.advance(wheelAccum > 0 ? 1 : -1);
+        wheelAccum = 0;
+        wheelCooldown = true;
+        setTimeout(() => { wheelCooldown = false; }, 700);
+      }
+    };
+
+    // Must be non-passive to call preventDefault
+    const section = this.track.closest('.work-section') || this.track;
+    section.addEventListener('wheel', onWheel, { passive: false });
+  }
 }
 
 /* ============================================================
    NAV
    ============================================================ */
-header { position: sticky; top: 0; z-index: 100; }
-
-.nav {
-  height: var(--nav-h);
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 48px;
-  background: rgba(255,255,255,0.93);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-bottom: 1px solid transparent;
-  transition: border-color 0.3s ease;
-}
-.nav.scrolled { border-color: var(--border); }
-
-/* ---- LOGO IMAGE with kinetic entrance animation ---- */
-.nav-logo { display: flex; align-items: center; }
-
-.logo-img {
-  height: 32px;
-  width: auto;
-  display: block;
-  opacity: 0;
-  filter: blur(8px);
-  transform: scale(0.6) skewX(-12deg);
-  animation: logo-enter 1.1s var(--ease-out) 0.2s forwards;
-  /* Transition for hover — only fires after animation completes */
-  transition: transform 0.3s cubic-bezier(0.16,1,0.3,1), filter 0.3s ease;
-}
-
-@keyframes logo-enter {
-  0% {
-    opacity: 0;
-    filter: blur(8px);
-    transform: scale(0.6) skewX(-12deg) translateX(-20px);
-    letter-spacing: 0.4em;
-  }
-  40% {
-    opacity: 1;
-    filter: blur(2px);
-    transform: scale(1.04) skewX(-4deg) translateX(4px);
-  }
-  65% {
-    filter: blur(0px);
-    transform: scale(0.98) skewX(1deg) translateX(-1px);
-  }
-  100% {
-    opacity: 1;
-    filter: blur(0px);
-    transform: scale(1) skewX(0deg) translateX(0);
-  }
-}
-
-/* Subtle hover: scale up only — no animation override (prevents disappearing) */
-.nav-logo:hover .logo-img {
-  transform: scale(1.07) skewX(-2deg);
-  filter: brightness(1.1);
-}
-/* Add transition to logo-img for the hover state */
-
-/* Nav links */
-.nav-links { display: flex; gap: 36px; }
-.nav-links a {
-  font-size: 13px; font-weight: 500;
-  letter-spacing: 0.05em; text-transform: uppercase;
-  color: var(--ink-muted);
-  position: relative;
-  transition: color 0.2s;
-}
-.nav-links a::after {
-  content: '';
-  position: absolute; bottom: -3px; left: 0;
-  height: 1.5px; width: 0;
-  background: var(--blue-a11y);
-  transition: width 0.3s var(--ease-out);
-}
-.nav-links a:hover { color: var(--ink); }
-.nav-links a:hover::after { width: 100%; }
-
-/* Mobile toggle */
-.nav-toggle {
-  display: none;
-  flex-direction: column; gap: 5px; justify-content: center;
-  background: none; border: none; cursor: pointer; padding: 4px;
-  width: 32px; height: 32px;
-}
-.nav-toggle span {
-  display: block; height: 1.5px; background: var(--ink);
-  transition: transform 0.3s var(--ease-out), opacity 0.3s ease;
-  transform-origin: center;
-}
-.nav-toggle[aria-expanded="true"] span:first-child  { transform: translateY(6.5px) rotate(45deg); }
-.nav-toggle[aria-expanded="true"] span:last-child   { transform: translateY(-6.5px) rotate(-45deg); }
-
-.mobile-menu {
-  display: none; flex-direction: column;
-  background: var(--bg); border-bottom: 1px solid var(--border);
-  padding: 16px 48px 24px; gap: 20px;
-}
-.mobile-menu.open { display: flex; }
-.mobile-menu a {
-  font-size: 22px; font-weight: 700; color: var(--ink);
-  transition: color 0.2s;
-}
-.mobile-menu a:hover { color: var(--blue-a11y); }
-
-/* ============================================================
-   HERO  +  gradient that bleeds into the next section
-   ============================================================ */
-.hero {
-  position: relative;
-  min-height: calc(100vh - var(--nav-h));
-  display: flex; align-items: center; justify-content: center;
-  /* NO overflow:hidden — let orbs bleed down into work section */
-  text-align: center;
-}
-
-/* ── Full-page fixed layer — white base + gradient orbs in one element ── */
-.gradient-bg {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  overflow: hidden;
-  /* White base painted directly here so it's always in sync with the orbs */
-  background: var(--bg);
-}
-
-.orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-}
-
-/* Main orb — centered, breathes with a dramatic expand/contract */
-.orb-1 {
-  width: 75vw; height: 75vw;
-  background: radial-gradient(circle, #FAC601 0%, #FAC60100 55%);
-  top: 50%; left: 50%;
-  opacity: 0.7;
-  animation: orb-breathe 3.5s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
-}
-
-/* Top-left accent — slow drift */
-.orb-2 {
-  width: 42vw; height: 42vw;
-  background: radial-gradient(circle, #F5B800 0%, transparent 60%);
-  top: 0%; left: 0%;
-  opacity: 0.38;
-  animation: orb-drift-a 7s ease-in-out infinite alternate;
-}
-
-/* Bottom-right accent — counters orb-2 */
-.orb-3 {
-  width: 38vw; height: 38vw;
-  background: radial-gradient(circle, #FBCF30 0%, transparent 60%);
-  bottom: 5%; right: 5%;
-  opacity: 0.42;
-  animation: orb-drift-b 9s ease-in-out infinite alternate;
-}
-
-/* Dramatic breathe: small→large with a big opacity swing so it really "pulses" */
-@keyframes orb-breathe {
-  0%   {
-    transform: translate(-50%, -50%) scale(0.65);
-    opacity: 0.45;
-    filter: blur(90px);
-  }
-  100% {
-    transform: translate(-50%, -50%) scale(1.25);
-    opacity: 0.78;
-    filter: blur(65px);
-  }
-}
-
-@keyframes orb-drift-a {
-  0%   { transform: translate(0, 0)           scale(1);    opacity: 0.3; }
-  50%  { transform: translate(8vw, 6vh)        scale(1.15); opacity: 0.45; }
-  100% { transform: translate(4vw, 12vh)       scale(0.9);  opacity: 0.3; }
-}
-
-@keyframes orb-drift-b {
-  0%   { transform: translate(0, 0)            scale(1);    opacity: 0.35; }
-  50%  { transform: translate(-6vw, -8vh)      scale(1.1);  opacity: 0.5; }
-  100% { transform: translate(-10vw, -3vh)     scale(1.2);  opacity: 0.38; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .orb       { animation: none !important; }
-  .logo-img  { animation: none !important; opacity: 1; filter: none; transform: none; }
-}
-
-/* Hero content */
-.hero-content {
-  position: relative; z-index: 1;
-  padding: 40px 24px;
-  display: flex; flex-direction: column; align-items: center; gap: 28px;
-}
-
-/* HELLO */
-.hello-word {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: clamp(80px, 14vw, 200px);
-  line-height: 0.9;
-  letter-spacing: -0.03em;
-  color: var(--blue);
-  display: flex; align-items: baseline;
-  cursor: default; user-select: none;
-}
-
-.h-letter {
-  display: inline-block;
-  position: relative;
-  opacity: 0;
-  transform: translateY(30px) rotate(-4deg);
-  animation: letter-in 0.5s var(--ease-out) calc(0.5s + var(--i) * 0.07s) forwards;
-  transition: color 0.15s ease;
-}
-
-@keyframes letter-in {
-  to { opacity: 1; transform: translateY(0) rotate(0deg); }
-}
-
-.h-letter:hover {
-  color: var(--ink);
-  transform: translateY(-6px) scale(1.06) !important;
-  transition: color 0.1s ease, transform 0.2s var(--ease-out);
-}
-
-.h-period {
-  display: inline-block;
-  color: var(--ink);
-  opacity: 0;
-  animation: letter-in 0.5s var(--ease-out) calc(0.5s + 5 * 0.07s) forwards;
-}
-
-/* O face bubble — fits inside the bowl of the O */
-.h-o {
-  position: relative;
-  transition: color 0.3s ease;
-}
-.h-o:hover {
-  color: transparent !important;
-}
-.face-bubble {
-  position: absolute;
-  /* Slightly above center to align with the O's optical center */
-  top: 48%; left: 50%;
-  transform: translate(-50%, -50%) scale(0);
-  /* Sized to fit neatly inside the O without touching adjacent letters */
-  width: 0.72em; height: 0.72em;
-  border-radius: 50%; overflow: hidden;
-  opacity: 0; pointer-events: none;
-  transition: transform 0.4s var(--ease-out), opacity 0.3s ease;
-  z-index: 10;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.25);
-  /* clip-path as belt-and-suspenders for perfect circle */
-  clip-path: circle(50% at 50% 50%);
-}
-.h-o:hover .face-bubble {
-  transform: translate(-50%, -50%) scale(1);
-  opacity: 1;
-}
-.face-bubble img {
-  width: 100%; height: 100%;
-  object-fit: cover;
-  /* Photo is vertical portrait — show upper body / face area */
-  object-position: 50% 15%;
-  border-radius: 50%;
-}
-
-/* Hero sub */
-.hero-sub {
-  font-size: clamp(15px, 1.8vw, 19px);
-  font-weight: 400; color: var(--ink-muted);
-  line-height: 1.7; max-width: 440px;
-  opacity: 0;
-  animation: fade-up 0.7s var(--ease-out) 1.1s forwards;
-}
-.hero-sub em   { font-style: italic; color: var(--ink); font-weight: 500; }
-.hero-sub strong { font-weight: 600; color: var(--ink); }
-
-@keyframes fade-up {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-.hero-scroll {
-  color: var(--ink-muted);
-  display: inline-flex;
-  opacity: 0;
-  animation: fade-up 0.6s var(--ease-out) 1.4s forwards,
-             bounce-down 2.2s ease-in-out 2s infinite;
-  transition: color 0.2s ease;
-}
-.hero-scroll:hover { color: var(--ink); }
-
-@keyframes bounce-down {
-  0%, 100% { transform: translateY(0); }
-  50%       { transform: translateY(7px); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .hero-scroll { animation: fade-up 0.6s var(--ease-out) 1.4s forwards; }
-  .h-letter, .h-period, .hero-sub { animation: none; opacity: 1; transform: none; }
+function initNav() {
+  const nav = document.querySelector('.nav');
+  if (!nav) return;
+  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 20), { passive: true });
 }
 
 /* ============================================================
-   SOLAR CAROUSEL
+   MOBILE MENU
    ============================================================ */
-.work-section {
-  padding: 12px 0 40px;
-  position: relative;
-  background: transparent;
+function initMobileMenu() {
+  const toggle = document.querySelector('.nav-toggle');
+  const menu   = document.querySelector('.mobile-menu');
+  if (!toggle || !menu) return;
+  toggle.addEventListener('click', () => {
+    const open = toggle.getAttribute('aria-expanded') === 'true';
+    toggle.setAttribute('aria-expanded', String(!open));
+    menu.setAttribute('aria-hidden', String(open));
+    menu.classList.toggle('open', !open);
+  });
+  menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    toggle.setAttribute('aria-expanded', 'false');
+    menu.setAttribute('aria-hidden', 'true');
+    menu.classList.remove('open');
+  }));
 }
-
-.carousel-label {
-  text-align: center;
-  font-size: 13px; font-weight: 500;
-  letter-spacing: 0.06em;
-  color: var(--ink-muted);
-  margin-bottom: 6px;
-}
-
-/* 32px spacing between: label → title → cards → arrows */
-.carousel-title-wrap {
-  text-align: center;
-  min-height: 56px;
-  display: flex; align-items: center; justify-content: center;
-  margin-bottom: 0;
-  padding: 0 24px;
-}
-
-.carousel-active-title {
-  font-family: var(--font-display);
-  font-size: clamp(32px, 6vw, 88px);
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  color: var(--ink);
-  line-height: 1;
-  transition: opacity 0.25s ease, transform 0.25s var(--ease-out);
-}
-.carousel-active-title.changing {
-  opacity: 0;
-  transform: translateY(10px) scale(0.97);
-}
-
-/* ---- Solar wrap ---- */
-.solar-wrap {
-  position: relative;
-  width: 100%;
-  height: 440px;
-  overflow: hidden;
-}
-
-/* ---- Decorative orbital rings ---- */
-.orbit-deco {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  display: flex; align-items: center; justify-content: center;
-}
-
-/* Planet container spins horizontally — gives the "solar system tilted plane" feel */
-.planet-container {
-  position: absolute;
-  inset: 0;
-  display: flex; align-items: center; justify-content: center;
-  animation: planet-spin 28s linear infinite;
-  transform-style: preserve-3d;
-}
-
-@keyframes planet-spin {
-  from { transform: rotateX(72deg) rotateZ(0deg); }
-  to   { transform: rotateX(72deg) rotateZ(360deg); }
-}
-
-.ring {
-  position: absolute;
-  border-radius: 50%;
-  border: 1.5px solid rgba(17,17,17,0.13);
-  /* Rings are static — planets move instead */
-}
-.ring-1 { width: 560px;  height: 220px; transform: rotateX(72deg); }
-.ring-2 { width: 820px;  height: 320px; transform: rotateX(72deg); }
-.ring-3 { width: 1080px; height: 420px; transform: rotateX(72deg); }
-
-/* Planet dots — fixed at positions on the rotating container.
-   The container (planet-container) rotates, carrying them around. */
-.planet {
-  position: absolute;
-  border-radius: 50%;
-  background: var(--yellow);
-}
-/* Each planet is placed at a fixed offset from center — the parent rotation carries them */
-.p-1 { width: 8px;  height: 8px;  translate: 200px  30px;  opacity: 0.75; }
-.p-2 { width: 11px; height: 11px; translate: -310px -20px; opacity: 0.4; background: var(--blue); }
-.p-3 { width: 5px;  height: 5px;  translate: 260px -50px;  opacity: 0.65; }
-.p-4 { width: 7px;  height: 7px;  translate: -140px  40px; opacity: 0.5; background: var(--ink-faint); }
-@media (prefers-reduced-motion: reduce) {
-  .planet, .ring { animation: none; }
-}
-
-/* ---- Solar track: explicit center anchor for absolute cards ---- */
-.solar-track {
-  position: absolute;          /* sits inside solar-wrap */
-  inset: 0;
-  /* The center of this element is the carousel center */
-  perspective: 1400px;
-  perspective-origin: 50% 50%;
-}
-/* All cards are placed relative to .solar-track center via JS:
-   left:50% top:50% then translate(-50%,-50%) + orbital offset */
-
-/* Each card is absolutely positioned and transformed by JS */
-.solar-card {
-  position: absolute;
-  width: 340px;
-  border-radius: 20px;
-  overflow: hidden;
-  cursor: pointer;
-  will-change: transform, opacity;
-  transition: transform 0.65s var(--ease-out),
-              opacity   0.65s ease,
-              box-shadow 0.4s ease,
-              filter    0.65s ease;
-  transform-origin: center center;
-  -webkit-tap-highlight-color: transparent;
-}
-
-/* Card inner */
-.solar-card-inner {
-  aspect-ratio: 4/3;
-  width: 100%;
-  background: #EBEBEB;
-  border-radius: 20px;
-  overflow: hidden;
-  position: relative;
-}
-.solar-card-inner img {
-  width: 100%; height: 100%;
-  object-fit: cover;
-  transition: transform 0.6s var(--ease-out), filter 0.5s ease;
-}
-
-/* Locked overlay */
-.card-lock-overlay {
-  position: absolute; inset: 0;
-  background: rgba(17,17,17,0.55);
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center; gap: 10px;
-  opacity: 0;
-  border-radius: 20px;
-  transition: opacity 0.3s ease;
-}
-.card-lock-overlay svg { color: white; }
-.card-lock-overlay span {
-  color: white; font-size: 12px; font-weight: 700;
-  letter-spacing: 0.1em; text-transform: uppercase;
-}
-.solar-card.is-active:hover .card-lock-overlay,
-.solar-card.is-active:focus .card-lock-overlay { opacity: 1; }
-
-/* Active card: center, large */
-.solar-card.is-active {
-  z-index: 10;
-  box-shadow: 0 32px 80px rgba(0,0,0,0.22), 0 8px 24px rgba(0,0,0,0.12);
-}
-.solar-card.is-active .solar-card-inner img { filter: brightness(1); }
-.solar-card.is-active:hover .solar-card-inner img {
-  transform: scale(1.04);
-  filter: brightness(0.88);
-}
-/* Card tilt on hover — rotates slightly like the reference, with a shadow shift */
-.solar-card.is-active {
-  transition: transform 0.65s var(--ease-out),
-              opacity   0.65s ease,
-              box-shadow 0.4s ease,
-              filter    0.65s ease;
-}
-.solar-card.is-active .solar-card-inner {
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.4s ease;
-}
-/* Tilt: rotate around the bottom-center axis so it leans back like picked up */
-.solar-card.is-active:hover .solar-card-inner {
-  transform: perspective(800px) rotateX(-6deg) rotateZ(-2deg) translateY(-8px) scale(1.02);
-  box-shadow: 8px 24px 48px rgba(0,0,0,0.22), -4px 8px 16px rgba(0,0,0,0.08);
-}
-
-/* Side / back cards */
-.solar-card:not(.is-active) {
-  z-index: 5;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.10);
-  pointer-events: none; /* only active is clickable */
-}
-.solar-card:not(.is-active) .solar-card-inner img { filter: brightness(0.75) saturate(0.7); }
-
-/* Card footer label (visible only on active) */
-.card-label {
-  position: absolute; bottom: 0; left: 0; right: 0;
-  padding: 20px;
-  background: linear-gradient(transparent, rgba(0,0,0,0.55));
-  color: white;
-  border-radius: 0 0 20px 20px;
-  opacity: 0;
-  transform: translateY(6px);
-  transition: opacity 0.35s ease, transform 0.35s var(--ease-out);
-}
-.solar-card.is-active:hover .card-label,
-.solar-card.is-active:focus .card-label {
-  opacity: 1;
-  transform: translateY(0);
-}
-.card-label-tags {
-  font-size: 11px; font-weight: 600;
-  letter-spacing: 0.1em; text-transform: uppercase;
-  opacity: 0.75; margin-bottom: 4px;
-}
-.card-label-title { font-family: var(--font-display); font-size: 18px; font-weight: 800; }
-
-/* Carousel controls — two small chevron circles flanking dots */
-.carousel-controls {
-  position: relative;
-  z-index: 20;
-  display: flex; align-items: center; justify-content: center;
-  gap: 12px;
-  padding: 16px 0 0;
-}
-.carousel-btn {
-  background: none;
-  border: 1px solid rgba(17,17,17,0.25);
-  color: var(--ink-muted);
-  width: 28px; height: 28px;
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer;
-  transition: border-color 0.2s ease, color 0.2s ease, transform 0.2s ease,
-              background 0.2s ease;
-  flex-shrink: 0;
-}
-.carousel-btn svg { width: 10px; height: 10px; }
-.carousel-btn:hover  {
-  border-color: var(--ink); color: var(--ink);
-  background: rgba(17,17,17,0.05); transform: scale(1.1);
-}
-.carousel-btn:active { transform: scale(0.92); }
-
-/* Dot indicators */
-.carousel-dots {
-  display: flex; align-items: center; gap: 6px;
-}
-.carousel-dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: rgba(17,17,17,0.2);
-  cursor: pointer;
-  transition: background 0.25s ease, transform 0.25s ease;
-  border: none; padding: 0;
-}
-.carousel-dot.active {
-  background: var(--ink);
-  transform: scale(1.3);
-}
-.carousel-dot:hover { background: rgba(17,17,17,0.5); }
-
-/* ============================================================
-   FOOTER
-   ============================================================ */
-.footer { border-top: none; padding: 40px 48px; margin-top: 0; background: transparent; }
-.footer-inner {
-  max-width: 1200px; margin: 0 auto;
-  display: flex; justify-content: space-between; align-items: center;
-  flex-wrap: wrap; gap: 12px;
-}
-.footer-copy { font-size: 13px; color: var(--ink-muted); }
-.footer-links { display: flex; gap: 28px; }
-.footer-links a {
-  font-size: 13px; font-weight: 500; color: var(--ink-muted);
-  transition: color 0.2s;
-}
-.footer-links a:hover { color: var(--ink); }
 
 /* ============================================================
    PASSWORD MODAL
    ============================================================ */
-.modal-overlay {
-  position: fixed; inset: 0; z-index: 1000;
-  background: rgba(17,17,17,0.6);
-  backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
-  display: flex; align-items: center; justify-content: center; padding: 24px;
-  opacity: 0; pointer-events: none;
-  transition: opacity 0.25s ease;
+let pendingDest = '';
+
+function openModal(dest, title) {
+  const modal     = document.getElementById('password-modal');
+  const nameEl    = document.getElementById('modal-project-name');
+  const errorEl   = document.getElementById('modal-error');
+  const input     = document.getElementById('modal-password');
+  if (!modal) return;
+
+  pendingDest         = dest;
+  nameEl.textContent  = title;
+  errorEl.textContent = '';
+  input.value         = '';
+  modal.setAttribute('aria-hidden', 'false');
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => input.focus(), 100);
 }
-.modal-overlay.open { opacity: 1; pointer-events: all; }
-.modal-box {
-  background: var(--bg); max-width: 420px; width: 100%; padding: 40px;
-  position: relative;
-  transform: translateY(18px) scale(0.97);
-  transition: transform 0.35s var(--ease-out);
+
+function closeModal() {
+  const modal = document.getElementById('password-modal');
+  if (!modal) return;
+  modal.setAttribute('aria-hidden', 'true');
+  modal.classList.remove('open');
+  document.body.style.overflow = '';
+  pendingDest = '';
 }
-.modal-overlay.open .modal-box { transform: translateY(0) scale(1); }
-.modal-close {
-  position: absolute; top: 16px; right: 16px;
-  background: none; border: none; cursor: pointer; padding: 6px;
-  color: var(--ink-muted);
-  transition: color 0.2s, transform 0.2s;
+
+function checkPassword() {
+  const input   = document.getElementById('modal-password');
+  const errorEl = document.getElementById('modal-error');
+  const val     = input?.value.trim() ?? '';
+  const correct = PASSWORDS[pendingDest] ?? '';
+
+  if (val === correct) {
+    closeModal();
+    navigateTo(pendingDest);
+  } else {
+    errorEl.textContent = 'Incorrect password. Please try again.';
+    input.value = '';
+    input.focus();
+    input.style.animation = 'none';
+    requestAnimationFrame(() => {
+      input.style.animation = 'shake 0.35s ease';
+    });
+  }
 }
-.modal-close:hover { color: var(--ink); transform: rotate(90deg); }
-.modal-title { font-family: var(--font-display); font-size: 22px; font-weight: 800; margin-bottom: 8px; }
-.modal-desc { font-size: 14px; color: var(--ink-muted); margin-bottom: 24px; line-height: 1.6; }
-.modal-form { display: flex; gap: 8px; flex-wrap: wrap; }
-.modal-input {
-  flex: 1; min-width: 150px; height: 44px; padding: 0 16px;
-  border: 1.5px solid var(--border-hover);
-  background: var(--bg); color: var(--ink);
-  font-family: var(--font-body); font-size: 15px; outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
+
+function initPasswordModal() {
+  document.getElementById('modal-close')?.addEventListener('click', closeModal);
+  document.getElementById('modal-submit')?.addEventListener('click', checkPassword);
+  document.getElementById('modal-password')?.addEventListener('keydown', e => {
+    if (e.key === 'Enter') checkPassword();
+  });
+  document.getElementById('password-modal')?.addEventListener('click', e => {
+    if (e.target.id === 'password-modal') closeModal();
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && document.getElementById('password-modal')?.classList.contains('open')) closeModal();
+  });
 }
-.modal-input:focus { border-color: var(--blue-a11y); box-shadow: 0 0 0 3px rgba(5,0,204,0.12); }
-.btn-primary {
-  height: 44px; padding: 0 22px;
-  background: var(--ink); color: var(--bg); border: none; cursor: pointer;
-  font-family: var(--font-body); font-size: 14px; font-weight: 600;
-  transition: background 0.2s, transform 0.15s;
-}
-.btn-primary:hover { background: var(--blue-a11y); }
-.btn-primary:active { transform: scale(0.98); }
-.modal-error { margin-top: 12px; font-size: 13px; font-weight: 600; color: #C8000A; min-height: 18px; }
 
 /* ============================================================
-   PROJECT PAGE
+   PAGE TRANSITIONS
    ============================================================ */
-.project-page-hero {
-  position: relative; width: 100%; height: 70vh; min-height: 480px;
-  overflow: hidden; background: #111;
-}
-.project-page-hero img {
-  width: 100%; height: 100%; object-fit: cover;
-  transition: transform 0.8s var(--ease-out);
-}
-.project-page-hero:hover img { transform: scale(1.03); }
-.project-page-hero-overlay {
-  position: absolute; inset: 0;
-  background: linear-gradient(to bottom, transparent 35%, rgba(17,17,17,0.62) 100%);
-}
-.project-page-hero-text {
-  position: absolute; bottom: 56px; left: 56px; color: white;
-}
-.project-page-hero-text .eyebrow {
-  display: block; font-size: 11px; font-weight: 700;
-  letter-spacing: 0.16em; text-transform: uppercase; opacity: 0.7; margin-bottom: 12px;
-}
-.project-page-hero-text h1 {
-  font-family: var(--font-display);
-  font-size: clamp(36px, 6vw, 80px); font-weight: 800;
-  line-height: 0.95; letter-spacing: -0.03em;
+let pageOverlay;
+
+function initPageTransitions() {
+  pageOverlay = document.createElement('div');
+  Object.assign(pageOverlay.style, {
+    position: 'fixed', inset: '0', zIndex: '9998',
+    background: '#111',
+    transformOrigin: 'top',
+    transform: 'scaleY(1)',
+    transition: 'none',
+    pointerEvents: 'none',
+  });
+  document.body.appendChild(pageOverlay);
+
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    pageOverlay.style.transition = 'transform 0.55s cubic-bezier(0.16,1,0.3,1)';
+    pageOverlay.style.transform  = 'scaleY(0)';
+  }));
+
+  document.addEventListener('click', e => {
+    const link = e.target.closest('a[href]');
+    if (!link) return;
+    const href = link.getAttribute('href');
+    if (!href || href.startsWith('#') || href.startsWith('mailto:') ||
+        href.startsWith('tel:') || href.startsWith('http') || link.target === '_blank') return;
+    e.preventDefault();
+    navigateTo(href);
+  });
 }
 
-.project-body { max-width: 1200px; margin: 0 auto; padding: 80px 56px 120px; }
-
-.project-intro {
-  display: grid; grid-template-columns: 1.5fr 1fr;
-  gap: 80px; padding-bottom: 72px; margin-bottom: 72px;
-  border-bottom: 1px solid var(--border); align-items: start;
+function navigateTo(href) {
+  if (!pageOverlay) { window.location.href = href; return; }
+  pageOverlay.style.transition  = 'transform 0.45s cubic-bezier(0.65,0,0.35,1)';
+  pageOverlay.style.transformOrigin = 'bottom';
+  pageOverlay.style.transform   = 'scaleY(1)';
+  setTimeout(() => { window.location.href = href; }, 450);
 }
-.project-desc {
-  font-family: var(--font-display);
-  font-size: clamp(20px, 2.5vw, 30px); font-weight: 700;
-  line-height: 1.35; letter-spacing: -0.02em;
-}
-.project-meta-list { display: flex; flex-direction: column; gap: 20px; padding-top: 6px; }
-.project-meta-item label {
-  display: block; font-size: 10px; font-weight: 700;
-  letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 4px;
-}
-.project-meta-item p { font-size: 14px; font-weight: 500; color: var(--ink); }
-
-.project-gallery { display: flex; flex-direction: column; gap: 4px; }
-.g-row { display: grid; gap: 4px; }
-.g-1 { grid-template-columns: 1fr; }
-.g-2 { grid-template-columns: 1fr 1fr; }
-.g-3 { grid-template-columns: 1fr 1fr 1fr; }
-.g-feat   { grid-template-columns: 2fr 1fr; }
-.g-feat-r { grid-template-columns: 1fr 2fr; }
-.g-img { overflow: hidden; background: #EBEBEB; aspect-ratio: 16/10; }
-.g-img.tall   { aspect-ratio: 4/5; }
-.g-img.wide   { aspect-ratio: 21/9; }
-.g-img.square { aspect-ratio: 1/1; }
-.g-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s var(--ease-out); }
-.g-img:hover img { transform: scale(1.04); }
-
-.project-text-block { max-width: 640px; margin: 64px 0; }
-.project-text-block h2 {
-  font-family: var(--font-display); font-size: clamp(20px, 2.5vw, 32px);
-  font-weight: 800; margin-bottom: 16px; letter-spacing: -0.02em;
-}
-.project-text-block p { font-size: 17px; line-height: 1.75; color: var(--ink-muted); }
-
-.project-nav {
-  display: flex; justify-content: space-between; align-items: center;
-  padding-top: 56px; margin-top: 56px; border-top: 1px solid var(--border);
-}
-.project-nav a {
-  font-size: 13px; font-weight: 600;
-  letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted);
-  transition: color 0.2s;
-}
-.project-nav a:hover { color: var(--ink); }
-
-/* ============================================================
-   ABOUT PAGE
-   ============================================================ */
-.about-page { padding-top: var(--nav-h); }
-.about-intro { display: grid; grid-template-columns: 1fr 1fr; min-height: 85vh; }
-.about-intro-text {
-  padding: 72px 64px;
-  display: flex; flex-direction: column; justify-content: flex-end;
-}
-.about-headline {
-  font-family: var(--font-display);
-  font-size: clamp(36px, 5vw, 64px); font-weight: 800;
-  line-height: 1.0; letter-spacing: -0.03em; margin-bottom: 32px;
-}
-.about-headline .accent { color: var(--blue-a11y); }
-.about-intro-text p { font-size: 18px; font-weight: 400; line-height: 1.7; color: var(--ink-muted); max-width: 420px; }
-.about-intro-photo { position: relative; overflow: hidden; background: #111; }
-.about-intro-photo img {
-  width: 100%; height: 100%; object-fit: cover; filter: grayscale(15%);
-  transition: filter 0.6s ease, transform 0.8s var(--ease-out);
-}
-.about-intro-photo:hover img { filter: grayscale(0%); transform: scale(1.03); }
-
-.about-details {
-  padding: 80px 64px 120px; max-width: 1200px; margin: 0 auto;
-  display: grid; grid-template-columns: 1.5fr 1fr; gap: 80px;
-}
-.about-bio p { font-size: 18px; line-height: 1.8; color: var(--ink-muted); }
-.about-bio p + p { margin-top: 20px; }
-.about-bio a {
-  display: inline-flex; align-items: center; gap: 6px; margin-top: 28px;
-  font-size: 14px; font-weight: 600; color: var(--ink);
-  border-bottom: 1.5px solid var(--ink); padding-bottom: 2px;
-  transition: color 0.2s, border-color 0.2s;
-}
-.about-bio a:hover { color: var(--blue-a11y); border-color: var(--blue-a11y); }
-.about-sidebar h3 {
-  font-size: 10px; font-weight: 700; letter-spacing: 0.16em;
-  text-transform: uppercase; color: var(--ink-muted); margin-bottom: 16px;
-}
-.skills-pills { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 48px; }
-.skills-pills li {
-  font-size: 13px; font-weight: 500; padding: 7px 16px;
-  border: 1.5px solid var(--border-hover); color: var(--ink);
-  transition: background 0.2s, border-color 0.2s, color 0.2s; cursor: default;
-}
-.skills-pills li:hover { background: var(--ink); color: var(--bg); border-color: var(--ink); }
-.about-cta {
-  display: inline-block; background: var(--ink); color: var(--bg);
-  font-size: 14px; font-weight: 600; padding: 14px 28px;
-  transition: background 0.2s, transform 0.15s;
-}
-.about-cta:hover { background: var(--blue-a11y); }
-.about-cta:active { transform: scale(0.98); }
 
 /* ============================================================
    SCROLL REVEAL
    ============================================================ */
-.reveal {
-  opacity: 0; transform: translateY(24px);
-  transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
-}
-.reveal.visible { opacity: 1; transform: none; }
-
-/* ============================================================
-   RESPONSIVE
-   ============================================================ */
-@media (max-width: 900px) {
-  .nav { padding: 0 24px; }
-  .nav-links { display: none; }
-  .nav-toggle { display: flex; }
-  .footer { padding: 32px 24px; }
-  .footer-inner { flex-direction: column; align-items: flex-start; }
-  .solar-wrap { height: 380px; }
-  .solar-card { width: 260px; }
-  .ring-2, .ring-3 { display: none; }
-  .project-body { padding: 48px 24px 80px; }
-  .project-intro { grid-template-columns: 1fr; gap: 40px; }
-  .g-2, .g-feat, .g-feat-r { grid-template-columns: 1fr; }
-  .project-page-hero-text { left: 24px; bottom: 28px; }
-  .about-intro { grid-template-columns: 1fr; min-height: auto; }
-  .about-intro-photo { height: 55vw; }
-  .about-intro-text { padding: 48px 24px; }
-  .about-details { grid-template-columns: 1fr; padding: 48px 24px 80px; gap: 48px; }
-}
-@media (max-width: 600px) {
-  .hello-word { font-size: clamp(64px, 22vw, 110px); }
-  .solar-card { width: 210px; }
-  .g-3 { grid-template-columns: 1fr; }
+function initScrollReveal() {
+  const targets = document.querySelectorAll(
+    '.about-headline, .about-intro-photo, .project-text-block, .g-img, .about-bio p, .skills-pills'
+  );
+  if (!targets.length) return;
+  targets.forEach((el, i) => {
+    el.classList.add('reveal');
+    el.style.transitionDelay = `${(i % 4) * 55}ms`;
+  });
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        obs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+  targets.forEach(el => obs.observe(el));
 }
 
 /* ============================================================
-   CLAUDE BADGE — static pill on the right edge, always visible
+   SHAKE KEYFRAME (injected)
    ============================================================ */
-.claude-badge {
-  position: fixed;
-  right: 0;
-  top: 75%;
-  /* Rotate so text reads bottom→top; anchor at bottom-right so it
-     sits flush against the viewport edge */
-  transform-origin: 100% 100%;
-  transform: rotate(-90deg) translateX(50%);
+const shakeCSS = document.createElement('style');
+shakeCSS.textContent = `
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    20%      { transform: translateX(-6px); }
+    40%      { transform: translateX(6px); }
+    60%      { transform: translateX(-4px); }
+    80%      { transform: translateX(4px); }
+  }
+`;
+document.head.appendChild(shakeCSS);
 
-  display: inline-flex;
-  flex-direction: row;           /* text left, icon right (after rotation: icon at bottom) */
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  background: var(--ink);
-  color: var(--bg);
-  font-family: var(--font-body);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  text-decoration: none;
-  z-index: 90;
-  white-space: nowrap;
-  border-radius: 8px 8px 0 0;   /* top corners round (= left corners when rotated) */
-  box-shadow: -2px 0 16px rgba(0,0,0,0.15);
-  transition: background 0.2s ease, gap 0.25s ease;
-}
-.claude-badge:hover {
-  background: var(--blue-a11y);
-  gap: 11px;
-}
-/* Claude icon sits after the text — appears at the bottom when rotated */
-.claude-badge-icon {
-  flex-shrink: 0;
-  width: 13px; height: 13px;
-  transition: transform 0.3s cubic-bezier(0.16,1,0.3,1);
-}
-.claude-badge:hover .claude-badge-icon {
-  transform: rotate(20deg) scale(1.15);
-}
-
-@media (max-width: 768px) { .claude-badge { display: none; } }
+/* ============================================================
+   INIT
+   ============================================================ */
+document.addEventListener('DOMContentLoaded', () => {
+  initNav();
+  initMobileMenu();
+  new SolarCarousel();
+  initPasswordModal();
+  initPageTransitions();
+  initScrollReveal();
+});
