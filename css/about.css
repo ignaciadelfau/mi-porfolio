@@ -39,8 +39,8 @@
 }
 .ab-map-line {
   fill: none;
-  stroke: rgba(17, 17, 17, 0.18);
-  stroke-width: 1.2;
+  stroke: rgba(17, 17, 17, 0.3);
+  stroke-width: 1;
   stroke-linecap: round;
 }
 
