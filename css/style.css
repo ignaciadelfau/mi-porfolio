@@ -18,7 +18,7 @@ html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 
   --font-body:    'Montserrat', sans-serif;
   --font-display: 'Syne', sans-serif;
-  --nav-h:        88px;
+  --nav-h:        72px;
   --ease-out:     cubic-bezier(0.16, 1, 0.3, 1);
   --ease-io:      cubic-bezier(0.65, 0, 0.35, 1);
 }
@@ -71,7 +71,7 @@ header { position: sticky; top: 0; z-index: 100; }
 .nav-logo { display: flex; align-items: center; }
 
 .logo-img {
-  height: 32px;
+  height: 28px;
   width: auto;
   display: block;
   opacity: 0;
@@ -290,20 +290,14 @@ header { position: sticky; top: 0; z-index: 100; }
 }
 
 /* O face bubble — fits inside the bowl of the O */
-.h-o {
-  position: relative;
-  transition: color 0.3s ease;
-}
-.h-o:hover {
-  color: transparent !important;
-}
+.h-o { position: relative; }
 .face-bubble {
   position: absolute;
   /* Slightly above center to align with the O's optical center */
   top: 48%; left: 50%;
   transform: translate(-50%, -50%) scale(0);
-  /* Sized to fit neatly inside the O without touching adjacent letters */
-  width: 0.72em; height: 0.72em;
+  /* 0.56em fits neatly inside the counter of Syne 800 O */
+  width: 0.56em; height: 0.56em;
   border-radius: 50%; overflow: hidden;
   opacity: 0; pointer-events: none;
   transition: transform 0.4s var(--ease-out), opacity 0.3s ease;
@@ -373,15 +367,15 @@ header { position: sticky; top: 0; z-index: 100; }
   font-size: 13px; font-weight: 500;
   letter-spacing: 0.06em;
   color: var(--ink-muted);
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
 
-/* Tight spacing: label → title flush against cards */
+/* 32px spacing between: label → title → cards → arrows */
 .carousel-title-wrap {
   text-align: center;
   min-height: 56px;
   display: flex; align-items: center; justify-content: center;
-  margin-bottom: -24px;
+  margin-bottom: 0;
   padding: 0 24px;
 }
 
@@ -462,6 +456,8 @@ header { position: sticky; top: 0; z-index: 100; }
   /* The center of this element is the carousel center */
   perspective: 1400px;
   perspective-origin: 50% 50%;
+  overflow-x: clip;
+  overflow-y: visible;
 }
 /* All cards are placed relative to .solar-track center via JS:
    left:50% top:50% then translate(-50%,-50%) + orbital offset */
@@ -525,7 +521,7 @@ header { position: sticky; top: 0; z-index: 100; }
   transform: scale(1.04);
   filter: brightness(0.88);
 }
-/* Card tilt on hover — rotates slightly like the reference, with a shadow shift */
+/* Card tilt on hover — removed */
 .solar-card.is-active {
   transition: transform 0.65s var(--ease-out),
               opacity   0.65s ease,
@@ -533,13 +529,7 @@ header { position: sticky; top: 0; z-index: 100; }
               filter    0.65s ease;
 }
 .solar-card.is-active .solar-card-inner {
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.4s ease;
-}
-/* Tilt: rotate around the bottom-center axis so it leans back like picked up */
-.solar-card.is-active:hover .solar-card-inner {
-  transform: perspective(800px) rotateX(-6deg) rotateZ(-2deg) translateY(-8px) scale(1.02);
-  box-shadow: 8px 24px 48px rgba(0,0,0,0.22), -4px 8px 16px rgba(0,0,0,0.08);
+  transition: none;
 }
 
 /* Side / back cards */
@@ -859,7 +849,7 @@ header { position: sticky; top: 0; z-index: 100; }
 .claude-badge {
   position: fixed;
   right: 0;
-  top: 75%;
+  top: 50%;
   /* Rotate so text reads bottom→top; anchor at bottom-right so it
      sits flush against the viewport edge */
   transform-origin: 100% 100%;
