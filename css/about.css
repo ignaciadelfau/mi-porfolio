@@ -3,7 +3,6 @@
    Archivo: css/about.css
    ============================================================ */
 
-/* Reset about-page body background to plain white */
 .about-body {
   background: #fff;
 }
@@ -11,13 +10,56 @@
 /* ── Shared reveal animation ── */
 .ab-reveal {
   opacity: 0;
-  transform: translateY(40px);
+  transform: translateY(36px);
   transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
               transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .ab-reveal.ab-visible {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* ── Scroll hint button ── */
+.ab-scroll-hint {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 36px;
+  height: 36px;
+  border: 1.5px solid #111;
+  border-radius: 50%;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  animation: ab-bounce 2.2s ease-in-out infinite;
+  transition: border-color 0.3s;
+  z-index: 10;
+}
+.ab-scroll-hint svg {
+  width: 13px;
+  height: 13px;
+}
+.ab-scroll-hint--white {
+  border-color: rgba(255,255,255,0.6);
+}
+.ab-scroll-hint--white svg {
+  stroke: #fff;
+}
+@keyframes ab-bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50%       { transform: translateX(-50%) translateY(7px); }
+}
+
+/* ── Nav white variant (on blue section) ── */
+.nav--white .nav-links a,
+.nav--white .nav-logo {
+  color: #fff !important;
+}
+.nav--white .nav-toggle span {
+  background: #fff !important;
 }
 
 /* ============================================================
@@ -29,6 +71,8 @@
   align-items: center;
   justify-content: center;
   padding: 120px 24px 80px;
+  position: relative;
+  background: #fff;
 }
 
 .ab-photo-wrap {
@@ -36,8 +80,8 @@
 }
 
 .ab-portrait {
-  width: clamp(200px, 30vw, 380px);
-  height: clamp(200px, 30vw, 380px);
+  width: clamp(200px, 28vw, 340px);
+  height: clamp(200px, 28vw, 340px);
   border-radius: 50%;
   object-fit: cover;
   object-position: 50% 20%;
@@ -45,7 +89,134 @@
 }
 
 /* ============================================================
-   ② BIO STATEMENT SECTION
+   ② MAP / CONSTELLATION SECTION
+   ============================================================ */
+.ab-map-section {
+  min-height: 100vh;
+  position: relative;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Central portrait */
+.ab-map-photo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: clamp(150px, 18vw, 220px);
+  height: clamp(150px, 18vw, 220px);
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid #eee;
+  z-index: 5;
+  flex-shrink: 0;
+}
+.ab-map-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 20%;
+}
+
+/* Float base */
+.ab-float {
+  position: absolute;
+  z-index: 4;
+}
+
+.ab-float-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: clamp(18px, 2vw, 26px);
+  color: #111;
+  margin: 0 0 6px;
+  line-height: 1.1;
+}
+.ab-float-sub {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  color: #999;
+  margin: 0;
+}
+
+/* Pill group */
+.ab-pill-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+/* Pill */
+.ab-pill {
+  border: 1.5px solid #1000FF;
+  color: #1000FF;
+  border-radius: 999px;
+  padding: 4px 13px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  white-space: nowrap;
+  background: #fff;
+}
+
+/* ── Float positions (desktop) ── */
+
+/* TOP CENTER — expertise pills */
+.ab-float--expertise {
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 7px;
+  max-width: 520px;
+  text-align: center;
+}
+
+/* LEFT — sports */
+.ab-float--sports {
+  left: 5%;
+  top: 38%;
+}
+
+/* BOTTOM-LEFT — skills */
+.ab-float--skills {
+  left: 5%;
+  bottom: 14%;
+  max-width: 280px;
+}
+
+/* RIGHT — photos */
+.ab-float--photos {
+  right: 5%;
+  top: 28%;
+  text-align: right;
+}
+
+/* RIGHT-BOTTOM — languages */
+.ab-float--languages {
+  right: 5%;
+  bottom: 28%;
+  text-align: right;
+}
+.ab-float--languages .ab-pill-group {
+  justify-content: flex-end;
+}
+
+/* BOTTOM-RIGHT — illustrate */
+.ab-float--ilustrar {
+  right: 18%;
+  bottom: 12%;
+}
+
+/* ============================================================
+   ③ BIO STATEMENT — blue bg
    ============================================================ */
 .ab-statement-section {
   min-height: 100vh;
@@ -53,26 +224,48 @@
   align-items: center;
   justify-content: center;
   padding: 80px 48px;
-  background: #fff;
+  background: #1000FF;
+  position: relative;
 }
 
 .ab-statement {
   font-family: 'Syne', sans-serif;
   font-weight: 700;
-  font-size: clamp(28px, 4.5vw, 64px);
+  font-size: clamp(26px, 4vw, 58px);
   line-height: 1.25;
   letter-spacing: -0.02em;
   text-align: center;
-  max-width: 900px;
-  color: #111;
+  max-width: 880px;
+  color: #fff;
 }
 
 .ab-statement strong {
   font-weight: 800;
 }
 
+/* Inline photo in text */
+.ab-inline-photo {
+  display: inline-block;
+  width: clamp(36px, 4vw, 56px);
+  height: clamp(36px, 4vw, 56px);
+  border-radius: 50%;
+  overflow: hidden;
+  vertical-align: middle;
+  margin: 0 6px;
+  border: 2px solid rgba(255,255,255,0.35);
+  position: relative;
+  top: -3px;
+  flex-shrink: 0;
+}
+.ab-inline-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 15%;
+}
+
 /* ============================================================
-   ③ LET'S TALK CTA SECTION
+   ④ LET'S TALK CTA — back to white
    ============================================================ */
 .ab-cta-section {
   min-height: 100vh;
@@ -81,6 +274,7 @@
   justify-content: center;
   padding: 80px 24px;
   background: #fff;
+  position: relative;
 }
 
 .ab-cta-inner {
@@ -120,7 +314,6 @@
   text-decoration: none;
   transition: background 0.25s ease, color 0.25s ease;
 }
-
 .ab-cta-btn:hover {
   background: #1000FF;
   color: #fff;
@@ -129,12 +322,55 @@
 /* ============================================================
    RESPONSIVE
    ============================================================ */
-@media (max-width: 600px) {
-  .ab-statement-section,
-  .ab-cta-section {
-    padding: 60px 24px;
+@media (max-width: 768px) {
+  /* On mobile, switch map section to a stacked flow */
+  .ab-map-section {
+    min-height: auto;
+    padding: 80px 24px 100px;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .ab-map-photo {
+    position: relative;
+    left: auto; top: auto;
+    transform: none;
+    margin: 0 auto 40px;
+    width: 160px;
+    height: 160px;
+  }
+
+  .ab-float {
+    position: relative;
+    left: auto !important;
+    right: auto !important;
+    top: auto !important;
+    bottom: auto !important;
+    transform: none !important;
+    text-align: left !important;
+    margin-bottom: 28px;
+  }
+
+  .ab-float--languages .ab-pill-group,
+  .ab-float--photos {
+    justify-content: flex-start;
+    text-align: left !important;
+  }
+
+  .ab-float--expertise {
+    justify-content: flex-start;
+  }
+
+  .ab-statement-section {
+    padding: 60px 28px;
   }
   .ab-statement {
     font-size: clamp(22px, 6vw, 36px);
+  }
+}
+
+@media (max-width: 480px) {
+  .ab-cta-section {
+    padding: 60px 24px;
   }
 }
