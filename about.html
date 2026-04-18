@@ -186,60 +186,17 @@
       const centerEl   = document.getElementById('ab-map-center');
       let mapTriggered = false;
 
-      function getCenter(el) {
-        const sr = mapSection.getBoundingClientRect();
-        const er = el.getBoundingClientRect();
-        return {
-          x: er.left - sr.left + er.width  / 2,
-          y: er.top  - sr.top  + er.height / 2,
-        };
-      }
-
-      function getEdge(el, cx, cy) {
-        // Returns the point on the element's border closest to center
-        const sr = mapSection.getBoundingClientRect();
-        const er = el.getBoundingClientRect();
-        const ex = er.left - sr.left + er.width  / 2;
-        const ey = er.top  - sr.top  + er.height / 2;
-        const dx = cx - ex, dy = cy - ey;
-        const len = Math.sqrt(dx*dx + dy*dy) || 1;
-        // Step in from element center toward photo center by half element size
-        const reach = Math.min(er.width, er.height) * 0.5;
-        return { x: ex + (dx/len)*reach, y: ey + (dy/len)*reach };
-      }
-
-      function drawLine(itemEl) {
-        const photoR  = centerEl.getBoundingClientRect();
-        const secR    = mapSection.getBoundingClientRect();
-        const cx = photoR.left - secR.left + photoR.width  / 2;
-        const cy = photoR.top  - secR.top  + photoR.height / 2;
-
-        const edge = getEdge(itemEl, cx, cy);
-
-        // Quadratic bezier — control point bows away from direct line
-        const mx = (cx + edge.x) / 2;
-        const my = (cy + edge.y) / 2;
-        // Perpendicular offset for the curve
-        const dx = edge.x - cx, dy = edge.y - cy;
-        const perp = 60;
-        const cpx = mx - (dy / Math.sqrt(dx*dx+dy*dy+1)) * perp;
-        const cpy = my + (dx / Math.sqrt(dx*dx+dy*dy+1)) * perp;
-
-        const d = `M ${cx} ${cy} Q ${cpx} ${cpy} ${edge.x} ${edge.y}`;
-        const totalLen = 300; // approx path length
-
-        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        path.setAttribute('d', d);
-        path.setAttribute('class', 'ab-map-line');
-        path.style.strokeDasharray  = totalLen;
-        path.style.strokeDashoffset = totalLen;
-        svgEl.appendChild(path);
-
-        // Animate draw
-        requestAnimationFrame(() => {
-          path.style.transition = 'stroke-dashoffset 0.9s cubic-bezier(0.16,1,0.3,1)';
-          path.style.strokeDashoffset = '0';
-        });
+      // Add arrowhead marker to SVG defs
+      function initSVG() {
+        const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+        defs.innerHTML = `
+          <marker id="ab-arrow" markerWidth="6" markerHeight="6"
+            refX="5" refY="3" orient="auto" markerUnits="strokeWidth">
+            <path d="M0,0.5 L0,5.5 L5.5,3 Z"
+              fill="rgba(17,17,17,0.35)" />
+          </marker>
+        `;
+        svgEl.appendChild(defs);
       }
 
       function resizeSVG() {
@@ -249,19 +206,96 @@
         svgEl.setAttribute('viewBox', `0 0 ${r.width} ${r.height}`);
       }
 
+      // Get center of photo circle in section-relative coords
+      function photoCenter() {
+        const sr = mapSection.getBoundingClientRect();
+        const pr = centerEl.getBoundingClientRect();
+        return {
+          x: pr.left - sr.left + pr.width  / 2,
+          y: pr.top  - sr.top  + pr.height / 2,
+          r: pr.width / 2,
+        };
+      }
+
+      // Get the nearest point on the element's bounding box edge toward (tx,ty)
+      function bboxEdge(el, tx, ty) {
+        const sr = mapSection.getBoundingClientRect();
+        const er = el.getBoundingClientRect();
+        const ex = er.left - sr.left;
+        const ey = er.top  - sr.top;
+        const ew = er.width, eh = er.height;
+        // Center of element
+        const cx = ex + ew / 2, cy = ey + eh / 2;
+        const dx = tx - cx, dy = ty - cy;
+        // Scale to reach bbox edge
+        const sx = dx !== 0 ? (ew / 2) / Math.abs(dx) : Infinity;
+        const sy = dy !== 0 ? (eh / 2) / Math.abs(dy) : Infinity;
+        const s  = Math.min(sx, sy);
+        return { x: cx + dx * s, y: cy + dy * s };
+      }
+
+      // Get point on photo circle edge toward (tx,ty)
+      function circleEdge(pc, tx, ty) {
+        const dx = tx - pc.x, dy = ty - pc.y;
+        const len = Math.sqrt(dx*dx + dy*dy) || 1;
+        return { x: pc.x + (dx/len) * pc.r, y: pc.y + (dy/len) * pc.r };
+      }
+
+      function drawArrow(itemEl) {
+        const pc   = photoCenter();
+        const elemCenter = (() => {
+          const sr = mapSection.getBoundingClientRect();
+          const er = itemEl.getBoundingClientRect();
+          return { x: er.left - sr.left + er.width/2, y: er.top - sr.top + er.height/2 };
+        })();
+
+        // Start: circle edge toward element; End: element bbox edge toward circle
+        const start = circleEdge(pc, elemCenter.x, elemCenter.y);
+        const end   = bboxEdge(itemEl, pc.x, pc.y);
+
+        // Midpoint + perpendicular bow for natural curve
+        const mx = (start.x + end.x) / 2;
+        const my = (start.y + end.y) / 2;
+        const dx = end.x - start.x, dy = end.y - start.y;
+        const len = Math.sqrt(dx*dx + dy*dy) || 1;
+        // Bow amount: 15% of line length, perpendicular
+        const bow = len * 0.18;
+        const cpx = mx + (-dy / len) * bow;
+        const cpy = my + ( dx / len) * bow;
+
+        const d = `M ${start.x.toFixed(1)} ${start.y.toFixed(1)} Q ${cpx.toFixed(1)} ${cpy.toFixed(1)} ${end.x.toFixed(1)} ${end.y.toFixed(1)}`;
+
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', d);
+        path.setAttribute('class', 'ab-map-line');
+        path.setAttribute('marker-end', 'url(#ab-arrow)');
+
+        // Measure actual length for dash animation
+        svgEl.appendChild(path);
+        const pathLen = path.getTotalLength() || 200;
+        path.style.strokeDasharray  = pathLen;
+        path.style.strokeDashoffset = pathLen;
+
+        // Trigger draw animation
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          path.style.transition = 'stroke-dashoffset 1s cubic-bezier(0.16,1,0.3,1)';
+          path.style.strokeDashoffset = '0';
+        }));
+      }
+
       const mapObs = new IntersectionObserver(entries => {
         entries.forEach(e => {
           if (e.isIntersecting && !mapTriggered) {
             mapTriggered = true;
             resizeSVG();
+            initSVG();
             mapItems.forEach(item => {
               const delay = parseInt(item.dataset.delay || 0, 10);
-              // Show item
               setTimeout(() => {
                 item.classList.add('ab-map-visible');
-                // Draw line slightly after item appears
                 if (item.dataset.line === 'true') {
-                  setTimeout(() => drawLine(item), 200);
+                  // Draw arrow after item has rendered (needs layout)
+                  setTimeout(() => drawArrow(item), 300);
                 }
               }, delay);
             });
@@ -271,13 +305,11 @@
       mapObs.observe(mapSection);
 
       window.addEventListener('resize', () => {
-        if (mapTriggered) {
-          resizeSVG();
-          // Redraw all lines
-          svgEl.innerHTML = '';
-          mapSection.querySelectorAll('.ab-map-item.ab-map-visible[data-line="true"]')
-            .forEach(item => drawLine(item));
-        }
+        if (!mapTriggered) return;
+        resizeSVG();
+        svgEl.querySelectorAll('.ab-map-line').forEach(p => p.remove());
+        mapSection.querySelectorAll('.ab-map-item.ab-map-visible[data-line="true"]')
+          .forEach(item => drawArrow(item));
       });
     });
   </script>
