@@ -207,7 +207,7 @@ class SolarCarousel {
       // left:50% top:50% anchors to center; translate(-50%,-50%) removes own size;
       // then orbital offset x/y moves outward; scale applied last.
       card.style.left = '50%';
-      card.style.top  = '50%';
+      card.style.top  = '30%';
 
       const dur = instant ? 0 : 650;
       card.style.transition = instant
