@@ -54,11 +54,15 @@
     <!-- ② CONSTELLATION MAP -->
     <section class="ab-map-section" aria-label="Skills and interests" id="ab-s2">
 
-      <div class="ab-map-photo">
+      <!-- SVG lines drawn dynamically -->
+      <svg class="ab-map-lines" aria-hidden="true" id="ab-lines"></svg>
+
+      <!-- Central photo — no animation, always visible -->
+      <div class="ab-map-photo" id="ab-map-center">
         <img src="assets/images/about-portrait.jpg" alt="María Ignacia Delfau" />
       </div>
 
-      <div class="ab-float ab-float--expertise ab-map-item" data-delay="0">
+      <div class="ab-float ab-float--expertise ab-map-item" data-delay="0" data-line="true" id="fl-expertise">
         <span class="ab-pill">UI design</span>
         <span class="ab-pill">Banking</span>
         <span class="ab-pill">Public services</span>
@@ -70,17 +74,17 @@
         <span class="ab-pill">Agile methodology</span>
       </div>
 
-      <div class="ab-float ab-float--sports ab-map-item" data-delay="150">
+      <div class="ab-float ab-float--sports ab-map-item" data-delay="500" data-line="true" id="fl-sports">
         <p class="ab-float-title">Sports</p>
         <p class="ab-float-sub">Better it is outside</p>
       </div>
 
-      <div class="ab-float ab-float--photos ab-map-item" data-delay="300">
+      <div class="ab-float ab-float--photos ab-map-item" data-delay="1000" data-line="true" id="fl-photos">
         <p class="ab-float-title">Take photos</p>
         <p class="ab-float-sub">Illustration photos</p>
       </div>
 
-      <div class="ab-float ab-float--skills ab-map-item" data-delay="450">
+      <div class="ab-float ab-float--skills ab-map-item" data-delay="1500" data-line="true" id="fl-skills">
         <p class="ab-float-title">Skills</p>
         <div class="ab-pill-group">
           <span class="ab-pill">Figma</span>
@@ -93,7 +97,7 @@
         </div>
       </div>
 
-      <div class="ab-float ab-float--languages ab-map-item" data-delay="600">
+      <div class="ab-float ab-float--languages ab-map-item" data-delay="2000" data-line="true" id="fl-languages">
         <p class="ab-float-title">Languages</p>
         <div class="ab-pill-group">
           <span class="ab-pill">Spanish</span>
@@ -101,7 +105,7 @@
         </div>
       </div>
 
-      <div class="ab-float ab-float--ilustrar ab-map-item" data-delay="750">
+      <div class="ab-float ab-float--ilustrar ab-map-item" data-delay="2500" data-line="true" id="fl-ilustrar">
         <p class="ab-float-title">Illustrate</p>
       </div>
 
@@ -158,7 +162,7 @@
   <script>
     document.addEventListener('DOMContentLoaded', () => {
 
-      // Nav turns white on blue section
+      // ── Nav white on blue section ──
       const nav = document.getElementById('main-nav');
       const blueSection = document.getElementById('ab-s3');
       const navObs = new IntersectionObserver(entries => {
@@ -166,35 +170,115 @@
       }, { threshold: 0.3 });
       if (blueSection) navObs.observe(blueSection);
 
-      // Standard reveal for photo + bio + cta
+      // ── Standard reveal ──
       const reveals = document.querySelectorAll('.ab-reveal');
       const revealObs = new IntersectionObserver(entries => {
         entries.forEach(e => {
-          if (e.isIntersecting) {
-            e.target.classList.add('ab-visible');
-            revealObs.unobserve(e.target);
-          }
+          if (e.isIntersecting) { e.target.classList.add('ab-visible'); revealObs.unobserve(e.target); }
         });
       }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
       reveals.forEach(el => revealObs.observe(el));
 
-      // Progressive map: photo stays, items appear one by one
+      // ── Map constellation ──
       const mapSection = document.getElementById('ab-s2');
       const mapItems   = mapSection.querySelectorAll('.ab-map-item');
+      const svgEl      = document.getElementById('ab-lines');
+      const centerEl   = document.getElementById('ab-map-center');
       let mapTriggered = false;
+
+      function getCenter(el) {
+        const sr = mapSection.getBoundingClientRect();
+        const er = el.getBoundingClientRect();
+        return {
+          x: er.left - sr.left + er.width  / 2,
+          y: er.top  - sr.top  + er.height / 2,
+        };
+      }
+
+      function getEdge(el, cx, cy) {
+        // Returns the point on the element's border closest to center
+        const sr = mapSection.getBoundingClientRect();
+        const er = el.getBoundingClientRect();
+        const ex = er.left - sr.left + er.width  / 2;
+        const ey = er.top  - sr.top  + er.height / 2;
+        const dx = cx - ex, dy = cy - ey;
+        const len = Math.sqrt(dx*dx + dy*dy) || 1;
+        // Step in from element center toward photo center by half element size
+        const reach = Math.min(er.width, er.height) * 0.5;
+        return { x: ex + (dx/len)*reach, y: ey + (dy/len)*reach };
+      }
+
+      function drawLine(itemEl) {
+        const photoR  = centerEl.getBoundingClientRect();
+        const secR    = mapSection.getBoundingClientRect();
+        const cx = photoR.left - secR.left + photoR.width  / 2;
+        const cy = photoR.top  - secR.top  + photoR.height / 2;
+
+        const edge = getEdge(itemEl, cx, cy);
+
+        // Quadratic bezier — control point bows away from direct line
+        const mx = (cx + edge.x) / 2;
+        const my = (cy + edge.y) / 2;
+        // Perpendicular offset for the curve
+        const dx = edge.x - cx, dy = edge.y - cy;
+        const perp = 60;
+        const cpx = mx - (dy / Math.sqrt(dx*dx+dy*dy+1)) * perp;
+        const cpy = my + (dx / Math.sqrt(dx*dx+dy*dy+1)) * perp;
+
+        const d = `M ${cx} ${cy} Q ${cpx} ${cpy} ${edge.x} ${edge.y}`;
+        const totalLen = 300; // approx path length
+
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', d);
+        path.setAttribute('class', 'ab-map-line');
+        path.style.strokeDasharray  = totalLen;
+        path.style.strokeDashoffset = totalLen;
+        svgEl.appendChild(path);
+
+        // Animate draw
+        requestAnimationFrame(() => {
+          path.style.transition = 'stroke-dashoffset 0.9s cubic-bezier(0.16,1,0.3,1)';
+          path.style.strokeDashoffset = '0';
+        });
+      }
+
+      function resizeSVG() {
+        const r = mapSection.getBoundingClientRect();
+        svgEl.setAttribute('width',  r.width);
+        svgEl.setAttribute('height', r.height);
+        svgEl.setAttribute('viewBox', `0 0 ${r.width} ${r.height}`);
+      }
 
       const mapObs = new IntersectionObserver(entries => {
         entries.forEach(e => {
           if (e.isIntersecting && !mapTriggered) {
             mapTriggered = true;
+            resizeSVG();
             mapItems.forEach(item => {
               const delay = parseInt(item.dataset.delay || 0, 10);
-              setTimeout(() => item.classList.add('ab-map-visible'), delay);
+              // Show item
+              setTimeout(() => {
+                item.classList.add('ab-map-visible');
+                // Draw line slightly after item appears
+                if (item.dataset.line === 'true') {
+                  setTimeout(() => drawLine(item), 200);
+                }
+              }, delay);
             });
           }
         });
       }, { threshold: 0.15 });
       mapObs.observe(mapSection);
+
+      window.addEventListener('resize', () => {
+        if (mapTriggered) {
+          resizeSVG();
+          // Redraw all lines
+          svgEl.innerHTML = '';
+          mapSection.querySelectorAll('.ab-map-item.ab-map-visible[data-line="true"]')
+            .forEach(item => drawLine(item));
+        }
+      });
     });
   </script>
 </body>
