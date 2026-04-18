@@ -16,7 +16,7 @@
   <a href="#main-content" class="skip-link sr-only">Skip to main content</a>
 
   <header role="banner">
-    <nav class="nav" aria-label="Main navigation">
+    <nav class="nav" id="main-nav" aria-label="Main navigation">
       <a href="index.html" class="nav-logo" aria-label="Home">
         <img src="assets/images/logo.png" alt="María Ignacia Delfau" class="logo-img" />
       </a>
@@ -38,25 +38,106 @@
 
   <main id="main-content">
 
-    <!-- ① PHOTO — centrada, aparece sola -->
-    <section class="ab-photo-section" aria-label="Portrait">
+    <!-- ① PHOTO — aparece sola, centrada -->
+    <section class="ab-photo-section" aria-label="Portrait" id="ab-s1">
       <div class="ab-photo-wrap ab-reveal">
         <img src="assets/images/about-portrait.jpg" alt="María Ignacia Delfau" class="ab-portrait" />
       </div>
+      <button class="ab-scroll-hint" aria-label="Scroll down" onclick="document.getElementById('ab-s2').scrollIntoView({behavior:'smooth'})">
+        <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+          <polyline points="2,4 7,10 12,4"/>
+        </svg>
+      </button>
     </section>
 
-    <!-- ② BIO STATEMENT — texto grande tipo manifiesto -->
-    <section class="ab-statement-section" aria-label="Bio">
+    <!-- ② CONSTELLATION MAP — foto centrada + tags flotantes -->
+    <section class="ab-map-section" aria-label="Skills and interests" id="ab-s2">
+
+      <!-- Foto central -->
+      <div class="ab-map-photo">
+        <img src="assets/images/about-portrait.jpg" alt="María Ignacia Delfau" />
+      </div>
+
+      <!-- TOP: expertise -->
+      <div class="ab-float ab-float--expertise ab-reveal" aria-label="Areas of expertise">
+        <span class="ab-pill">UI design</span>
+        <span class="ab-pill">Banking</span>
+        <span class="ab-pill">Public services</span>
+        <span class="ab-pill">Accessibility</span>
+        <span class="ab-pill">Prototyping</span>
+        <span class="ab-pill">Research</span>
+        <span class="ab-pill">UX design</span>
+        <span class="ab-pill">Design System</span>
+        <span class="ab-pill">Agile methodology</span>
+      </div>
+
+      <!-- LEFT: sports -->
+      <div class="ab-float ab-float--sports ab-reveal" aria-label="Hobbies">
+        <p class="ab-float-title">Sports</p>
+        <p class="ab-float-sub">Better it is outside</p>
+      </div>
+
+      <!-- BOTTOM-LEFT: skills -->
+      <div class="ab-float ab-float--skills ab-reveal" aria-label="Tools and skills">
+        <p class="ab-float-title">Skills</p>
+        <div class="ab-pill-group">
+          <span class="ab-pill">Figma</span>
+          <span class="ab-pill">Jira</span>
+          <span class="ab-pill">Confluence</span>
+          <span class="ab-pill">Adobe Creative Suite</span>
+          <span class="ab-pill">Zeplin</span>
+          <span class="ab-pill">HTML</span>
+          <span class="ab-pill">CSS</span>
+        </div>
+      </div>
+
+      <!-- RIGHT: photos -->
+      <div class="ab-float ab-float--photos ab-reveal" aria-label="Photography interest">
+        <p class="ab-float-title">Take photos</p>
+        <p class="ab-float-sub">Illustration photos</p>
+      </div>
+
+      <!-- RIGHT-BOTTOM: languages -->
+      <div class="ab-float ab-float--languages ab-reveal" aria-label="Languages">
+        <p class="ab-float-title">Languages</p>
+        <div class="ab-pill-group">
+          <span class="ab-pill">Spanish</span>
+          <span class="ab-pill">English</span>
+        </div>
+      </div>
+
+      <!-- BOTTOM: illustrate -->
+      <div class="ab-float ab-float--ilustrar ab-reveal" aria-label="Illustration interest">
+        <p class="ab-float-title">Illustrate</p>
+      </div>
+
+      <button class="ab-scroll-hint" aria-label="Scroll down" onclick="document.getElementById('ab-s3').scrollIntoView({behavior:'smooth'})">
+        <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+          <polyline points="2,4 7,10 12,4"/>
+        </svg>
+      </button>
+    </section>
+
+    <!-- ③ BIO STATEMENT — fondo azul, texto blanco -->
+    <section class="ab-statement-section" aria-label="Bio" id="ab-s3">
       <div class="ab-statement ab-reveal">
         I'm a Chilean&nbsp;designer in Barcelona,
         <strong>specializing in UX/UI design.</strong>
+        <span class="ab-inline-photo" aria-hidden="true">
+          <img src="assets/images/about-portrait.jpg" alt="" />
+        </span>
         I'm passionate about projects that enhance user experiences and promote a
         <strong>sustainable, equitable future.</strong>
       </div>
+      <button class="ab-scroll-hint ab-scroll-hint--white" aria-label="Scroll down" onclick="document.getElementById('ab-s4').scrollIntoView({behavior:'smooth'})">
+        <svg viewBox="0 0 14 14" fill="none" stroke="#fff" stroke-width="1.5" aria-hidden="true">
+          <polyline points="2,4 7,10 12,4"/>
+        </svg>
+      </button>
     </section>
 
-    <!-- ③ LET'S TALK — CTA final -->
-    <section class="ab-cta-section" aria-label="Contact">
+    <!-- ④ LET'S TALK — vuelve blanco -->
+    <section class="ab-cta-section" aria-label="Contact" id="ab-s4">
       <div class="ab-cta-inner ab-reveal">
         <h2 class="ab-cta-title">Let's talk</h2>
         <p class="ab-cta-sub">And make something fun together&nbsp;:)</p>
@@ -79,9 +160,21 @@
 
   <script src="js/main.js"></script>
   <script>
-    // Scroll reveal for about page elements
     document.addEventListener('DOMContentLoaded', () => {
-      const els = document.querySelectorAll('.ab-reveal');
+
+      // ── Nav color change on blue section ──
+      const nav = document.getElementById('main-nav');
+      const blueSection = document.getElementById('ab-s3');
+
+      const navObs = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          nav.classList.toggle('nav--white', e.isIntersecting);
+        });
+      }, { threshold: 0.3 });
+      if (blueSection) navObs.observe(blueSection);
+
+      // ── Scroll reveal with staggered delays for map floats ──
+      const reveals = document.querySelectorAll('.ab-reveal');
       const obs = new IntersectionObserver(entries => {
         entries.forEach(e => {
           if (e.isIntersecting) {
@@ -89,8 +182,15 @@
             obs.unobserve(e.target);
           }
         });
-      }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
-      els.forEach(el => obs.observe(el));
+      }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+      reveals.forEach((el, i) => {
+        // Stagger float items in section 2
+        if (el.closest('#ab-s2')) {
+          el.style.transitionDelay = `${i * 80}ms`;
+        }
+        obs.observe(el);
+      });
     });
   </script>
 </body>
