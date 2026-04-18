@@ -38,28 +38,27 @@
 
   <main id="main-content">
 
-    <!-- ① PHOTO — aparece sola, centrada -->
+    <!-- ① PHOTO -->
     <section class="ab-photo-section" aria-label="Portrait" id="ab-s1">
       <div class="ab-photo-wrap ab-reveal">
         <img src="assets/images/about-portrait.jpg" alt="María Ignacia Delfau" class="ab-portrait" />
       </div>
-      <button class="ab-scroll-hint" aria-label="Scroll down" onclick="document.getElementById('ab-s2').scrollIntoView({behavior:'smooth'})">
+      <button class="ab-scroll-hint" aria-label="Scroll down"
+        onclick="document.getElementById('ab-s2').scrollIntoView({behavior:'smooth'})">
         <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
           <polyline points="2,4 7,10 12,4"/>
         </svg>
       </button>
     </section>
 
-    <!-- ② CONSTELLATION MAP — foto centrada + tags flotantes -->
+    <!-- ② CONSTELLATION MAP -->
     <section class="ab-map-section" aria-label="Skills and interests" id="ab-s2">
 
-      <!-- Foto central -->
       <div class="ab-map-photo">
         <img src="assets/images/about-portrait.jpg" alt="María Ignacia Delfau" />
       </div>
 
-      <!-- TOP: expertise -->
-      <div class="ab-float ab-float--expertise ab-reveal" aria-label="Areas of expertise">
+      <div class="ab-float ab-float--expertise ab-map-item" data-delay="0">
         <span class="ab-pill">UI design</span>
         <span class="ab-pill">Banking</span>
         <span class="ab-pill">Public services</span>
@@ -71,14 +70,17 @@
         <span class="ab-pill">Agile methodology</span>
       </div>
 
-      <!-- LEFT: sports -->
-      <div class="ab-float ab-float--sports ab-reveal" aria-label="Hobbies">
+      <div class="ab-float ab-float--sports ab-map-item" data-delay="150">
         <p class="ab-float-title">Sports</p>
         <p class="ab-float-sub">Better it is outside</p>
       </div>
 
-      <!-- BOTTOM-LEFT: skills -->
-      <div class="ab-float ab-float--skills ab-reveal" aria-label="Tools and skills">
+      <div class="ab-float ab-float--photos ab-map-item" data-delay="300">
+        <p class="ab-float-title">Take photos</p>
+        <p class="ab-float-sub">Illustration photos</p>
+      </div>
+
+      <div class="ab-float ab-float--skills ab-map-item" data-delay="450">
         <p class="ab-float-title">Skills</p>
         <div class="ab-pill-group">
           <span class="ab-pill">Figma</span>
@@ -91,14 +93,7 @@
         </div>
       </div>
 
-      <!-- RIGHT: photos -->
-      <div class="ab-float ab-float--photos ab-reveal" aria-label="Photography interest">
-        <p class="ab-float-title">Take photos</p>
-        <p class="ab-float-sub">Illustration photos</p>
-      </div>
-
-      <!-- RIGHT-BOTTOM: languages -->
-      <div class="ab-float ab-float--languages ab-reveal" aria-label="Languages">
+      <div class="ab-float ab-float--languages ab-map-item" data-delay="600">
         <p class="ab-float-title">Languages</p>
         <div class="ab-pill-group">
           <span class="ab-pill">Spanish</span>
@@ -106,19 +101,19 @@
         </div>
       </div>
 
-      <!-- BOTTOM: illustrate -->
-      <div class="ab-float ab-float--ilustrar ab-reveal" aria-label="Illustration interest">
+      <div class="ab-float ab-float--ilustrar ab-map-item" data-delay="750">
         <p class="ab-float-title">Illustrate</p>
       </div>
 
-      <button class="ab-scroll-hint" aria-label="Scroll down" onclick="document.getElementById('ab-s3').scrollIntoView({behavior:'smooth'})">
+      <button class="ab-scroll-hint" aria-label="Scroll down"
+        onclick="document.getElementById('ab-s3').scrollIntoView({behavior:'smooth'})">
         <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
           <polyline points="2,4 7,10 12,4"/>
         </svg>
       </button>
     </section>
 
-    <!-- ③ BIO STATEMENT — fondo azul, texto blanco -->
+    <!-- ③ BIO STATEMENT — blue bg -->
     <section class="ab-statement-section" aria-label="Bio" id="ab-s3">
       <div class="ab-statement ab-reveal">
         I'm a Chilean&nbsp;designer in Barcelona,
@@ -129,14 +124,15 @@
         I'm passionate about projects that enhance user experiences and promote a
         <strong>sustainable, equitable future.</strong>
       </div>
-      <button class="ab-scroll-hint ab-scroll-hint--white" aria-label="Scroll down" onclick="document.getElementById('ab-s4').scrollIntoView({behavior:'smooth'})">
+      <button class="ab-scroll-hint ab-scroll-hint--white" aria-label="Scroll down"
+        onclick="document.getElementById('ab-s4').scrollIntoView({behavior:'smooth'})">
         <svg viewBox="0 0 14 14" fill="none" stroke="#fff" stroke-width="1.5" aria-hidden="true">
           <polyline points="2,4 7,10 12,4"/>
         </svg>
       </button>
     </section>
 
-    <!-- ④ LET'S TALK — vuelve blanco -->
+    <!-- ④ LET'S TALK -->
     <section class="ab-cta-section" aria-label="Contact" id="ab-s4">
       <div class="ab-cta-inner ab-reveal">
         <h2 class="ab-cta-title">Let's talk</h2>
@@ -162,35 +158,43 @@
   <script>
     document.addEventListener('DOMContentLoaded', () => {
 
-      // ── Nav color change on blue section ──
+      // Nav turns white on blue section
       const nav = document.getElementById('main-nav');
       const blueSection = document.getElementById('ab-s3');
-
       const navObs = new IntersectionObserver(entries => {
-        entries.forEach(e => {
-          nav.classList.toggle('nav--white', e.isIntersecting);
-        });
+        entries.forEach(e => nav.classList.toggle('nav--white', e.isIntersecting));
       }, { threshold: 0.3 });
       if (blueSection) navObs.observe(blueSection);
 
-      // ── Scroll reveal with staggered delays for map floats ──
+      // Standard reveal for photo + bio + cta
       const reveals = document.querySelectorAll('.ab-reveal');
-      const obs = new IntersectionObserver(entries => {
+      const revealObs = new IntersectionObserver(entries => {
         entries.forEach(e => {
           if (e.isIntersecting) {
             e.target.classList.add('ab-visible');
-            obs.unobserve(e.target);
+            revealObs.unobserve(e.target);
           }
         });
       }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+      reveals.forEach(el => revealObs.observe(el));
 
-      reveals.forEach((el, i) => {
-        // Stagger float items in section 2
-        if (el.closest('#ab-s2')) {
-          el.style.transitionDelay = `${i * 80}ms`;
-        }
-        obs.observe(el);
-      });
+      // Progressive map: photo stays, items appear one by one
+      const mapSection = document.getElementById('ab-s2');
+      const mapItems   = mapSection.querySelectorAll('.ab-map-item');
+      let mapTriggered = false;
+
+      const mapObs = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting && !mapTriggered) {
+            mapTriggered = true;
+            mapItems.forEach(item => {
+              const delay = parseInt(item.dataset.delay || 0, 10);
+              setTimeout(() => item.classList.add('ab-map-visible'), delay);
+            });
+          }
+        });
+      }, { threshold: 0.15 });
+      mapObs.observe(mapSection);
     });
   </script>
 </body>
