@@ -138,25 +138,33 @@
 }
 
 /* ── Positions ── */
+
+/* Expertise pills — top center, clear of photo stack */
 .ab-float--expertise {
-  top: 9%; left: 50%;
+  top: 7%; left: 50%;
   transform: translateX(-50%);
   display: flex; flex-wrap: wrap;
   justify-content: center; gap: 7px;
-  max-width: 560px;
+  max-width: 420px;   /* narrower so it doesn't bleed into photo stack zone */
 }
 
-.ab-float--sports { right: 5%; top: 38%; }
-
-.ab-float--skills { left: 5%; bottom: 10%; max-width: 280px; }
-
-.ab-float--photos { right: 5%; top: 8%; text-align: left; }
-
-.ab-float--languages {
-  left: 5%; top: 33%;
+/* Take photos — top right, well below the expertise row */
+.ab-float--photos {
+  right: 4%; top: 22%;
+  text-align: left;
 }
 
-.ab-float--ilustrar { left: 5%; top: 55%; }
+/* Sports — right side, below photo stack */
+.ab-float--sports { right: 4%; top: 56%; }
+
+/* Languages — left side, upper third */
+.ab-float--languages { left: 4%; top: 27%; }
+
+/* Ilustrar — left side, well below languages */
+.ab-float--ilustrar { left: 4%; top: 52%; }
+
+/* Skills — left side, bottom zone */
+.ab-float--skills { left: 4%; bottom: 7%; max-width: 260px; }
 
 /* ── Emoji in title ── */
 .ab-emoji {
