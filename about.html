@@ -43,12 +43,6 @@
       <div class="ab-photo-wrap ab-reveal">
         <img src="assets/images/about-portrait.jpg" alt="María Ignacia Delfau" class="ab-portrait" />
       </div>
-      <button class="ab-scroll-hint" aria-label="Scroll down"
-        onclick="document.getElementById('ab-s2').scrollIntoView({behavior:'smooth'})">
-        <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-          <polyline points="2,4 7,10 12,4"/>
-        </svg>
-      </button>
     </section>
 
     <!-- ② CONSTELLATION MAP -->
@@ -62,7 +56,8 @@
         <img src="assets/images/about-portrait.jpg" alt="María Ignacia Delfau" />
       </div>
 
-      <div class="ab-float ab-float--expertise ab-map-item" data-delay="0" data-line="true" id="fl-expertise">
+      <!-- EXPERTISE PILLS — top center -->
+      <div class="ab-float ab-float--expertise ab-map-item" data-delay="0" data-line="false" id="fl-expertise">
         <span class="ab-pill">UI design</span>
         <span class="ab-pill">Banking</span>
         <span class="ab-pill">Public services</span>
@@ -74,17 +69,40 @@
         <span class="ab-pill">Agile methodology</span>
       </div>
 
-      <div class="ab-float ab-float--sports ab-map-item" data-delay="500" data-line="true" id="fl-sports">
+      <!-- SPORTS — right side with sport emojis -->
+      <div class="ab-float ab-float--sports ab-map-item" data-delay="500" data-line="false" id="fl-sports">
         <p class="ab-float-title">Sports</p>
         <p class="ab-float-sub">Better it is outside</p>
+        <div class="ab-sport-icons">
+          <span class="ab-sport-icon" title="Cycling">🚴‍♀️</span>
+          <span class="ab-sport-icon" title="Hiking">🧗‍♀️</span>
+          <span class="ab-sport-icon" title="Running">🏃‍♀️</span>
+          <span class="ab-sport-icon" title="Outdoors">⛺️</span>
+        </div>
       </div>
 
-      <div class="ab-float ab-float--photos ab-map-item" data-delay="1000" data-line="true" id="fl-photos">
-        <p class="ab-float-title">Take photos</p>
-        <p class="ab-float-sub">Illustration photos</p>
+      <!-- TAKE PHOTOS — top right with stacked photo cards -->
+      <div class="ab-float ab-float--photos ab-map-item" data-delay="1000" data-line="false" id="fl-photos">
+        <p class="ab-float-title">Take photos <span class="ab-emoji">📷</span> )</p>
+        <div class="ab-photo-stack">
+          <div class="ab-photo-card ab-photo-card--1">
+            <div class="ab-photo-card-img" style="background: linear-gradient(135deg, #b0c4b1 0%, #7a9e7e 100%);"></div>
+            <div class="ab-photo-card-label">
+              <span class="ab-photo-card-name">Cannon AE1</span>
+              <span class="ab-photo-card-loc">Photo Gardena, 01</span>
+            </div>
+          </div>
+          <div class="ab-photo-card ab-photo-card--2">
+            <div class="ab-photo-card-img" style="background: linear-gradient(135deg, #a8c5da 0%, #6a9dba 100%);"></div>
+          </div>
+          <div class="ab-photo-card ab-photo-card--3">
+            <div class="ab-photo-card-img" style="background: linear-gradient(135deg, #d4c5a9 0%, #b8a07a 100%);"></div>
+          </div>
+        </div>
       </div>
 
-      <div class="ab-float ab-float--skills ab-map-item" data-delay="1500" data-line="true" id="fl-skills">
+      <!-- SKILLS — left bottom -->
+      <div class="ab-float ab-float--skills ab-map-item" data-delay="1500" data-line="false" id="fl-skills">
         <p class="ab-float-title">Skills</p>
         <div class="ab-pill-group">
           <span class="ab-pill">Figma</span>
@@ -97,7 +115,8 @@
         </div>
       </div>
 
-      <div class="ab-float ab-float--languages ab-map-item" data-delay="2000" data-line="true" id="fl-languages">
+      <!-- LANGUAGES — left middle -->
+      <div class="ab-float ab-float--languages ab-map-item" data-delay="2000" data-line="false" id="fl-languages">
         <p class="ab-float-title">Languages</p>
         <div class="ab-pill-group">
           <span class="ab-pill">Spanish</span>
@@ -105,16 +124,21 @@
         </div>
       </div>
 
-      <div class="ab-float ab-float--ilustrar ab-map-item" data-delay="2500" data-line="true" id="fl-ilustrar">
-        <p class="ab-float-title">Illustrate</p>
+      <!-- ILUSTRAR — bottom left with placeholder image -->
+      <div class="ab-float ab-float--ilustrar ab-map-item" data-delay="2500" data-line="false" id="fl-ilustrar">
+        <p class="ab-float-title">Ilustrar</p>
+        <div class="ab-ilustrar-img">
+          <svg width="100%" height="100%" viewBox="0 0 120 90" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <rect width="120" height="90" rx="4" fill="#f0f0f0"/>
+            <circle cx="42" cy="38" r="14" fill="#d0d0d0"/>
+            <ellipse cx="42" cy="75" rx="22" ry="10" fill="#d0d0d0"/>
+            <rect x="70" y="28" width="36" height="6" rx="3" fill="#e0e0e0"/>
+            <rect x="70" y="40" width="28" height="4" rx="2" fill="#e0e0e0"/>
+            <rect x="70" y="50" width="32" height="4" rx="2" fill="#e0e0e0"/>
+          </svg>
+        </div>
       </div>
 
-      <button class="ab-scroll-hint" aria-label="Scroll down"
-        onclick="document.getElementById('ab-s3').scrollIntoView({behavior:'smooth'})">
-        <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-          <polyline points="2,4 7,10 12,4"/>
-        </svg>
-      </button>
     </section>
 
     <!-- ③ BIO STATEMENT — blue bg -->
@@ -128,12 +152,6 @@
         I'm passionate about projects that enhance user experiences and promote a
         <strong>sustainable, equitable future.</strong>
       </div>
-      <button class="ab-scroll-hint ab-scroll-hint--white" aria-label="Scroll down"
-        onclick="document.getElementById('ab-s4').scrollIntoView({behavior:'smooth'})">
-        <svg viewBox="0 0 14 14" fill="none" stroke="#fff" stroke-width="1.5" aria-hidden="true">
-          <polyline points="2,4 7,10 12,4"/>
-        </svg>
-      </button>
     </section>
 
     <!-- ④ LET'S TALK -->
@@ -182,121 +200,16 @@
       // ── Map constellation ──
       const mapSection = document.getElementById('ab-s2');
       const mapItems   = mapSection.querySelectorAll('.ab-map-item');
-      const svgEl      = document.getElementById('ab-lines');
-      const centerEl   = document.getElementById('ab-map-center');
       let mapTriggered = false;
-
-      // Add arrowhead marker to SVG defs
-      function initSVG() {
-        const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
-        defs.innerHTML = `
-          <marker id="ab-arrow" markerWidth="6" markerHeight="6"
-            refX="5" refY="3" orient="auto" markerUnits="strokeWidth">
-            <path d="M0,0.5 L0,5.5 L5.5,3 Z"
-              fill="rgba(17,17,17,0.35)" />
-          </marker>
-        `;
-        svgEl.appendChild(defs);
-      }
-
-      function resizeSVG() {
-        const r = mapSection.getBoundingClientRect();
-        svgEl.setAttribute('width',  r.width);
-        svgEl.setAttribute('height', r.height);
-        svgEl.setAttribute('viewBox', `0 0 ${r.width} ${r.height}`);
-      }
-
-      // Get center of photo circle in section-relative coords
-      function photoCenter() {
-        const sr = mapSection.getBoundingClientRect();
-        const pr = centerEl.getBoundingClientRect();
-        return {
-          x: pr.left - sr.left + pr.width  / 2,
-          y: pr.top  - sr.top  + pr.height / 2,
-          r: pr.width / 2,
-        };
-      }
-
-      // Get the nearest point on the element's bounding box edge toward (tx,ty)
-      function bboxEdge(el, tx, ty) {
-        const sr = mapSection.getBoundingClientRect();
-        const er = el.getBoundingClientRect();
-        const ex = er.left - sr.left;
-        const ey = er.top  - sr.top;
-        const ew = er.width, eh = er.height;
-        // Center of element
-        const cx = ex + ew / 2, cy = ey + eh / 2;
-        const dx = tx - cx, dy = ty - cy;
-        // Scale to reach bbox edge
-        const sx = dx !== 0 ? (ew / 2) / Math.abs(dx) : Infinity;
-        const sy = dy !== 0 ? (eh / 2) / Math.abs(dy) : Infinity;
-        const s  = Math.min(sx, sy);
-        return { x: cx + dx * s, y: cy + dy * s };
-      }
-
-      // Get point on photo circle edge toward (tx,ty)
-      function circleEdge(pc, tx, ty) {
-        const dx = tx - pc.x, dy = ty - pc.y;
-        const len = Math.sqrt(dx*dx + dy*dy) || 1;
-        return { x: pc.x + (dx/len) * pc.r, y: pc.y + (dy/len) * pc.r };
-      }
-
-      function drawArrow(itemEl) {
-        const pc   = photoCenter();
-        const elemCenter = (() => {
-          const sr = mapSection.getBoundingClientRect();
-          const er = itemEl.getBoundingClientRect();
-          return { x: er.left - sr.left + er.width/2, y: er.top - sr.top + er.height/2 };
-        })();
-
-        // Start: circle edge toward element; End: element bbox edge toward circle
-        const start = circleEdge(pc, elemCenter.x, elemCenter.y);
-        const end   = bboxEdge(itemEl, pc.x, pc.y);
-
-        // Midpoint + perpendicular bow for natural curve
-        const mx = (start.x + end.x) / 2;
-        const my = (start.y + end.y) / 2;
-        const dx = end.x - start.x, dy = end.y - start.y;
-        const len = Math.sqrt(dx*dx + dy*dy) || 1;
-        // Bow amount: 15% of line length, perpendicular
-        const bow = len * 0.18;
-        const cpx = mx + (-dy / len) * bow;
-        const cpy = my + ( dx / len) * bow;
-
-        const d = `M ${start.x.toFixed(1)} ${start.y.toFixed(1)} Q ${cpx.toFixed(1)} ${cpy.toFixed(1)} ${end.x.toFixed(1)} ${end.y.toFixed(1)}`;
-
-        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        path.setAttribute('d', d);
-        path.setAttribute('class', 'ab-map-line');
-        path.setAttribute('marker-end', 'url(#ab-arrow)');
-
-        // Measure actual length for dash animation
-        svgEl.appendChild(path);
-        const pathLen = path.getTotalLength() || 200;
-        path.style.strokeDasharray  = pathLen;
-        path.style.strokeDashoffset = pathLen;
-
-        // Trigger draw animation
-        requestAnimationFrame(() => requestAnimationFrame(() => {
-          path.style.transition = 'stroke-dashoffset 1s cubic-bezier(0.16,1,0.3,1)';
-          path.style.strokeDashoffset = '0';
-        }));
-      }
 
       const mapObs = new IntersectionObserver(entries => {
         entries.forEach(e => {
           if (e.isIntersecting && !mapTriggered) {
             mapTriggered = true;
-            resizeSVG();
-            initSVG();
             mapItems.forEach(item => {
               const delay = parseInt(item.dataset.delay || 0, 10);
               setTimeout(() => {
                 item.classList.add('ab-map-visible');
-                if (item.dataset.line === 'true') {
-                  // Draw arrow after item has rendered (needs layout)
-                  setTimeout(() => drawArrow(item), 300);
-                }
               }, delay);
             });
           }
@@ -304,13 +217,32 @@
       }, { threshold: 0.15 });
       mapObs.observe(mapSection);
 
-      window.addEventListener('resize', () => {
-        if (!mapTriggered) return;
-        resizeSVG();
-        svgEl.querySelectorAll('.ab-map-line').forEach(p => p.remove());
-        mapSection.querySelectorAll('.ab-map-item.ab-map-visible[data-line="true"]')
-          .forEach(item => drawArrow(item));
-      });
+      // ── Photo stack fan interaction ──
+      const photoStack = document.querySelector('.ab-photo-stack');
+      if (photoStack) {
+        const cards = photoStack.querySelectorAll('.ab-photo-card');
+        photoStack.addEventListener('mouseenter', () => {
+          cards.forEach((c, i) => c.classList.add('fanned'));
+        });
+        photoStack.addEventListener('mouseleave', () => {
+          cards.forEach(c => c.classList.remove('fanned'));
+        });
+      }
+
+      // ── Sport icons stagger on hover ──
+      const sportIcons = document.querySelectorAll('.ab-sport-icon');
+      const sportsBlock = document.querySelector('.ab-float--sports');
+      if (sportsBlock) {
+        sportsBlock.addEventListener('mouseenter', () => {
+          sportIcons.forEach((icon, i) => {
+            setTimeout(() => icon.classList.add('bounce'), i * 80);
+          });
+        });
+        sportsBlock.addEventListener('mouseleave', () => {
+          sportIcons.forEach(icon => icon.classList.remove('bounce'));
+        });
+      }
+
     });
   </script>
 </body>
