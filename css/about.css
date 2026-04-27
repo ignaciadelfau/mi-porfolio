@@ -60,11 +60,12 @@
    ② MAP SECTION
    ============================================================ */
 .ab-map-section {
-  height: 900px;   /* fixed height so positions are predictable */
+  height: 100vh;
+  min-height: 700px;
   position: relative;
   background: #fff;
   display: flex; align-items: center; justify-content: center;
-  overflow: visible;
+  overflow: hidden;
 }
 
 /* SVG lines overlay (kept but unused — no arrows) */
@@ -137,34 +138,44 @@
   transform: translateY(-2px);
 }
 
-/* ── Positions — all in px from section edges to avoid % ambiguity ── */
+/* ── Positions — scattered organically around center photo ── */
 
-/* Expertise pills — top center, above the photo */
+/* Expertise pills — top arc, centered */
 .ab-float--expertise {
   top: 48px; left: 50%;
   transform: translateX(-50%);
   display: flex; flex-wrap: wrap;
   justify-content: center; gap: 7px;
-  max-width: 380px;
+  max-width: 480px;
 }
 
-/* Take photos — right column, starts 210px from top (below expertise row) */
+/* Take photos — upper right quadrant */
 .ab-float--photos {
-  right: 60px; top: 210px;
+  right: 60px; top: 80px;
   text-align: left;
 }
 
-/* Sports — right column, 540px from top (well below photo stack ~200px tall) */
-.ab-float--sports { right: 60px; top: 570px; }
+/* Sports — lower right */
+.ab-float--sports {
+  right: 60px; bottom: 100px;
+}
 
-/* Languages — left column, 220px from top */
-.ab-float--languages { left: 60px; top: 220px; }
+/* Languages — left side, vertically centered */
+.ab-float--languages {
+  left: 55px; top: 50%;
+  transform: translateY(-50%);
+}
 
-/* Ilustrar — left column, 420px from top (Languages block ~120px tall → 220+120+80 gap) */
-.ab-float--ilustrar { left: 60px; top: 430px; }
+/* Ilustrar — lower left */
+.ab-float--ilustrar {
+  left: 60px; bottom: 80px;
+}
 
-/* Skills — left column, 690px from top (Ilustrar block ~160px → 430+160+100 gap) */
-.ab-float--skills { left: 60px; top: 680px; max-width: 260px; }
+/* Skills — upper left */
+.ab-float--skills {
+  left: 40px; top: 80px;
+  max-width: 220px;
+}
 
 /* ── Emoji in title ── */
 .ab-emoji {
