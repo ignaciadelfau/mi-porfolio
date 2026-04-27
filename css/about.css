@@ -60,11 +60,11 @@
    ② MAP SECTION
    ============================================================ */
 .ab-map-section {
-  min-height: 100vh;
+  height: 900px;   /* fixed height so positions are predictable */
   position: relative;
   background: #fff;
   display: flex; align-items: center; justify-content: center;
-  overflow: hidden;
+  overflow: visible;
 }
 
 /* SVG lines overlay (kept but unused — no arrows) */
@@ -137,34 +137,34 @@
   transform: translateY(-2px);
 }
 
-/* ── Positions ── */
+/* ── Positions — all in px from section edges to avoid % ambiguity ── */
 
-/* Expertise pills — top center, clear of photo stack */
+/* Expertise pills — top center, above the photo */
 .ab-float--expertise {
-  top: 7%; left: 50%;
+  top: 48px; left: 50%;
   transform: translateX(-50%);
   display: flex; flex-wrap: wrap;
   justify-content: center; gap: 7px;
-  max-width: 420px;   /* narrower so it doesn't bleed into photo stack zone */
+  max-width: 380px;
 }
 
-/* Take photos — top right, well below the expertise row */
+/* Take photos — right column, starts 210px from top (below expertise row) */
 .ab-float--photos {
-  right: 4%; top: 22%;
+  right: 60px; top: 210px;
   text-align: left;
 }
 
-/* Sports — right side, below photo stack */
-.ab-float--sports { right: 4%; top: 56%; }
+/* Sports — right column, 540px from top (well below photo stack ~200px tall) */
+.ab-float--sports { right: 60px; top: 570px; }
 
-/* Languages — left side, upper third */
-.ab-float--languages { left: 4%; top: 27%; }
+/* Languages — left column, 220px from top */
+.ab-float--languages { left: 60px; top: 220px; }
 
-/* Ilustrar — left side, well below languages */
-.ab-float--ilustrar { left: 4%; top: 52%; }
+/* Ilustrar — left column, 420px from top (Languages block ~120px tall → 220+120+80 gap) */
+.ab-float--ilustrar { left: 60px; top: 430px; }
 
-/* Skills — left side, bottom zone */
-.ab-float--skills { left: 4%; bottom: 7%; max-width: 260px; }
+/* Skills — left column, 690px from top (Ilustrar block ~160px → 430+160+100 gap) */
+.ab-float--skills { left: 60px; top: 680px; max-width: 260px; }
 
 /* ── Emoji in title ── */
 .ab-emoji {
@@ -382,9 +382,11 @@
    ============================================================ */
 @media (max-width: 768px) {
   .ab-map-section {
+    height: auto;
     min-height: auto;
     padding: 80px 24px 100px;
     flex-direction: column;
+    overflow: hidden;
   }
   .ab-map-photo {
     position: relative; left: auto; top: auto;
