@@ -60,8 +60,8 @@
    ② MAP SECTION
    ============================================================ */
 .ab-map-section {
-  height: 100vh;
-  min-height: 700px;
+  height: 620px;
+  min-height: 620px;
   position: relative;
   background: #fff;
   overflow: hidden;
@@ -138,42 +138,41 @@
   transform: translateY(-2px);
 }
 
-/* ── Positions — defined by user ── */
+/* ── Positions — px fijos sobre sección de 620px ── */
 
 .ab-float--expertise {
-  top: 41%;
-  right: 7%;
-  transform: none;
+  top: 137px;
+  right: 115px;
   display: flex; flex-wrap: wrap;
   justify-content: center; gap: 7px;
-  max-width: 44%;
+  max-width: 340px;
 }
 
 .ab-float--skills {
-  top: 42%;
-  left: 10%;
+  top: 264px;
+  left: 54px;
   max-width: 200px;
 }
 
 .ab-float--languages {
-  bottom: 22%;
-  right: 39%;
+  bottom: 172px;
+  right: 266px;
 }
 
 .ab-float--ilustrar {
-  bottom: 25%;
-  left: 14%;
+  bottom: 199px;
+  left: 200px;
 }
 
 .ab-float--photos {
-  bottom: 32%;
-  right: 17%;
+  bottom: 291px;
+  right: 131px;
   text-align: left;
 }
 
 .ab-float--sports {
-  bottom: 37%;
-  left: 29%;
+  top: 165px;
+  left: 195px;
 }
 
 /* ── Emoji in title ── */
