@@ -138,41 +138,41 @@
   transform: translateY(-2px);
 }
 
-/* ── Positions — px fijos sobre sección de 620px ── */
+/* ── Positions — defined via drag tool ── */
 
 .ab-float--expertise {
-  top: 137px;
-  right: 115px;
+  top: 13px;
+  right: 301px;
   display: flex; flex-wrap: wrap;
   justify-content: center; gap: 7px;
   max-width: 340px;
 }
 
-.ab-float--skills {
-  top: 264px;
-  left: 54px;
-  max-width: 200px;
-}
-
-.ab-float--languages {
-  bottom: 172px;
-  right: 266px;
-}
-
-.ab-float--ilustrar {
-  bottom: 199px;
-  left: 200px;
+.ab-float--sports {
+  top: 41px;
+  left: 407px;
 }
 
 .ab-float--photos {
-  bottom: 291px;
+  top: 222px;
   right: 131px;
   text-align: left;
 }
 
-.ab-float--sports {
-  top: 165px;
-  left: 195px;
+.ab-float--skills {
+  bottom: 75px;
+  left: 331px;
+  max-width: 200px;
+}
+
+.ab-float--languages {
+  bottom: 139px;
+  right: 266px;
+}
+
+.ab-float--ilustrar {
+  top: 131px;
+  left: 118px;
 }
 
 /* ── Emoji in title ── */
