@@ -336,14 +336,14 @@
   position: relative;
 }
 .ab-statement {
-  font-family: 'Syne', sans-serif;
-  font-weight: 700;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
   font-size: clamp(22px, 3vw, 46px);
   line-height: 1.35; letter-spacing: -0.01em;
-  text-align: center; max-width: 780px;
+  text-align: center; max-width: 1100px;
   color: #fff;
 }
-.ab-statement strong { font-weight: 800; }
+.ab-statement strong { font-weight: 600; }
 
 .ab-inline-photo {
   display: inline-block;
