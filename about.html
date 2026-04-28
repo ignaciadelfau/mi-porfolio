@@ -177,10 +177,49 @@
   </footer>
 
   <script src="js/main.js"></script>
+
+  <!-- EDIT MODE -->
+  <style>
+    #edit-toggle {
+      position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+      background: #1000FF; color: #fff; border: none; border-radius: 999px;
+      padding: 10px 20px; font-size: 13px; font-weight: 600;
+      cursor: pointer; font-family: 'Montserrat', sans-serif;
+      box-shadow: 0 4px 16px rgba(16,0,255,0.3);
+    }
+    #edit-panel {
+      display: none; position: fixed; bottom: 72px; right: 24px; z-index: 9998;
+      background: #fff; border: 1px solid #e0e0e0; border-radius: 12px;
+      padding: 16px; width: 340px; box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+      font-family: 'Montserrat', sans-serif;
+    }
+    #edit-panel.visible { display: block; }
+    #edit-panel p { font-size: 11px; color: #888; margin-bottom: 8px; }
+    #css-output {
+      width: 100%; height: 220px; font-family: monospace; font-size: 10px;
+      border: 1px solid #e0e0e0; border-radius: 6px; padding: 8px;
+      resize: none; color: #111; line-height: 1.6;
+    }
+    #copy-css {
+      margin-top: 8px; width: 100%; background: #111; color: #fff;
+      border: none; border-radius: 6px; padding: 8px; font-size: 12px;
+      cursor: pointer; font-family: 'Montserrat', sans-serif;
+    }
+    body.edit-mode .ab-map-item { cursor: grab !important; outline: 1.5px dashed #1000FF55; }
+    body.edit-mode .ab-map-item:hover { outline: 1.5px dashed #1000FF; }
+    body.edit-mode .ab-map-item.is-dragging { cursor: grabbing !important; outline: 2px solid #1000FF; z-index: 200; }
+  </style>
+
+  <button id="edit-toggle">✦ Edit positions</button>
+  <div id="edit-panel">
+    <p>Arrastra los elementos a su posición. Copia el CSS cuando estés lista y pégalo aquí.</p>
+    <textarea id="css-output" readonly></textarea>
+    <button id="copy-css">Copiar CSS</button>
+  </div>
+
   <script>
     document.addEventListener('DOMContentLoaded', () => {
 
-      // ── Nav white on blue section ──
       const nav = document.getElementById('main-nav');
       const blueSection = document.getElementById('ab-s3');
       const navObs = new IntersectionObserver(entries => {
@@ -188,7 +227,6 @@
       }, { threshold: 0.3 });
       if (blueSection) navObs.observe(blueSection);
 
-      // ── Standard reveal ──
       const reveals = document.querySelectorAll('.ab-reveal');
       const revealObs = new IntersectionObserver(entries => {
         entries.forEach(e => {
@@ -197,51 +235,120 @@
       }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
       reveals.forEach(el => revealObs.observe(el));
 
-      // ── Map constellation ──
       const mapSection = document.getElementById('ab-s2');
-      const mapItems   = mapSection.querySelectorAll('.ab-map-item');
+      const mapItems = mapSection.querySelectorAll('.ab-map-item');
       let mapTriggered = false;
-
       const mapObs = new IntersectionObserver(entries => {
         entries.forEach(e => {
           if (e.isIntersecting && !mapTriggered) {
             mapTriggered = true;
             mapItems.forEach(item => {
-              const delay = parseInt(item.dataset.delay || 0, 10);
-              setTimeout(() => {
-                item.classList.add('ab-map-visible');
-              }, delay);
+              setTimeout(() => item.classList.add('ab-map-visible'), parseInt(item.dataset.delay || 0, 10));
             });
           }
         });
       }, { threshold: 0.15 });
       mapObs.observe(mapSection);
 
-      // ── Photo stack fan interaction ──
       const photoStack = document.querySelector('.ab-photo-stack');
       if (photoStack) {
-        const cards = photoStack.querySelectorAll('.ab-photo-card');
-        photoStack.addEventListener('mouseenter', () => {
-          cards.forEach((c, i) => c.classList.add('fanned'));
-        });
-        photoStack.addEventListener('mouseleave', () => {
-          cards.forEach(c => c.classList.remove('fanned'));
-        });
+        photoStack.addEventListener('mouseenter', () => photoStack.querySelectorAll('.ab-photo-card').forEach(c => c.classList.add('fanned')));
+        photoStack.addEventListener('mouseleave', () => photoStack.querySelectorAll('.ab-photo-card').forEach(c => c.classList.remove('fanned')));
       }
-
-      // ── Sport icons stagger on hover ──
-      const sportIcons = document.querySelectorAll('.ab-sport-icon');
       const sportsBlock = document.querySelector('.ab-float--sports');
       if (sportsBlock) {
-        sportsBlock.addEventListener('mouseenter', () => {
-          sportIcons.forEach((icon, i) => {
-            setTimeout(() => icon.classList.add('bounce'), i * 80);
-          });
-        });
-        sportsBlock.addEventListener('mouseleave', () => {
-          sportIcons.forEach(icon => icon.classList.remove('bounce'));
-        });
+        sportsBlock.addEventListener('mouseenter', () => sportsBlock.querySelectorAll('.ab-sport-icon').forEach((ic, i) => setTimeout(() => ic.classList.add('bounce'), i * 80)));
+        sportsBlock.addEventListener('mouseleave', () => sportsBlock.querySelectorAll('.ab-sport-icon').forEach(ic => ic.classList.remove('bounce')));
       }
+
+      // ── EDIT MODE ──
+      const toggle  = document.getElementById('edit-toggle');
+      const panel   = document.getElementById('edit-panel');
+      const output  = document.getElementById('css-output');
+      const copyBtn = document.getElementById('copy-css');
+      let editMode  = false;
+
+      const classMap = {
+        'ab-float--expertise': 'expertise',
+        'ab-float--skills':    'skills',
+        'ab-float--languages': 'languages',
+        'ab-float--ilustrar':  'ilustrar',
+        'ab-float--photos':    'photos',
+        'ab-float--sports':    'sports',
+      };
+      const extras = {
+        expertise: '  display: flex; flex-wrap: wrap;\n  justify-content: center; gap: 7px;\n  max-width: 340px;',
+        skills:    '  max-width: 200px;',
+        photos:    '  text-align: left;',
+      };
+
+      function getFloatClass(el) {
+        return Object.keys(classMap).find(c => el.classList.contains(c)) || null;
+      }
+
+      function buildCSS() {
+        const sr = mapSection.getBoundingClientRect();
+        const lines = [`/* .ab-map-section height: ${Math.round(sr.height)}px */`];
+        mapItems.forEach(el => {
+          const cls = getFloatClass(el);
+          if (!cls) return;
+          const name = classMap[cls];
+          const er = el.getBoundingClientRect();
+          const L = Math.round(er.left - sr.left);
+          const T = Math.round(er.top  - sr.top);
+          const R = Math.round(sr.right  - er.right);
+          const B = Math.round(sr.bottom - er.bottom);
+          const useRight  = (L + er.width  / 2) > sr.width  / 2;
+          const useBottom = (T + er.height / 2) > sr.height / 2;
+          let rule = `.ab-float--${name} {\n`;
+          rule += useBottom ? `  bottom: ${B}px;\n` : `  top: ${T}px;\n`;
+          rule += useRight  ? `  right: ${R}px;\n`  : `  left: ${L}px;\n`;
+          if (extras[name]) rule += extras[name] + '\n';
+          rule += `}`;
+          lines.push(rule);
+        });
+        return lines.join('\n\n');
+      }
+
+      mapItems.forEach(el => {
+        let ox, oy, startL, startT;
+        el.addEventListener('pointerdown', e => {
+          if (!editMode) return;
+          e.preventDefault(); e.stopPropagation();
+          el.setPointerCapture(e.pointerId);
+          el.classList.add('is-dragging');
+          const sr = mapSection.getBoundingClientRect();
+          const er = el.getBoundingClientRect();
+          ox = e.clientX; oy = e.clientY;
+          startL = er.left - sr.left; startT = er.top - sr.top;
+          el.style.removeProperty('right'); el.style.removeProperty('bottom');
+          el.style.left = startL + 'px'; el.style.top = startT + 'px';
+        });
+        el.addEventListener('pointermove', e => {
+          if (!el.classList.contains('is-dragging')) return;
+          const sr = mapSection.getBoundingClientRect();
+          let nx = Math.max(0, Math.min(sr.width  - el.offsetWidth,  startL + (e.clientX - ox)));
+          let ny = Math.max(0, Math.min(sr.height - el.offsetHeight, startT + (e.clientY - oy)));
+          el.style.left = nx + 'px'; el.style.top = ny + 'px';
+          output.value = buildCSS();
+        });
+        el.addEventListener('pointerup', () => { el.classList.remove('is-dragging'); output.value = buildCSS(); });
+      });
+
+      toggle.addEventListener('click', () => {
+        editMode = !editMode;
+        document.body.classList.toggle('edit-mode', editMode);
+        panel.classList.toggle('visible', editMode);
+        toggle.textContent = editMode ? '✕ Salir del editor' : '✦ Edit positions';
+        if (editMode) { mapItems.forEach(el => el.classList.add('ab-map-visible')); output.value = buildCSS(); }
+      });
+
+      copyBtn.addEventListener('click', () => {
+        navigator.clipboard.writeText(output.value).then(() => {
+          copyBtn.textContent = '¡Copiado!';
+          setTimeout(() => copyBtn.textContent = 'Copiar CSS', 2000);
+        });
+      });
 
     });
   </script>
