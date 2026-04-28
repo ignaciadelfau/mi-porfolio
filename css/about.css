@@ -28,6 +28,28 @@
   transform: translateY(0);
 }
 
+
+/* ── Scroll hint ── */
+.ab-scroll-hint {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 36px; height: 36px;
+  border: 1.5px solid rgba(255,255,255,0.6);
+  border-radius: 50%;
+  background: transparent;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  animation: ab-bounce 2.2s ease-in-out infinite;
+  z-index: 10;
+}
+.ab-scroll-hint svg { width: 13px; height: 13px; }
+@keyframes ab-bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50%       { transform: translateX(-50%) translateY(7px); }
+}
+
 /* ── Nav white override ── */
 .nav--white .nav-links a,
 .nav--white .nav-logo { color: #fff !important; }
@@ -316,9 +338,9 @@
 .ab-statement {
   font-family: 'Syne', sans-serif;
   font-weight: 700;
-  font-size: clamp(26px, 4vw, 58px);
-  line-height: 1.25; letter-spacing: -0.02em;
-  text-align: center; max-width: 880px;
+  font-size: clamp(18px, 2.4vw, 36px);
+  line-height: 1.35; letter-spacing: -0.01em;
+  text-align: center; max-width: 780px;
   color: #fff;
 }
 .ab-statement strong { font-weight: 800; }
