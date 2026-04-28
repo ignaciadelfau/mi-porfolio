@@ -38,11 +38,18 @@
 
   <main id="main-content">
 
-    <!-- ① PHOTO -->
-    <section class="ab-photo-section" aria-label="Portrait" id="ab-s1">
-      <div class="ab-photo-wrap ab-reveal">
-        <img src="assets/images/about-portrait.jpg" alt="María Ignacia Delfau" class="ab-portrait" />
+    <!-- ① HERO -->
+    <section class="ab-hero-section" aria-label="Introduction" id="ab-s1">
+      <div class="ab-hero-inner ab-reveal">
+        <h1 class="ab-hero-title">Hey there! 👋</h1>
+        <p class="ab-hero-sub">Let's scroll and know me better :)</p>
       </div>
+      <button class="ab-scroll-hint ab-scroll-hint--dark" aria-label="Scroll down"
+        onclick="document.getElementById('ab-s2').scrollIntoView({behavior:'smooth'})">
+        <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+          <polyline points="2,4 7,10 12,4"/>
+        </svg>
+      </button>
     </section>
 
     <!-- ② CONSTELLATION MAP -->
