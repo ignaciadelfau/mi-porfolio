@@ -177,5 +177,57 @@
   </footer>
 
   <script src="js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+      // ── Nav white on blue section ──
+      const nav = document.getElementById('main-nav');
+      const blueSection = document.getElementById('ab-s3');
+      const navObs = new IntersectionObserver(entries => {
+        entries.forEach(e => nav.classList.toggle('nav--white', e.isIntersecting));
+      }, { threshold: 0.3 });
+      if (blueSection) navObs.observe(blueSection);
+
+      // ── Standard reveal ──
+      const reveals = document.querySelectorAll('.ab-reveal');
+      const revealObs = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting) { e.target.classList.add('ab-visible'); revealObs.unobserve(e.target); }
+        });
+      }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+      reveals.forEach(el => revealObs.observe(el));
+
+      // ── Map constellation ──
+      const mapSection = document.getElementById('ab-s2');
+      const mapItems = mapSection.querySelectorAll('.ab-map-item');
+      let mapTriggered = false;
+      const mapObs = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting && !mapTriggered) {
+            mapTriggered = true;
+            mapItems.forEach(item => {
+              setTimeout(() => item.classList.add('ab-map-visible'), parseInt(item.dataset.delay || 0, 10));
+            });
+          }
+        });
+      }, { threshold: 0.15 });
+      mapObs.observe(mapSection);
+
+      // ── Photo stack fan ──
+      const photoStack = document.querySelector('.ab-photo-stack');
+      if (photoStack) {
+        photoStack.addEventListener('mouseenter', () => photoStack.querySelectorAll('.ab-photo-card').forEach(c => c.classList.add('fanned')));
+        photoStack.addEventListener('mouseleave', () => photoStack.querySelectorAll('.ab-photo-card').forEach(c => c.classList.remove('fanned')));
+      }
+
+      // ── Sport icons bounce ──
+      const sportsBlock = document.querySelector('.ab-float--sports');
+      if (sportsBlock) {
+        sportsBlock.addEventListener('mouseenter', () => sportsBlock.querySelectorAll('.ab-sport-icon').forEach((ic, i) => setTimeout(() => ic.classList.add('bounce'), i * 80)));
+        sportsBlock.addEventListener('mouseleave', () => sportsBlock.querySelectorAll('.ab-sport-icon').forEach(ic => ic.classList.remove('bounce')));
+      }
+
+    });
+  </script>
 </body>
 </html>
