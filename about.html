@@ -15,6 +15,9 @@
 
   <a href="#main-content" class="skip-link sr-only">Skip to main content</a>
 
+  <!-- Scroll progress bar -->
+  <div id="scroll-progress" aria-hidden="true"></div>
+
   <header role="banner">
     <nav class="nav" id="main-nav" aria-label="Main navigation">
       <a href="index.html" class="nav-logo" aria-label="Home">
@@ -153,21 +156,42 @@
 
     <!-- ③ BIO STATEMENT — blue bg -->
     <section class="ab-statement-section" aria-label="Bio" id="ab-s3">
-      <div class="ab-statement ab-reveal">
-        I'm a Chilean&nbsp;designer in Barcelona,
-        <strong>specializing in UX/UI design.</strong>
-        <span class="ab-inline-photo" aria-hidden="true">
-          <img src="assets/images/about-portrait.jpg" alt="" />
-        </span>
-        I'm passionate about projects that enhance user experiences and promote a
-        <strong>sustainable, equitable future.</strong>
+      <div class="ab-statement-inner">
+        <div class="ab-statement">
+          <span class="ab-word">I'm</span>
+          <span class="ab-word">a</span>
+          <span class="ab-word">Chilean&nbsp;designer</span>
+          <span class="ab-word">in</span>
+          <span class="ab-word">Barcelona,</span>
+          <span class="ab-word ab-word--strong">specializing</span>
+          <span class="ab-word ab-word--strong">in</span>
+          <span class="ab-word ab-word--strong">UX/UI</span>
+          <span class="ab-word ab-word--strong">design.</span>
+          <span class="ab-inline-photo ab-word" aria-hidden="true">
+            <img src="assets/images/about-portrait.jpg" alt="" />
+          </span>
+          <span class="ab-word">I'm</span>
+          <span class="ab-word">passionate</span>
+          <span class="ab-word">about</span>
+          <span class="ab-word">projects</span>
+          <span class="ab-word">that</span>
+          <span class="ab-word">enhance</span>
+          <span class="ab-word">user</span>
+          <span class="ab-word">experiences</span>
+          <span class="ab-word">and</span>
+          <span class="ab-word">promote</span>
+          <span class="ab-word">a</span>
+          <span class="ab-word ab-word--strong">sustainable,</span>
+          <span class="ab-word ab-word--strong">equitable</span>
+          <span class="ab-word ab-word--strong">future.</span>
+        </div>
+        <button class="ab-hero-arrow ab-statement-arrow" aria-label="Scroll down"
+          onclick="document.getElementById('ab-s4').scrollIntoView({behavior:'smooth'})">
+          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <polyline points="2,4 7,10 12,4"/>
+          </svg>
+        </button>
       </div>
-      <button class="ab-scroll-hint ab-scroll-hint--white" aria-label="Scroll down"
-        onclick="document.getElementById('ab-s4').scrollIntoView({behavior:'smooth'})">
-        <svg viewBox="0 0 14 14" fill="none" stroke="#fff" stroke-width="1.5" aria-hidden="true">
-          <polyline points="2,4 7,10 12,4"/>
-        </svg>
-      </button>
     </section>
 
     <!-- ④ LET'S TALK -->
@@ -228,6 +252,36 @@
         });
       }, { threshold: 0.15 });
       mapObs.observe(mapSection);
+
+      // ── Scroll progress bar ──
+      const progressBar = document.getElementById('scroll-progress');
+      window.addEventListener('scroll', () => {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        progressBar.style.width = pct + '%';
+      }, { passive: true });
+
+      // ── Statement words stagger ──
+      const statementEl = document.querySelector('.ab-statement');
+      if (statementEl) {
+        // Pre-assign delays so they're ready before the class fires
+        statementEl.querySelectorAll('.ab-word').forEach((w, i) => {
+          w.style.transitionDelay = (i * 50) + 'ms';
+        });
+        const wordObs = new IntersectionObserver(entries => {
+          entries.forEach(e => {
+            if (e.isIntersecting) {
+              // Small rAF to ensure delays are painted before class triggers transition
+              requestAnimationFrame(() => {
+                statementEl.classList.add('ab-words-visible');
+              });
+              wordObs.unobserve(e.target);
+            }
+          });
+        }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+        wordObs.observe(statementEl);
+      }
 
       // ── Photo stack fan ──
       const photoStack = document.querySelector('.ab-photo-stack');
