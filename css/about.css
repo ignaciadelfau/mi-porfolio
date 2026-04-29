@@ -76,7 +76,63 @@
   line-height: 1;
   color: #fff;
   margin: 0;
+  display: flex; align-items: center; gap: 0.15em;
 }
+
+/* Text underline sweep on hover */
+.ab-hero-text {
+  position: relative;
+  cursor: default;
+}
+.ab-hero-text::after {
+  content: '';
+  position: absolute;
+  left: 0; bottom: -4px;
+  width: 0; height: 3px;
+  background: rgba(255,255,255,0.5);
+  border-radius: 2px;
+  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.ab-hero-title:hover .ab-hero-text::after {
+  width: 100%;
+}
+
+/* Wave emoji animation on hover */
+.ab-hero-wave {
+  display: inline-block;
+  transform-origin: 70% 80%;
+  transition: transform 0.2s ease;
+}
+.ab-hero-title:hover .ab-hero-wave {
+  animation: ab-wave 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes ab-wave {
+  0%   { transform: rotate(0deg); }
+  20%  { transform: rotate(20deg); }
+  40%  { transform: rotate(-8deg); }
+  60%  { transform: rotate(16deg); }
+  80%  { transform: rotate(-4deg); }
+  100% { transform: rotate(0deg); }
+}
+
+/* Arrow button inline, right below subtitle */
+.ab-hero-arrow {
+  width: 36px; height: 36px;
+  border: 1.5px solid rgba(255,255,255,0.6);
+  border-radius: 50%;
+  background: transparent;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  margin-top: 8px;
+  animation: ab-bounce 2.2s ease-in-out infinite;
+  color: #fff;
+  transition: background 0.25s ease, border-color 0.25s ease;
+}
+.ab-hero-arrow:hover {
+  background: rgba(255,255,255,0.15);
+  border-color: #fff;
+}
+.ab-hero-arrow svg { width: 13px; height: 13px; }
 .ab-hero-sub {
   font-family: 'Montserrat', sans-serif;
   font-size: clamp(14px, 1.4vw, 18px);
