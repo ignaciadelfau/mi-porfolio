@@ -7,7 +7,7 @@
 /* ── Scroll progress bar ── */
 #scroll-progress {
   position: fixed;
-  top: 56px;
+  top: 0;
   left: 0;
   height: 2px;
   width: 0%;
