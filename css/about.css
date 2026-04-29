@@ -6,8 +6,9 @@
 
 /* ── Scroll progress bar ── */
 #scroll-progress {
-  position: absolute;
-  bottom: 0; left: 0;
+  position: fixed;
+  top: 56px;
+  left: 0;
   height: 2px;
   width: 0%;
   background: #1000FF;
@@ -66,9 +67,6 @@
 .nav--white .nav-links a,
 .nav--white .nav-logo { color: #fff !important; }
 .nav--white .nav-toggle span { background: #fff !important; }
-
-/* Progress bar needs header to be positioned */
-header[role="banner"] { position: relative; }
 
 /* ============================================================
    ① HERO SECTION
