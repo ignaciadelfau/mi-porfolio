@@ -253,6 +253,13 @@
 
       // ── Scroll progress bar ──
       const progressBar = document.getElementById('scroll-progress');
+      const headerEl = document.querySelector('header[role="banner"]');
+      function setProgressTop() {
+        const h = headerEl ? headerEl.getBoundingClientRect().height : 0;
+        progressBar.style.top = h + 'px';
+      }
+      setProgressTop();
+      window.addEventListener('resize', setProgressTop, { passive: true });
       window.addEventListener('scroll', () => {
         const scrollTop = window.scrollY;
         const docHeight = document.documentElement.scrollHeight - window.innerHeight;
