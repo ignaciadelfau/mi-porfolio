@@ -220,11 +220,21 @@
 
       // ── Nav white on blue section ──
       const nav = document.getElementById('main-nav');
-      const blueSection = document.getElementById('ab-s3');
+      const blueSections = [
+        document.getElementById('ab-s1'),
+        document.getElementById('ab-s3'),
+      ];
       const navObs = new IntersectionObserver(entries => {
-        entries.forEach(e => nav.classList.toggle('nav--white', e.isIntersecting));
+        entries.forEach(e => {
+          const anyBlue = blueSections.some(s => s && s.classList.contains('ab-in-view'));
+          if (e.isIntersecting) e.target.classList.add('ab-in-view');
+          else e.target.classList.remove('ab-in-view');
+          const isBlue = blueSections.some(s => s && s.classList.contains('ab-in-view'));
+          nav.classList.toggle('nav--white', isBlue);
+          progressBar.style.background = isBlue ? '#fff' : '#1000FF';
+        });
       }, { threshold: 0.3 });
-      if (blueSection) navObs.observe(blueSection);
+      blueSections.forEach(s => { if (s) navObs.observe(s); });
 
       // ── Standard reveal ──
       const reveals = document.querySelectorAll('.ab-reveal');
