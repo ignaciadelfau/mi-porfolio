@@ -403,7 +403,7 @@ header { position: sticky; top: 0; z-index: 100; }
 .solar-wrap {
   position: relative;
   width: 100%;
-  height: 440px;
+  height: 360px;
   overflow: visible;
 }
 
@@ -575,7 +575,7 @@ header { position: sticky; top: 0; z-index: 100; }
   z-index: 20;
   display: flex; align-items: center; justify-content: center;
   gap: 12px;
-  padding: 16px 0 0;
+  padding: 0;
 }
 .carousel-btn {
   background: none;
