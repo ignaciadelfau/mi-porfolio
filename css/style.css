@@ -290,7 +290,13 @@ header { position: sticky; top: 0; z-index: 100; }
 }
 
 /* O face bubble — fits inside the bowl of the O */
-.h-o { position: relative; }
+.h-o {
+  position: relative;
+  transition: color 0.3s ease;
+}
+.h-o:hover {
+  color: transparent;
+}
 .face-bubble {
   position: absolute;
   /* Slightly above center to align with the O's optical center */
